@@ -1,36 +1,24 @@
-#
-# Be sure to run `pod spec lint NAME.podspec' to ensure this is a
-# valid spec and remove all comments before submitting the spec.
-#
-# To learn more about the attributes see http://docs.cocoapods.org/specification.html
-#
 Pod::Spec.new do |s|
   s.name         = "JSONAPI"
   s.version      = "0.0.1"
-  s.summary      = "A short description of JSONAPI."
+  s.summary      = "Model mapper/parser for JSON API"
   s.description  = <<-DESC
-                    An optional longer description of JSONAPI
-
-                    * Markdown format.
-                    * Don't worry about the indent, we strip it!
+                    Maps a JSON response conformed to JSON API spect to objects.
                    DESC
-  s.homepage     = "http://EXAMPLE/NAME"
+  s.homepage     = "http://joshholtz.com"
   s.screenshots  = "www.example.com/screenshots_1", "www.example.com/screenshots_2"
   s.license      = 'MIT'
-  s.author       = { "Josh Holtz" => "josh@rokkincat.com" }
-  s.source       = { :git => "http://EXAMPLE/NAME.git", :tag => s.version.to_s }
+  s.author       = { "Josh Holtz" => "me@joshholtz.com" }
+  s.source       = { :git => "https://github.com/joshdholtz/jsonapi-ios.git", :tag => s.version.to_s }
 
   s.platform     = :ios, '7.0'
   s.ios.deployment_target = '5.0'
-  # s.osx.deployment_target = '10.7'
   s.requires_arc = true
 
-  s.source_files = 'Classes'
+  s.public_header_files = 'Classes/*.h'
+  s.source_files = 'Classes/*.m'
   s.resources = 'Assets'
 
-  s.ios.exclude_files = 'Classes/osx'
-  s.osx.exclude_files = 'Classes/ios'
-  # s.public_header_files = 'Classes/**/*.h'
   # s.frameworks = 'SomeFramework', 'AnotherFramework'
   # s.dependency 'JSONKit', '~> 1.4'
 end
