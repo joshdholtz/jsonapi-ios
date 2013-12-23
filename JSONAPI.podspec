@@ -6,7 +6,7 @@
 #
 Pod::Spec.new do |s|
   s.name         = "JSONAPI"
-  s.version      = "0.1.0"
+  s.version      = "0.0.1"
   s.summary      = "A short description of JSONAPI."
   s.description  = <<-DESC
                     An optional longer description of JSONAPI
@@ -20,8 +20,8 @@ Pod::Spec.new do |s|
   s.author       = { "Josh Holtz" => "josh@rokkincat.com" }
   s.source       = { :git => "http://EXAMPLE/NAME.git", :tag => s.version.to_s }
 
-  # s.platform     = :ios, '5.0'
-  # s.ios.deployment_target = '5.0'
+  s.platform     = :ios, '7.0'
+  s.ios.deployment_target = '5.0'
   # s.osx.deployment_target = '10.7'
   s.requires_arc = true
 
