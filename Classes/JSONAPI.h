@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 
 #import "JSONAPIResource.h"
+#import "JSONAPIResourceLinker.h"
 
 @interface JSONAPI : NSObject
 

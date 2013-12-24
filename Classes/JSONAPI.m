@@ -69,7 +69,7 @@
     NSArray *rawResources = [_dictionary objectForKey:key];
     NSArray *resources = nil;
     if ([rawResources isKindOfClass:[NSArray class]] == YES) {
-        resources = [JSONAPIResource jsonAPIResources:rawResources];
+        resources = [JSONAPIResource jsonAPIResources:rawResources withLinked:self.linked];
     }
     
     return resources;
@@ -97,10 +97,17 @@
             NSArray *value = [rawLinked objectForKey:key];
             
             if ([value isKindOfClass:[NSArray class]] == YES) {
-                NSArray *resources = [JSONAPIResource jsonAPIResources:value];
-                if (resources != nil) {
-                    [creatingLinked setObject:resources forKey:key];
+                NSMutableDictionary *resources = [NSMutableDictionary dictionary];
+                for (NSDictionary *resourceDictionary in value) {
+                    JSONAPIResource *resource = [JSONAPIResource jsonAPIResource:resourceDictionary withLinked:nil];
+                    [resources setObject:resource forKey:resource.ID];
                 }
+                [creatingLinked setObject:resources forKey:key];
+                
+//                NSArray *resources = [JSONAPIResource jsonAPIResources:value];
+//                if (resources != nil) {
+//                    [creatingLinked setObject:resources forKey:key];
+//                }
             }
             
         }

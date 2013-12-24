@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		033A6C5F18695CD2001CF9FA /* JSONAPIResource.m in Sources */ = {isa = PBXBuildFile; fileRef = 033A6C5E18695CD2001CF9FA /* JSONAPIResource.m */; };
+		0386643D186A0DAD00985CEC /* JSONAPIResourceLinker.m in Sources */ = {isa = PBXBuildFile; fileRef = 0386643C186A0DAD00985CEC /* JSONAPIResourceLinker.m */; };
 		03A055BB1868E038004807F0 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03A055BA1868E038004807F0 /* Foundation.framework */; };
 		03A055BD1868E038004807F0 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03A055BC1868E038004807F0 /* CoreGraphics.framework */; };
 		03A055BF1868E038004807F0 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03A055BE1868E038004807F0 /* UIKit.framework */; };
@@ -39,6 +40,8 @@
 /* Begin PBXFileReference section */
 		033A6C5D18695CD2001CF9FA /* JSONAPIResource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONAPIResource.h; sourceTree = "<group>"; };
 		033A6C5E18695CD2001CF9FA /* JSONAPIResource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSONAPIResource.m; sourceTree = "<group>"; };
+		0386643B186A0DAD00985CEC /* JSONAPIResourceLinker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONAPIResourceLinker.h; sourceTree = "<group>"; };
+		0386643C186A0DAD00985CEC /* JSONAPIResourceLinker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSONAPIResourceLinker.m; sourceTree = "<group>"; };
 		03A055B71868E038004807F0 /* JSONAPI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JSONAPI.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		03A055BA1868E038004807F0 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		03A055BC1868E038004807F0 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -169,6 +172,8 @@
 				03A055F41868E08A004807F0 /* JSONAPI.m */,
 				033A6C5D18695CD2001CF9FA /* JSONAPIResource.h */,
 				033A6C5E18695CD2001CF9FA /* JSONAPIResource.m */,
+				0386643B186A0DAD00985CEC /* JSONAPIResourceLinker.h */,
+				0386643C186A0DAD00985CEC /* JSONAPIResourceLinker.m */,
 			);
 			name = Classes;
 			path = ../Classes;
@@ -273,6 +278,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				03A055D11868E038004807F0 /* ViewController.m in Sources */,
+				0386643D186A0DAD00985CEC /* JSONAPIResourceLinker.m in Sources */,
 				03A055F71868E08A004807F0 /* JSONAPI.m in Sources */,
 				033A6C5F18695CD2001CF9FA /* JSONAPIResource.m in Sources */,
 				03A055CB1868E038004807F0 /* AppDelegate.m in Sources */,
