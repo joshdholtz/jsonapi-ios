@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		033A6C5F18695CD2001CF9FA /* JSONAPIResource.m in Sources */ = {isa = PBXBuildFile; fileRef = 033A6C5E18695CD2001CF9FA /* JSONAPIResource.m */; };
 		03A055BB1868E038004807F0 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03A055BA1868E038004807F0 /* Foundation.framework */; };
 		03A055BD1868E038004807F0 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03A055BC1868E038004807F0 /* CoreGraphics.framework */; };
 		03A055BF1868E038004807F0 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03A055BE1868E038004807F0 /* UIKit.framework */; };
@@ -21,8 +22,7 @@
 		03A055DC1868E038004807F0 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03A055BE1868E038004807F0 /* UIKit.framework */; };
 		03A055E41868E038004807F0 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 03A055E21868E038004807F0 /* InfoPlist.strings */; };
 		03A055E61868E038004807F0 /* JSONAPITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 03A055E51868E038004807F0 /* JSONAPITests.m */; };
-		03A055F61868E08A004807F0 /* JSONAPIModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 03A055F21868E08A004807F0 /* JSONAPIModel.m */; };
-		03A055F71868E08A004807F0 /* JSONAPITopLevel.m in Sources */ = {isa = PBXBuildFile; fileRef = 03A055F41868E08A004807F0 /* JSONAPITopLevel.m */; };
+		03A055F71868E08A004807F0 /* JSONAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = 03A055F41868E08A004807F0 /* JSONAPI.m */; };
 		03A055F81868E08A004807F0 /* JSONAPI.podspec in Resources */ = {isa = PBXBuildFile; fileRef = 03A055F51868E08A004807F0 /* JSONAPI.podspec */; };
 /* End PBXBuildFile section */
 
@@ -37,6 +37,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		033A6C5D18695CD2001CF9FA /* JSONAPIResource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONAPIResource.h; sourceTree = "<group>"; };
+		033A6C5E18695CD2001CF9FA /* JSONAPIResource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSONAPIResource.m; sourceTree = "<group>"; };
 		03A055B71868E038004807F0 /* JSONAPI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JSONAPI.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		03A055BA1868E038004807F0 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		03A055BC1868E038004807F0 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -56,11 +58,8 @@
 		03A055E11868E038004807F0 /* JSONAPITests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "JSONAPITests-Info.plist"; sourceTree = "<group>"; };
 		03A055E31868E038004807F0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		03A055E51868E038004807F0 /* JSONAPITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JSONAPITests.m; sourceTree = "<group>"; };
-		03A055F01868E08A004807F0 /* JSONAPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONAPI.h; sourceTree = "<group>"; };
-		03A055F11868E08A004807F0 /* JSONAPIModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONAPIModel.h; sourceTree = "<group>"; };
-		03A055F21868E08A004807F0 /* JSONAPIModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSONAPIModel.m; sourceTree = "<group>"; };
-		03A055F31868E08A004807F0 /* JSONAPITopLevel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONAPITopLevel.h; sourceTree = "<group>"; };
-		03A055F41868E08A004807F0 /* JSONAPITopLevel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSONAPITopLevel.m; sourceTree = "<group>"; };
+		03A055F31868E08A004807F0 /* JSONAPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONAPI.h; sourceTree = "<group>"; };
+		03A055F41868E08A004807F0 /* JSONAPI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSONAPI.m; sourceTree = "<group>"; };
 		03A055F51868E08A004807F0 /* JSONAPI.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = JSONAPI.podspec; path = ../JSONAPI.podspec; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -166,11 +165,10 @@
 		03A055EF1868E08A004807F0 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				03A055F01868E08A004807F0 /* JSONAPI.h */,
-				03A055F11868E08A004807F0 /* JSONAPIModel.h */,
-				03A055F21868E08A004807F0 /* JSONAPIModel.m */,
-				03A055F31868E08A004807F0 /* JSONAPITopLevel.h */,
-				03A055F41868E08A004807F0 /* JSONAPITopLevel.m */,
+				03A055F31868E08A004807F0 /* JSONAPI.h */,
+				03A055F41868E08A004807F0 /* JSONAPI.m */,
+				033A6C5D18695CD2001CF9FA /* JSONAPIResource.h */,
+				033A6C5E18695CD2001CF9FA /* JSONAPIResource.m */,
 			);
 			name = Classes;
 			path = ../Classes;
@@ -275,9 +273,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				03A055D11868E038004807F0 /* ViewController.m in Sources */,
-				03A055F71868E08A004807F0 /* JSONAPITopLevel.m in Sources */,
+				03A055F71868E08A004807F0 /* JSONAPI.m in Sources */,
+				033A6C5F18695CD2001CF9FA /* JSONAPIResource.m in Sources */,
 				03A055CB1868E038004807F0 /* AppDelegate.m in Sources */,
-				03A055F61868E08A004807F0 /* JSONAPIModel.m in Sources */,
 				03A055C71868E038004807F0 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

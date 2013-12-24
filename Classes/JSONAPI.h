@@ -6,10 +6,21 @@
 //  Copyright (c) 2013 Josh Holtz. All rights reserved.
 //
 
-#ifndef JSONAPI_JSONAPI_h
-#define JSONAPI_JSONAPI_h
+#import <Foundation/Foundation.h>
 
-    #import "JSONAPITopLevel.h"
-    #import "JSONAPIModel.h"
+#import "JSONAPIResource.h"
 
-#endif
+@interface JSONAPI : NSObject
+
+@property (nonatomic, strong) NSDictionary *meta;
+@property (nonatomic, strong) NSDictionary *linked;
+@property (nonatomic, strong) NSError *error;
+
+- (id)initWithString:(NSString*)string;
+- (id)initWithDictionary:(NSDictionary*)dictionary;
+
+- (id)objectForKey:(NSString*)key;
+- (JSONAPIResource*)resourceForKey:(NSString*)key;
+- (NSArray*)resourcesForKey:(NSString*)key;
+
+@end
