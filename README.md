@@ -5,7 +5,7 @@ A parser for [JSON API](http://jsonapi.org) documents.
 ## Installation
 
 ### Drop-in Classes
-Clone the repository and drop in the .h and .m files in the "Classes" directory.
+Clone the repository and drop in the .h and .m files from the "Classes" directory into your project.
 
 ### CocoaPods
 
