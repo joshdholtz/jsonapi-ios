@@ -10,12 +10,16 @@
 
 #import "JSONAPIResource.h"
 #import "JSONAPIResourceLinker.h"
+#import "JSONAPIResourceModeler.h"
 
 @interface JSONAPI : NSObject
 
 @property (nonatomic, strong) NSDictionary *meta;
 @property (nonatomic, strong) NSDictionary *linked;
 @property (nonatomic, strong) NSError *error;
+
++ (id)JSONAPIWithString:(NSString*)string;
++ (id)JSONAPIWithDictionary:(NSDictionary*)dictionary;
 
 - (id)initWithString:(NSString*)string;
 - (id)initWithDictionary:(NSDictionary*)dictionary;

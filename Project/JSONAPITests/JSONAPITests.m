@@ -20,9 +20,9 @@
 {
     [super setUp];
 
-    [JSONAPIResourceLinker link:@"author" toLinked:@"authors"];
-    [JSONAPIResourceLinker link:@"authors" toLinked:@"authors"]; // Don't NEED this but why not be explicit
-    [JSONAPIResourceLinker link:@"person" toLinked:@"people"];
+    [JSONAPIResourceLinker link:@"author" toLinkedType:@"authors"];
+    [JSONAPIResourceLinker link:@"authors" toLinkedType:@"authors"]; // Don't NEED this but why not be explicit
+    [JSONAPIResourceLinker link:@"person" toLinkedType:@"people"];
     
 }
 

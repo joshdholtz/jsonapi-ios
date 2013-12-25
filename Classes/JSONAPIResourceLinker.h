@@ -12,7 +12,7 @@
 
 @property (nonatomic, strong) NSMutableDictionary *linkedTypeToLinksType;
 
-+ (void)link:(NSString*)resourceLinkType toLinked:(NSString*)linkedType;
++ (void)link:(NSString*)resourceLinkType toLinkedType:(NSString*)linkedType;
 + (NSString*)linkedType:(NSString*)resourceLinkType;
 
 + (void)unlinkAll;

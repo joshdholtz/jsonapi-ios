@@ -18,6 +18,14 @@
 
 #pragma mark - Init
 
++ (id)JSONAPIWithString:(NSString*)string {
+    return [[JSONAPI alloc] initWithString:string];
+}
+
++ (id)JSONAPIWithDictionary:(NSDictionary*)dictionary {
+    return [[JSONAPI alloc] initWithDictionary:dictionary];
+}
+
 - (id)initWithString:(NSString*)string {
     self = [super init];
     if (self) {
@@ -69,7 +77,8 @@
     NSArray *rawResources = [_dictionary objectForKey:key];
     NSArray *resources = nil;
     if ([rawResources isKindOfClass:[NSArray class]] == YES) {
-        resources = [JSONAPIResource jsonAPIResources:rawResources withLinked:self.linked];
+        Class c = [JSONAPIResourceModeler resourceForLinkedType:[JSONAPIResourceLinker linkedType:key]];
+        resources = [JSONAPIResource jsonAPIResources:rawResources withLinked:self.linked withClass:c];
     }
     
     return resources;
@@ -99,15 +108,12 @@
             if ([value isKindOfClass:[NSArray class]] == YES) {
                 NSMutableDictionary *resources = [NSMutableDictionary dictionary];
                 for (NSDictionary *resourceDictionary in value) {
-                    JSONAPIResource *resource = [JSONAPIResource jsonAPIResource:resourceDictionary withLinked:nil];
+                    Class c = [JSONAPIResourceModeler resourceForLinkedType:[JSONAPIResourceLinker linkedType:key]];
+                    JSONAPIResource *resource = [JSONAPIResource jsonAPIResource:resourceDictionary withLinked:nil withClass:c];
                     [resources setObject:resource forKey:resource.ID];
                 }
                 [creatingLinked setObject:resources forKey:key];
                 
-//                NSArray *resources = [JSONAPIResource jsonAPIResources:value];
-//                if (resources != nil) {
-//                    [creatingLinked setObject:resources forKey:key];
-//                }
             }
             
         }

@@ -28,12 +28,17 @@
     return self;
 }
 
-+ (void)link:(NSString*)resourceLinkType toLinked:(NSString*)linkedType {
++ (void)link:(NSString*)resourceLinkType toLinkedType:(NSString*)linkedType {
     [[JSONAPIResourceLinker sharedLinker].linkedTypeToLinksType setObject:linkedType forKey:resourceLinkType];
 }
 
 + (NSString*)linkedType:(NSString*)resourceLinkType {
-    return [[JSONAPIResourceLinker sharedLinker].linkedTypeToLinksType objectForKey:resourceLinkType];
+    NSString *type = [[JSONAPIResourceLinker sharedLinker].linkedTypeToLinksType objectForKey:resourceLinkType];
+    if (type == nil) {
+        type = resourceLinkType;
+    }
+    
+    return type;
 }
 
 + (void)unlinkAll {

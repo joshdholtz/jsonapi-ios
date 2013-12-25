@@ -26,6 +26,10 @@
 }
 
 + (NSArray*)jsonAPIResources:(NSArray*)array withLinked:(NSDictionary*)linked withClass:(Class)resourceObjectClass {
+    if (resourceObjectClass == nil) {
+        resourceObjectClass = [self class];
+    }
+    
     NSMutableArray *mutableArray = [[NSMutableArray alloc] init];
     for (NSDictionary *dict in array) {
         [mutableArray addObject:[[resourceObjectClass alloc] initWithDictionary:dict withLinked:linked]];
@@ -35,7 +39,15 @@
 }
 
 + (id)jsonAPIResource:(NSDictionary*)dictionary withLinked:(NSDictionary*)linked {
-    return [[[self class] alloc] initWithDictionary:dictionary withLinked:linked];
+    return [JSONAPIResource jsonAPIResource:dictionary withLinked:linked withClass:[self class]];
+}
+
++ (id)jsonAPIResource:(NSDictionary*)dictionary withLinked:(NSDictionary*)linked withClass:(Class)resourceObjectClass {
+    if (resourceObjectClass == nil) {
+        resourceObjectClass = [self class];
+    }
+    
+    return [[resourceObjectClass alloc] initWithDictionary:dictionary withLinked:linked];
 }
 
 - (id)init {
@@ -149,7 +161,6 @@
             NSMutableArray *linkedResources = [NSMutableArray array];
             [self.__resourceLinks setObject:linkedResources forKey:linkTypeUnmapped];
             for (NSNumber *linkedId in linksTo) {
-                NSLog(@"Looking for linked object with ID of %@", linkedId);
                 JSONAPIResource *linkedResource = [[linked objectForKey:linkType] objectForKey:linkedId];
                 if (linkedResource != nil) {
                     [linkedResources addObject:linkedResource];
