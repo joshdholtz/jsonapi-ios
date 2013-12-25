@@ -1,6 +1,6 @@
 # JSONAPI - iOS
 
-A parser and validator for [JSON API](http://jsonapi.org) documents.
+A parser for [JSON API](http://jsonapi.org) documents.
 
 ## Installation
 
