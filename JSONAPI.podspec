@@ -16,9 +16,5 @@ Pod::Spec.new do |s|
   s.requires_arc = true
 
   s.public_header_files = 'Classes/*.h'
-  s.source_files = 'Classes/*.m'
-  s.resources = 'Assets'
-
-  # s.frameworks = 'SomeFramework', 'AnotherFramework'
-  # s.dependency 'JSONKit', '~> 1.4'
+  s.source_files = 'Classes/*'
 end
