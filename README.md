@@ -106,13 +106,17 @@ for (JSONAPIResource *post in posts) {
 
 NSString *json = @"{\"posts\":[{\"id\":1,\"name\":\"A post!\",\"links\":{\"author\":9}},{\"id\":2,\"name\":\"Another post!\",\"links\":{\"author\":10}}],\"linked\":{\"people\":[{\"id\":9,\"name\":\"Josh Holtz\"},{\"id\":10,\"name\":\"Bandit the Cat\"}]}}";
 
+// Links "author" resource to "people" linked resources
 [JSONAPIResourceLinker link:@"author" toLinkedType:@"people"];
+
+//
 [JSONAPIResourceModeler useResource:[PeopleResource class] toLinkedType:@"people"];
 [JSONAPIResourceModeler useResource:[PostResource class] toLinkedType:@"posts"];
 
 // Parses JSON string into JSONAPI object
 JSONAPI *jsonApi = [JSONAPI JSONAPIWithString:json];
 
+// Gets posts from JSONAPI that will be an array of PostResource objects
 NSArray *posts = [jsonApi resourcesForKey:@"posts"];
 
 // Parsing using JSONAPI and modeled resources (PostResource, PeopleResource, CommentResource
