@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "JSONAPI"
-  s.version      = "0.0.1"
+  s.version      = "0.1.0"
   s.summary      = "Model mapper/parser for JSON API"
   s.description  = <<-DESC
                     Maps a JSON response conformed to JSON API spect to objects.
