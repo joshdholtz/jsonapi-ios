@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "JSONAPI"
-  s.version      = "0.1.0"
+  s.version      = "0.0.1"
   s.summary      = "Client parser for JSON API"
   s.description  = <<-DESC
                     Parses a JSON API document for easy use.
