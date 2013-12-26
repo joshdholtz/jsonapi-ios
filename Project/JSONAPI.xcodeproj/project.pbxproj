@@ -8,6 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		033A6C5F18695CD2001CF9FA /* JSONAPIResource.m in Sources */ = {isa = PBXBuildFile; fileRef = 033A6C5E18695CD2001CF9FA /* JSONAPIResource.m */; };
+		0386643D186A0DAD00985CEC /* JSONAPIResourceLinker.m in Sources */ = {isa = PBXBuildFile; fileRef = 0386643C186A0DAD00985CEC /* JSONAPIResourceLinker.m */; };
+		0386644E186A8DA000985CEC /* JSONAPIResourceModeler.m in Sources */ = {isa = PBXBuildFile; fileRef = 0386644D186A8DA000985CEC /* JSONAPIResourceModeler.m */; };
+		03866451186A909200985CEC /* PeopleResource.m in Sources */ = {isa = PBXBuildFile; fileRef = 03866450186A909200985CEC /* PeopleResource.m */; };
+		03866454186A94B700985CEC /* CommentResource.m in Sources */ = {isa = PBXBuildFile; fileRef = 03866453186A94B700985CEC /* CommentResource.m */; };
+		03866457186A94C200985CEC /* PostResource.m in Sources */ = {isa = PBXBuildFile; fileRef = 03866456186A94C200985CEC /* PostResource.m */; };
 		03A055BB1868E038004807F0 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03A055BA1868E038004807F0 /* Foundation.framework */; };
 		03A055BD1868E038004807F0 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03A055BC1868E038004807F0 /* CoreGraphics.framework */; };
 		03A055BF1868E038004807F0 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03A055BE1868E038004807F0 /* UIKit.framework */; };
@@ -39,6 +44,16 @@
 /* Begin PBXFileReference section */
 		033A6C5D18695CD2001CF9FA /* JSONAPIResource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONAPIResource.h; sourceTree = "<group>"; };
 		033A6C5E18695CD2001CF9FA /* JSONAPIResource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSONAPIResource.m; sourceTree = "<group>"; };
+		0386643B186A0DAD00985CEC /* JSONAPIResourceLinker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONAPIResourceLinker.h; sourceTree = "<group>"; };
+		0386643C186A0DAD00985CEC /* JSONAPIResourceLinker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSONAPIResourceLinker.m; sourceTree = "<group>"; };
+		0386644C186A8DA000985CEC /* JSONAPIResourceModeler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONAPIResourceModeler.h; sourceTree = "<group>"; };
+		0386644D186A8DA000985CEC /* JSONAPIResourceModeler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSONAPIResourceModeler.m; sourceTree = "<group>"; };
+		0386644F186A909200985CEC /* PeopleResource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PeopleResource.h; sourceTree = "<group>"; };
+		03866450186A909200985CEC /* PeopleResource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PeopleResource.m; sourceTree = "<group>"; };
+		03866452186A94B700985CEC /* CommentResource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommentResource.h; sourceTree = "<group>"; };
+		03866453186A94B700985CEC /* CommentResource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommentResource.m; sourceTree = "<group>"; };
+		03866455186A94C200985CEC /* PostResource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PostResource.h; sourceTree = "<group>"; };
+		03866456186A94C200985CEC /* PostResource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PostResource.m; sourceTree = "<group>"; };
 		03A055B71868E038004807F0 /* JSONAPI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JSONAPI.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		03A055BA1868E038004807F0 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		03A055BC1868E038004807F0 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -87,6 +102,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0386643E186A791D00985CEC /* ResourceModels */ = {
+			isa = PBXGroup;
+			children = (
+				03866455186A94C200985CEC /* PostResource.h */,
+				03866456186A94C200985CEC /* PostResource.m */,
+				0386644F186A909200985CEC /* PeopleResource.h */,
+				03866450186A909200985CEC /* PeopleResource.m */,
+				03866452186A94B700985CEC /* CommentResource.h */,
+				03866453186A94B700985CEC /* CommentResource.m */,
+			);
+			name = ResourceModels;
+			sourceTree = "<group>";
+		};
 		03A055AE1868E038004807F0 = {
 			isa = PBXGroup;
 			children = (
@@ -127,6 +155,7 @@
 				03A055CC1868E038004807F0 /* Main.storyboard */,
 				03A055CF1868E038004807F0 /* ViewController.h */,
 				03A055D01868E038004807F0 /* ViewController.m */,
+				0386643E186A791D00985CEC /* ResourceModels */,
 				03A055D21868E038004807F0 /* Images.xcassets */,
 				03A055C11868E038004807F0 /* Supporting Files */,
 			);
@@ -169,6 +198,10 @@
 				03A055F41868E08A004807F0 /* JSONAPI.m */,
 				033A6C5D18695CD2001CF9FA /* JSONAPIResource.h */,
 				033A6C5E18695CD2001CF9FA /* JSONAPIResource.m */,
+				0386643B186A0DAD00985CEC /* JSONAPIResourceLinker.h */,
+				0386643C186A0DAD00985CEC /* JSONAPIResourceLinker.m */,
+				0386644C186A8DA000985CEC /* JSONAPIResourceModeler.h */,
+				0386644D186A8DA000985CEC /* JSONAPIResourceModeler.m */,
 			);
 			name = Classes;
 			path = ../Classes;
@@ -272,10 +305,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				03866451186A909200985CEC /* PeopleResource.m in Sources */,
+				03866457186A94C200985CEC /* PostResource.m in Sources */,
 				03A055D11868E038004807F0 /* ViewController.m in Sources */,
+				0386643D186A0DAD00985CEC /* JSONAPIResourceLinker.m in Sources */,
 				03A055F71868E08A004807F0 /* JSONAPI.m in Sources */,
 				033A6C5F18695CD2001CF9FA /* JSONAPIResource.m in Sources */,
+				03866454186A94B700985CEC /* CommentResource.m in Sources */,
 				03A055CB1868E038004807F0 /* AppDelegate.m in Sources */,
+				0386644E186A8DA000985CEC /* JSONAPIResourceModeler.m in Sources */,
 				03A055C71868E038004807F0 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

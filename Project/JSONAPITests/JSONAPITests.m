@@ -19,19 +19,24 @@
 - (void)setUp
 {
     [super setUp];
-    // Put setup code here. This method is called before the invocation of each test method in the class.
+
+    [JSONAPIResourceLinker link:@"author" toLinkedType:@"authors"];
+    [JSONAPIResourceLinker link:@"authors" toLinkedType:@"authors"]; // Don't NEED this but why not be explicit
+    [JSONAPIResourceLinker link:@"person" toLinkedType:@"people"];
+    
 }
 
 - (void)tearDown
 {
-    // Put teardown code here. This method is called after the invocation of each test method in the class.
+    [JSONAPIResourceLinker unlinkAll];
+    
     [super tearDown];
 }
 
 - (void)testMeta
 {
     NSDictionary *meta = @{ @"page_number" : @1, @"number_of_pages" : @5};
-    NSDictionary *linked = @{ @"author" : @[ @{ @"id" : @9, @"name" : @"Josh" } ] };
+    NSDictionary *linked = @{ @"authors" : @[ @{ @"id" : @9, @"name" : @"Josh" } ] };
     NSDictionary *json = @{ @"meta" : meta, @"linked" : linked, @"posts" : @[ @{ @"id" : @1, @"name" : @"Josh is awesome", @"links" : @{ @"author" : @9 } } ] };
     
     JSONAPI *jsonAPI = [[JSONAPI alloc] initWithDictionary:json];
@@ -43,7 +48,7 @@
 - (void)testBadMeta
 {
     NSArray *meta = @[ @{ @"page_number" : @1, @"number_of_pages" : @5} ];
-    NSDictionary *linked = @{ @"author" : @[ @{ @"id" : @9, @"name" : @"Josh" } ] };
+    NSDictionary *linked = @{ @"authors" : @[ @{ @"id" : @9, @"name" : @"Josh" } ] };
     NSDictionary *json = @{ @"meta" : meta, @"linked" : linked, @"posts" : @[ @{ @"id" : @1, @"name" : @"Josh is awesome", @"links" : @{ @"author" : @9 } } ] };
     
     JSONAPI *jsonAPI = [[JSONAPI alloc] initWithDictionary:json];
@@ -54,7 +59,7 @@
 - (void)testLinkedCount
 {
     NSDictionary *meta = @{ @"page_number" : @1, @"number_of_pages" : @5};
-    NSDictionary *linked = @{ @"author" : @[ @{ @"id" : @9, @"name" : @"Josh" } ] };
+    NSDictionary *linked = @{ @"authors" : @[ @{ @"id" : @9, @"name" : @"Josh" } ] };
     NSDictionary *json = @{ @"meta" : meta, @"linked" : linked, @"posts" : @[ @{ @"id" : @1, @"name" : @"Josh is awesome", @"links" : @{ @"author" : @9 } } ] };
     
     JSONAPI *jsonAPI = [[JSONAPI alloc] initWithDictionary:json];
@@ -65,11 +70,11 @@
 - (void)testLinkedResource {
     NSDictionary *meta = @{ @"page_number" : @1, @"number_of_pages" : @5};
     NSDictionary *linkedAuthor9 = @{ @"id" : @9, @"name" : @"Josh" };
-    NSDictionary *linked = @{ @"author" : @[ linkedAuthor9 ] };
+    NSDictionary *linked = @{ @"authors" : @[ linkedAuthor9 ] };
     NSDictionary *json = @{ @"meta" : meta, @"linked" : linked, @"posts" : @[ @{ @"id" : @1, @"name" : @"Josh is awesome", @"links" : @{ @"author" : @9 } } ] };
     
     JSONAPI *jsonAPI = [[JSONAPI alloc] initWithDictionary:json];
-    JSONAPIResource *linkedAuthorResource = [[jsonAPI.linked objectForKey:@"author"] objectAtIndex:0];
+    JSONAPIResource *linkedAuthorResource = [[jsonAPI.linked objectForKey:@"authors"] objectForKey:@9];
     NSAssert([[linkedAuthor9 objectForKey:@"id"] isEqualToNumber:linkedAuthorResource.ID] , @"Author resource ID does not equal %@", [linkedAuthor9 objectForKey:@"id"]);
     NSAssert([[linkedAuthor9 objectForKey:@"name"] isEqualToString:[linkedAuthorResource objectForKey:@"name"]] , @"Author resource name does not equal %@", [linkedAuthor9 objectForKey:@"name"]);
 }
@@ -77,7 +82,7 @@
 - (void)testBadLinked
 {
     NSDictionary *meta = @{ @"page_number" : @1, @"number_of_pages" : @5};
-    NSArray *linked = @[ @{ @"author" : @[ @{ @"id" : @9, @"name" : @"Josh" } ] } ];
+    NSArray *linked = @[ @{ @"authors" : @[ @{ @"id" : @9, @"name" : @"Josh" } ] } ];
     NSDictionary *json = @{ @"meta" : meta, @"linked" : linked, @"posts" : @[ @{ @"id" : @1, @"name" : @"Josh is awesome", @"links" : @{ @"author" : @9 } } ] };
     
     JSONAPI *jsonAPI = [[JSONAPI alloc] initWithDictionary:json];
@@ -88,7 +93,7 @@
 - (void)testResourcesCount {
     
     NSDictionary *meta = @{ @"page_number" : @1, @"number_of_pages" : @5};
-    NSDictionary *linked = @{ @"author" : @[ @{ @"id" : @9, @"name" : @"Josh" } ] };
+    NSDictionary *linked = @{ @"authors" : @[ @{ @"id" : @9, @"name" : @"Josh" } ] };
     NSDictionary *post = @{ @"id" : @1, @"name" : @"Josh is awesome", @"links" : @{ @"author" : @9 } };
     NSArray *posts = @[ post ];
     NSDictionary *json = @{ @"meta" : meta, @"linked" : linked, @"posts" : posts };
@@ -100,7 +105,7 @@
 - (void)testResourcesObject {
     
     NSDictionary *meta = @{ @"page_number" : @1, @"number_of_pages" : @5};
-    NSDictionary *linked = @{ @"author" : @[ @{ @"id" : @9, @"name" : @"Josh" } ] };
+    NSDictionary *linked = @{ @"authors" : @[ @{ @"id" : @9, @"name" : @"Josh" } ] };
     NSDictionary *post = @{ @"id" : @1, @"name" : @"Josh is awesome", @"links" : @{ @"author" : @9 } };
     NSArray *posts = @[ post ];
     NSDictionary *json = @{ @"meta" : meta, @"linked" : linked, @"posts" : posts };
@@ -110,6 +115,83 @@
 
     NSAssert([[post objectForKey:@"id"] isEqualToNumber:resource.ID] , @"Posts ID does not equal %@", [post objectForKey:@"id"]);
     NSAssert([[post objectForKey:@"name"] isEqualToString:[resource objectForKey:@"name"]] , @"Posts name does not equal %@", [post objectForKey:@"name"]);
+}
+
+- (void)testResourceLinkSameTypeName {
+    
+    NSDictionary *meta = @{ @"page_number" : @1, @"number_of_pages" : @5};
+    NSDictionary *linkedAuthor9 = @{ @"id" : @9, @"name" : @"Josh" };
+    NSDictionary *linked = @{ @"authors" : @[ linkedAuthor9 ] };
+    NSDictionary *post = @{ @"id" : @1, @"name" : @"Josh is awesome", @"links" : @{ @"author" : @9 } };
+    NSArray *posts = @[ post ];
+    NSDictionary *json = @{ @"meta" : meta, @"linked" : linked, @"posts" : posts };
+    
+    JSONAPI *jsonAPI = [[JSONAPI alloc] initWithDictionary:json];
+    JSONAPIResource *resource = [jsonAPI resourceForKey:@"posts"];
+    
+    JSONAPIResource *linkedAuthor = [resource linkedResourceForKey:@"author"];
+    
+    NSAssert(linkedAuthor != nil, @"Linked author is nil");
+    NSAssert([[linkedAuthor objectForKey:@"name"] isEqualToString:[linkedAuthor9 objectForKey:@"name"]], @"Linked author's name is not equal to %@", [linkedAuthor9 objectForKey:@"name"]);
+    NSAssert([[linkedAuthor objectForKey:@"name"] isEqualToString:[linkedAuthor9 objectForKey:@"name"]], @"Linked author's name is not equal to %@", [linkedAuthor9 objectForKey:@"name"]);
+    
+}
+
+- (void)testResourceLinksSameTypeName {
+    
+    NSDictionary *meta = @{ @"page_number" : @1, @"number_of_pages" : @5};
+    NSDictionary *linkedAuthor9 = @{ @"id" : @9, @"name" : @"Josh" };
+    NSDictionary *linkedAuthor11 = @{ @"id" : @11, @"name" : @"Bandit" };
+    NSArray *linkedAuthors = @[ linkedAuthor9, linkedAuthor11 ];
+    NSDictionary *linked = @{ @"authors" : linkedAuthors };
+    NSDictionary *post = @{ @"id" : @1, @"name" : @"Josh is awesome", @"links" : @{ @"authors" : @[ @9, @11 ] } };
+    NSArray *posts = @[ post ];
+    NSDictionary *json = @{ @"meta" : meta, @"linked" : linked, @"posts" : posts };
+    
+    JSONAPI *jsonAPI = [[JSONAPI alloc] initWithDictionary:json];
+    JSONAPIResource *resource = [jsonAPI resourceForKey:@"posts"];
+    
+    NSArray *linkedAuthorsResources = [resource linkedResourceForKey:@"authors"];
+    JSONAPIResource *linkedAuthorResource9, *linkedAuthorResource11;
+    for (JSONAPIResource *linkedAuthorResource in linkedAuthorsResources) {
+        if ([linkedAuthorResource.ID isEqualToNumber:[linkedAuthor9 objectForKey:@"id"]] == YES) {
+            linkedAuthorResource9 = linkedAuthorResource;
+        } else if ([linkedAuthorResource.ID isEqualToNumber:[linkedAuthor11 objectForKey:@"id"]] == YES) {
+            linkedAuthorResource11 = linkedAuthorResource;
+        }
+    }
+    
+    NSAssert(linkedAuthorsResources.count == linkedAuthors.count, @"Linked author resource count is not %d", linkedAuthors.count);
+    
+    NSAssert([[linkedAuthorResource9 objectForKey:@"name"] isEqualToString:[linkedAuthor9 objectForKey:@"name"]], @"Linked author's 9 name is not equal to %@", [linkedAuthor9 objectForKey:@"name"]);
+    NSAssert([[linkedAuthorResource9 objectForKey:@"name"] isEqualToString:[linkedAuthor9 objectForKey:@"name"]], @"Linked author's 9 name is not equal to %@", [linkedAuthor9 objectForKey:@"name"]);
+    
+    NSAssert([[linkedAuthorResource11 objectForKey:@"name"] isEqualToString:[linkedAuthor11 objectForKey:@"name"]], @"Linked author's 11 name is not equal to %@", [linkedAuthor9 objectForKey:@"name"]);
+    NSAssert([[linkedAuthorResource11 objectForKey:@"name"] isEqualToString:[linkedAuthor11 objectForKey:@"name"]], @"Linked author's 11 name is not equal to %@", [linkedAuthor9 objectForKey:@"name"]);
+    
+}
+
+- (void)testResourceLinksRealDifferentTypeName {
+    
+    NSDictionary *meta = @{ @"page_number" : @1, @"number_of_pages" : @5};
+    NSDictionary *linkedPeople9 = @{ @"id" : @9, @"name" : @"Josh" };
+    NSDictionary *linkedPeople11 = @{ @"id" : @11, @"name" : @"Bandit" };
+    NSArray *linkedPeople = @[ linkedPeople9, linkedPeople11 ];
+    NSDictionary *linked = @{ @"people" : linkedPeople };
+    NSDictionary *post = @{ @"id" : @1, @"name" : @"Josh is awesome", @"links" : @{ @"person" : @9 } };
+    NSArray *posts = @[ post ];
+    NSDictionary *json = @{ @"meta" : meta, @"linked" : linked, @"posts" : posts };
+    
+    JSONAPI *jsonAPI = [[JSONAPI alloc] initWithDictionary:json];
+    JSONAPIResource *resource = [jsonAPI resourceForKey:@"posts"];
+    
+    JSONAPIResource *linkedPersonResource = [resource linkedResourceForKey:@"person"];
+    
+    NSAssert(linkedPersonResource != nil, @"Linked person is nil");
+    NSAssert([[linkedPersonResource objectForKey:@"name"] isEqualToString:[linkedPeople9 objectForKey:@"name"]], @"Linked person's 9 name is not equal to %@", [linkedPeople11 objectForKey:@"name"]);
+    NSAssert([[linkedPersonResource objectForKey:@"name"] isEqualToString:[linkedPeople9 objectForKey:@"name"]], @"Linked person's 9 name is not equal to %@", [linkedPeople11 objectForKey:@"name"]);
+
+    
 }
 
 @end

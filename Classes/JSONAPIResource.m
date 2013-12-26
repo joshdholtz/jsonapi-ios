@@ -8,41 +8,71 @@
 
 #import "JSONAPIResource.h"
 
+#import "JSONAPIResourceLinker.h"
+
+#pragma mark - JSONAPIResource
+
 @interface JSONAPIResource()
 
 @property (nonatomic, strong) NSDictionary *__dictionary;
+@property (nonatomic, strong) NSMutableDictionary *__resourceLinks;
 
 @end
 
 @implementation JSONAPIResource
 
-+ (NSArray*)jsonAPIResources:(NSArray*)array {
-    return [JSONAPIResource jsonAPIResources:array withClass:[self class]];
++ (NSArray*)jsonAPIResources:(NSArray*)array withLinked:(NSDictionary*)linked {
+    return [JSONAPIResource jsonAPIResources:array withLinked:linked withClass:[self class]];
 }
 
-+ (NSArray*)jsonAPIResources:(NSArray*)array withClass:(Class)resourceObjectClass {
++ (NSArray*)jsonAPIResources:(NSArray*)array withLinked:(NSDictionary*)linked withClass:(Class)resourceObjectClass {
+    if (resourceObjectClass == nil) {
+        resourceObjectClass = [self class];
+    }
+    
     NSMutableArray *mutableArray = [[NSMutableArray alloc] init];
     for (NSDictionary *dict in array) {
-        [mutableArray addObject:[[resourceObjectClass alloc] initWithDictionary:dict]];
+        [mutableArray addObject:[[resourceObjectClass alloc] initWithDictionary:dict withLinked:linked]];
     }
     
     return mutableArray;
 }
 
-+ (id)jsonAPIResource:(NSDictionary*)dictionary {
-    return [[[self class] alloc] initWithDictionary:dictionary];
++ (id)jsonAPIResource:(NSDictionary*)dictionary withLinked:(NSDictionary*)linked {
+    return [JSONAPIResource jsonAPIResource:dictionary withLinked:linked withClass:[self class]];
 }
 
-- (id)initWithDictionary:(NSDictionary*)dict {
++ (id)jsonAPIResource:(NSDictionary*)dictionary withLinked:(NSDictionary*)linked withClass:(Class)resourceObjectClass {
+    if (resourceObjectClass == nil) {
+        resourceObjectClass = [self class];
+    }
+    
+    return [[resourceObjectClass alloc] initWithDictionary:dictionary withLinked:linked];
+}
+
+- (id)init {
+    self = [super init];
+    if (self) {
+        self.__resourceLinks = [NSMutableDictionary dictionary];
+    }
+    return self;
+}
+
+- (id)initWithDictionary:(NSDictionary*)dict withLinked:(NSDictionary*)linked {
     self = [self init];
     if (self) {
         [self setWithDictionary:dict];
+        [self setWithLinks:linked];
     }
     return self;
 }
 
 - (id)objectForKey:(NSString*)key {
     return [self.__dictionary objectForKey:key];
+}
+
+- (id)linkedResourceForKey:(NSString *)key {
+    return [self.__resourceLinks objectForKey:key];
 }
 
 - (NSDictionary *)mapKeysToProperties {
@@ -108,6 +138,36 @@
             
         }
         
+    }
+}
+
+- (void)setWithLinks:(NSDictionary*)linked {
+    // Loops through links of resources
+    for (NSString *linkTypeUnmapped in self.links.allKeys) {
+        
+        NSString *linkType = [JSONAPIResourceLinker linkedType:linkTypeUnmapped];
+        if (linkType == nil) {
+            linkType = linkTypeUnmapped;
+        }
+        
+        // Gets linked objects for the resource
+        id linksTo = [self.links objectForKey:linkTypeUnmapped];
+        if ([linksTo isKindOfClass:[NSNumber class]] == YES) {
+            JSONAPIResource *linkedResource = [[linked objectForKey:linkType] objectForKey:linksTo];
+            
+            [self.__resourceLinks setObject:linkedResource forKey:linkTypeUnmapped];
+            
+        } else if ([linksTo isKindOfClass:[NSArray class]] == YES) {
+            NSMutableArray *linkedResources = [NSMutableArray array];
+            [self.__resourceLinks setObject:linkedResources forKey:linkTypeUnmapped];
+            for (NSNumber *linkedId in linksTo) {
+                JSONAPIResource *linkedResource = [[linked objectForKey:linkType] objectForKey:linkedId];
+                if (linkedResource != nil) {
+                    [linkedResources addObject:linkedResource];
+                }
+            }
+            
+        }
     }
 }
 
