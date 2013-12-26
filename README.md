@@ -1,6 +1,6 @@
 # JSONAPI - iOS
 
-A parser for [JSON API](http://jsonapi.org) documents.
+A library for loading data from a [JSON API](http://jsonapi.org) datasource. Parses JSON API data into models with support for auto-linking of resources and custom model classes
 
 ## Installation
 
