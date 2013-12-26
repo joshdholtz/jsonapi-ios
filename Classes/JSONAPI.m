@@ -58,7 +58,7 @@
     return [_dictionary objectForKey:key];
 }
 
-- (JSONAPIResource*)resourceForKey:(NSString*)key {
+- (id)resourceForKey:(NSString*)key {
     JSONAPIResource *resource;
     
     NSArray *resources = [self resourcesForKey:key];

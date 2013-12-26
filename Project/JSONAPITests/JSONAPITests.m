@@ -10,6 +10,10 @@
 
 #import "JSONAPI.h"
 
+#import "CommentResource.h"
+#import "PeopleResource.h"
+#import "PostResource.h"
+
 @interface JSONAPITests : XCTestCase
 
 @end
@@ -24,11 +28,17 @@
     [JSONAPIResourceLinker link:@"authors" toLinkedType:@"authors"]; // Don't NEED this but why not be explicit
     [JSONAPIResourceLinker link:@"person" toLinkedType:@"people"];
     
+    [JSONAPIResourceModeler useResource:[CommentResource class] toLinkedType:@"comment"];
+    [JSONAPIResourceModeler useResource:[PeopleResource class] toLinkedType:@"authors"];
+    [JSONAPIResourceModeler useResource:[PeopleResource class] toLinkedType:@"people"];
+    [JSONAPIResourceModeler useResource:[PostResource class] toLinkedType:@"posts"];
+    
 }
 
 - (void)tearDown
 {
     [JSONAPIResourceLinker unlinkAll];
+    [JSONAPIResourceModeler unmodelAll];
     
     [super tearDown];
 }
@@ -192,6 +202,25 @@
     NSAssert([[linkedPersonResource objectForKey:@"name"] isEqualToString:[linkedPeople9 objectForKey:@"name"]], @"Linked person's 9 name is not equal to %@", [linkedPeople11 objectForKey:@"name"]);
 
     
+}
+
+- (void)testResourceModels {
+    NSDictionary *meta = @{ @"page_number" : @1, @"number_of_pages" : @5};
+    NSDictionary *linkedAuthor9 = @{ @"id" : @9, @"name" : @"Josh" };
+    NSDictionary *linkedAuthor11 = @{ @"id" : @11, @"name" : @"Bandit" };
+    NSArray *linkedAuthors = @[ linkedAuthor9, linkedAuthor11 ];
+    NSDictionary *linked = @{ @"authors" : linkedAuthors };
+    NSDictionary *post = @{ @"id" : @1, @"name" : @"Josh is awesome", @"links" : @{ @"author" : @9 } };
+    NSArray *posts = @[ post ];
+    NSDictionary *json = @{ @"meta" : meta, @"linked" : linked, @"posts" : posts };
+    
+    JSONAPI *jsonAPI = [[JSONAPI alloc] initWithDictionary:json];
+    PostResource *postResource = [jsonAPI resourceForKey:@"posts"];
+    
+    NSAssert([postResource class] == [PostResource class], @"Post resource is not of type PostResource, but %@", [postResource class]);
+    NSAssert([postResource.author class] == [PeopleResource class], @"Post resource's author is not of type PeopleResource, but %@", [postResource.author class]);
+    NSAssert([postResource.name isEqualToString:[post objectForKey:@"name"]], @"Post name is not equal to %@", [post objectForKey:@"name"]);
+    NSAssert([postResource.author.name isEqualToString:[linkedAuthor9 objectForKey:@"name"]], @"Author name is not equal to %@", [post objectForKey:@"name"]);
 }
 
 @end

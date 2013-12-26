@@ -25,7 +25,7 @@
 - (id)initWithDictionary:(NSDictionary*)dictionary;
 
 - (id)objectForKey:(NSString*)key;
-- (JSONAPIResource*)resourceForKey:(NSString*)key;
+- (id)resourceForKey:(NSString*)key;
 - (NSArray*)resourcesForKey:(NSString*)key;
 
 @end

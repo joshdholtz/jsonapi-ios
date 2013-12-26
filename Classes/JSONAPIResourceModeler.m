@@ -36,4 +36,8 @@
     return [[JSONAPIResourceModeler sharedModeler].resourceToLinkedType valueForKey:linkedType];
 }
 
++ (void)unmodelAll {
+    [[JSONAPIResourceModeler sharedModeler].resourceToLinkedType removeAllObjects];
+}
+
 @end

@@ -15,4 +15,6 @@
 + (void)useResource:(Class)jsonApiResource toLinkedType:(NSString*)linkedType;
 + (Class)resourceForLinkedType:(NSString*)linkedType;
 
++ (void)unmodelAll;
+
 @end
