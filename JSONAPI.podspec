@@ -1,12 +1,12 @@
 Pod::Spec.new do |s|
   s.name         = "JSONAPI"
   s.version      = "0.1.0"
-  s.summary      = "Model mapper/parser for JSON API"
+  s.summary      = "Client parser for JSON API"
   s.description  = <<-DESC
-                    Maps a JSON response conformed to JSON API spect to objects.
+                    Parses a JSON API document for easy use.
                    DESC
-  s.homepage     = "http://joshholtz.com"
-  s.screenshots  = "www.example.com/screenshots_1", "www.example.com/screenshots_2"
+  s.homepage     = "https://github.com/joshdholtz/jsonapi-ios.git"
+  #s.screenshots  = "www.example.com/screenshots_1", "www.example.com/screenshots_2"
   s.license      = 'MIT'
   s.author       = { "Josh Holtz" => "me@joshholtz.com" }
   s.source       = { :git => "https://github.com/joshdholtz/jsonapi-ios.git", :tag => s.version.to_s }
