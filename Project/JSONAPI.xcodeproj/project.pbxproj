@@ -13,6 +13,7 @@
 		03866451186A909200985CEC /* PeopleResource.m in Sources */ = {isa = PBXBuildFile; fileRef = 03866450186A909200985CEC /* PeopleResource.m */; };
 		03866454186A94B700985CEC /* CommentResource.m in Sources */ = {isa = PBXBuildFile; fileRef = 03866453186A94B700985CEC /* CommentResource.m */; };
 		03866457186A94C200985CEC /* PostResource.m in Sources */ = {isa = PBXBuildFile; fileRef = 03866456186A94C200985CEC /* PostResource.m */; };
+		03866459186CCE6600985CEC /* CHANGELOG.md in Resources */ = {isa = PBXBuildFile; fileRef = 03866458186CCE6600985CEC /* CHANGELOG.md */; };
 		03A055BB1868E038004807F0 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03A055BA1868E038004807F0 /* Foundation.framework */; };
 		03A055BD1868E038004807F0 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03A055BC1868E038004807F0 /* CoreGraphics.framework */; };
 		03A055BF1868E038004807F0 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03A055BE1868E038004807F0 /* UIKit.framework */; };
@@ -54,6 +55,7 @@
 		03866453186A94B700985CEC /* CommentResource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommentResource.m; sourceTree = "<group>"; };
 		03866455186A94C200985CEC /* PostResource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PostResource.h; sourceTree = "<group>"; };
 		03866456186A94C200985CEC /* PostResource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PostResource.m; sourceTree = "<group>"; };
+		03866458186CCE6600985CEC /* CHANGELOG.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = CHANGELOG.md; path = ../CHANGELOG.md; sourceTree = "<group>"; };
 		03A055B71868E038004807F0 /* JSONAPI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JSONAPI.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		03A055BA1868E038004807F0 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		03A055BC1868E038004807F0 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -118,6 +120,7 @@
 		03A055AE1868E038004807F0 = {
 			isa = PBXGroup;
 			children = (
+				03866458186CCE6600985CEC /* CHANGELOG.md */,
 				03A055EF1868E08A004807F0 /* Classes */,
 				03A055C01868E038004807F0 /* JSONAPI */,
 				03A055DF1868E038004807F0 /* JSONAPITests */,
@@ -284,6 +287,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				03A055D31868E038004807F0 /* Images.xcassets in Resources */,
+				03866459186CCE6600985CEC /* CHANGELOG.md in Resources */,
 				03A055C51868E038004807F0 /* InfoPlist.strings in Resources */,
 				03A055CE1868E038004807F0 /* Main.storyboard in Resources */,
 				03A055F81868E08A004807F0 /* JSONAPI.podspec in Resources */,
