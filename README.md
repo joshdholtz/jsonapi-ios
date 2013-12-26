@@ -16,6 +16,47 @@ it simply add the following line to your Podfile:
 
 ## Usage
 
+### JSONAPI
+`JSONAPI` parses and validates a JSON API document into a usable object. This object holds the response as an NSDictionary but provides methods to accomdate the JSON API format such as `meta`, `linked`, and `(NSArray*)resourcesForKey:(NSString*)key`.
+
+### JSONAPIResource
+`JSONAPIResource` is an object that holds data for each resource in a JSON API document. This objects holds the "id", "href", and "links" as properties but also the rest of the object as an NSDictionary that can be accessed through `(id)objectForKey:(NSString*)key`. There is also a method for retrieving linked resources from the JSON API document by using `(id)linkedResourceForKey:(NSString*)key`
+
+### JSONAPIResourceLinker
+`JSONAPIResourceLinker` is used for configuring the type of 'links' resources to 'linked' resources.
+
+#### Example
+The "author" defined in "links" need to be mapped to the "people" type in "linked"
+
+````
+{
+    "posts":[
+        {
+            "id":1,
+            "name":"A post!",
+            "links":{
+                "author":9
+            }
+        }
+    ],
+    "linked":{
+        "people":[
+            {
+                "id":9,
+                "name":"Josh Holtz"
+            }
+        ]
+    }
+}
+
+````
+
+### JSONAPIResourceModeler
+
+`JSONAPIResourceModeler` is used for configuring what type of JSONAPIResource subclass that resource types are created into.
+
+## Examples
+
 ### Parsing - Basic
 
 ```` objc
@@ -59,10 +100,82 @@ for (JSONAPIResource *post in posts) {
 
 ````
 
+### Parsing - Using linked resources and subclassed JSONAPIResource classes
+
+```` objc
+
+NSString *json = @"{\"posts\":[{\"id\":1,\"name\":\"A post!\",\"links\":{\"author\":9}},{\"id\":2,\"name\":\"Another post!\",\"links\":{\"author\":10}}],\"linked\":{\"people\":[{\"id\":9,\"name\":\"Josh Holtz\"},{\"id\":10,\"name\":\"Bandit the Cat\"}]}}";
+
+[JSONAPIResourceLinker link:@"author" toLinkedType:@"people"];
+[JSONAPIResourceModeler useResource:[PeopleResource class] toLinkedType:@"people"];
+[JSONAPIResourceModeler useResource:[PostResource class] toLinkedType:@"posts"];
+
+// Parses JSON string into JSONAPI object
+JSONAPI *jsonApi = [JSONAPI JSONAPIWithString:json];
+
+NSArray *posts = [jsonApi resourcesForKey:@"posts"];
+
+// Parsing using JSONAPI and modeled resources (PostResource, PeopleResource, CommentResource
+for (PostResource *post in posts) {
+    
+    PeopleResource *author = post.author;
+    NSLog(@"\"%@\" by %@", post.name, author.name);
+}
+
+````
+
+#### PostResource.h, PostResource.m
+
+```` objc
+
+@interface PostResource : JSONAPIResource
+
+- (PeopleResource*)author;
+- (NSString*)name;
+
+@end
+
+@implementation PostResource
+
+- (PeopleResource *)author {
+    return [self linkedResourceForKey:@"author"];
+}
+
+- (NSArray *)comments {
+    return [self linkedResourceForKey:@"comments"];
+}
+
+- (NSString *)name {
+    return [self objectForKey:@"name"];
+}
+
+@end
+
+````
+
+#### PeopleResource.h, PeopleResource.m
+
+```` objc
+
+@interface CommentResource : JSONAPIResource
+
+- (NSString*)text;
+
+@end
+
+@implementation CommentResource
+
+- (NSString *)text {
+    return [self objectForKey:@"text"];
+}
+
+@end
+
+````
+
 ## Author
 
-Josh Holtz, me@joshholtz.com
-@joshdholtz
+Josh Holtz, me@joshholtz.com, @joshdholtz
 
 ## License
 
