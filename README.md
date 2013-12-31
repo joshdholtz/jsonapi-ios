@@ -179,7 +179,7 @@ for (PostResource *post in posts) {
 
 ## Author
 
-Josh Holtz, me@joshholtz.com, @joshdholtz
+Josh Holtz, me@joshholtz.com, [@joshdholtz](https://twitter.com/joshdholtz)
 
 ## License
 
