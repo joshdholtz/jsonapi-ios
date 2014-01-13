@@ -190,3 +190,4 @@ Josh Holtz, me@joshholtz.com, [@joshdholtz](https://twitter.com/joshdholtz)
 
 JSONAPI is available under the MIT license. See the LICENSE file for more info.
 
+
