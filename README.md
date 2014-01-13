@@ -2,6 +2,11 @@
 
 A library for loading data from a [JSON API](http://jsonapi.org) datasource. Parses JSON API data into models with support for auto-linking of resources and custom model classes.
 
+### Features
+- Parses datasource into manageable objects of `JSONAPIResource`
+- Auto-links resources with custom link mapping definitions using `JSONAPIResourceLinker` (ex: linke 'book' to 'books', link 'person' to 'people')
+- Allows resource types to be created into custom subclasses models of `JSONAPIResource` using `JSONAPIResourceModeler`
+
 ## Installation
 
 ### Drop-in Classes
@@ -12,7 +17,7 @@ Clone the repository and drop in the .h and .m files from the "Classes" director
 JSONAPI is available through [CocoaPods](http://cocoapods.org), to install
 it simply add the following line to your Podfile:
 
-    pod 'JSONAPI', '~> 0.1.0'
+    pod 'JSONAPI', '~> 0.1.1'
 
 ## Usage
 
