@@ -6,8 +6,8 @@ A library for loading data from a [JSON API](http://jsonapi.org) datasource. Par
 
 ### Features
 - Parses datasource into manageable objects of `JSONAPIResource`
-- Auto-links resources with custom link mapping definitions using `JSONAPIResourceLinker` (ex: linke 'book' to 'books', link 'person' to 'people')
-- Allows resource types to be created into custom subclasses models of `JSONAPIResource` using `JSONAPIResourceModeler`
+- Auto-links resources with custom link mapping definitions using `JSONAPIResourceLinker` (ex: link 'book' to 'books', link 'person' to 'people')
+- Allows resource types to be created into subclasses of `JSONAPIResource` using `JSONAPIResourceModeler`
 
 ## Installation
 
