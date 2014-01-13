@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "JSONAPI"
-  s.version      = "0.1.0"
+  s.version      = "0.1.1"
   s.summary      = "A library for loading data from a JSON API datasource."
   s.description  = <<-DESC
                     A library for loading data from a JSON API datasource. Parses JSON API data into models with support for auto-linking of resources and custom model classes.
