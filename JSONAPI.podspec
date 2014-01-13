@@ -1,9 +1,9 @@
 Pod::Spec.new do |s|
   s.name         = "JSONAPI"
   s.version      = "0.1.0"
-  s.summary      = "Client parser for JSON API"
+  s.summary      = "A library for loading data from a JSON API datasource."
   s.description  = <<-DESC
-                    Parses a JSON API document for easy use.
+                    A library for loading data from a JSON API datasource. Parses JSON API data into models with support for auto-linking of resources and custom model classes.
                    DESC
   s.homepage     = "https://github.com/joshdholtz/jsonapi-ios.git"
   #s.screenshots  = "www.example.com/screenshots_1", "www.example.com/screenshots_2"
