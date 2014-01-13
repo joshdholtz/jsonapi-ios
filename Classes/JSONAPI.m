@@ -101,6 +101,8 @@
     NSDictionary *rawLinked = [dictionary objectForKey:@"linked"];
     if ([rawLinked isKindOfClass:[NSDictionary class]] == YES) {
         
+        NSMutableArray *linkedToLinkWithLinked = [NSMutableArray array];
+        
         // Loops through linked arrays
         for (NSString *key in rawLinked.allKeys) {
             NSArray *value = [rawLinked objectForKey:key];
@@ -111,6 +113,8 @@
                     Class c = [JSONAPIResourceModeler resourceForLinkedType:[JSONAPIResourceLinker linkedType:key]];
                     JSONAPIResource *resource = [JSONAPIResource jsonAPIResource:resourceDictionary withLinked:nil withClass:c];
                     [resources setObject:resource forKey:resource.ID];
+                    
+                    [linkedToLinkWithLinked addObject:resource];
                 }
                 [creatingLinked setObject:resources forKey:key];
                 
@@ -118,7 +122,13 @@
             
         }
         
+        // Linked the linked
+        for (JSONAPIResource *resource in linkedToLinkWithLinked) {
+            [resource linkLinks:creatingLinked];
+        }
+        
     }
+    
     _linked = creatingLinked;
 }
 

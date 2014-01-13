@@ -23,4 +23,6 @@
 - (id)objectForKey:(NSString*)key;
 - (id)linkedResourceForKey:(NSString*)key;
 
+- (void)linkLinks:(NSDictionary*)linked;
+
 @end
