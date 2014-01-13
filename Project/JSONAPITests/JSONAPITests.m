@@ -27,6 +27,8 @@
     [JSONAPIResourceLinker link:@"author" toLinkedType:@"authors"];
     [JSONAPIResourceLinker link:@"authors" toLinkedType:@"authors"]; // Don't NEED this but why not be explicit
     [JSONAPIResourceLinker link:@"person" toLinkedType:@"people"];
+    [JSONAPIResourceLinker link:@"chapter" toLinkedType:@"chapters"];
+    [JSONAPIResourceLinker link:@"book" toLinkedType:@"books"];
     
     [JSONAPIResourceModeler useResource:[CommentResource class] toLinkedType:@"comment"];
     [JSONAPIResourceModeler useResource:[PeopleResource class] toLinkedType:@"authors"];
@@ -221,6 +223,28 @@
     XCTAssertEqual([postResource.author class], [PeopleResource class], @"Post resource's author is not of type PeopleResource, but %@", [postResource.author class]);
     XCTAssertEqualObjects(postResource.name, [post objectForKey:@"name"], @"Post name is not equal to %@", [post objectForKey:@"name"]);
     XCTAssertEqualObjects(postResource.author.name, [linkedAuthor9 objectForKey:@"name"], @"Author name is not equal to %@", [post objectForKey:@"name"]);
+}
+
+- (void)testLinksInLinked {
+    NSDictionary *meta = @{};
+    NSDictionary *linkedBook9 = @{ @"id" : @9, @"name" : @"A Book That's A Book", @"links" : @{ @"author" : @11 } };
+    NSArray *linkedBooks = @[ linkedBook9 ];
+    NSDictionary *linkedAuthor11 = @{ @"id" : @11, @"name" : @"Bandit"};
+    NSArray *linkedAuthors = @[ linkedAuthor11 ];
+    NSDictionary *linked = @{ @"authors" : linkedAuthors, @"books" : linkedBooks};
+    NSDictionary *chapter = @{ @"id" : @1, @"name" : @"Chapter 1: And It Begins", @"links" : @{ @"book" : @9 } };
+    NSArray *chapters = @[ chapter ];
+    NSDictionary *json = @{ @"meta" : meta, @"linked" : linked, @"chapters" : chapters };
+    
+    JSONAPI *jsonAPI = [[JSONAPI alloc] initWithDictionary:json];
+    
+    JSONAPIResource *chapterResource = [jsonAPI resourceForKey:@"chapters"];
+    JSONAPIResource *bookResource = [chapterResource linkedResourceForKey:@"book"];
+    JSONAPIResource *authorResource = [bookResource linkedResourceForKey:@"author"];
+    
+    XCTAssertEqualObjects([chapterResource objectForKey:@"name"], [chapter objectForKey:@"name"], @"Chapter name should equal %@", [chapter objectForKey:@"name"]);
+    XCTAssertEqualObjects([bookResource objectForKey:@"name"], [linkedBook9 objectForKey:@"name"], @"Book name should equal %@", [chapter objectForKey:@"name"]);
+    XCTAssertEqualObjects([authorResource objectForKey:@"name"], [linkedAuthor11 objectForKey:@"name"], @"Author name should equal %@", [chapter objectForKey:@"name"]);
 }
 
 @end
