@@ -1,5 +1,5 @@
 language: objective-c
 before_install:
-	- brew update
-	- brew install xctool
+    - brew update
+    - brew install xctool
 script: xctool -project Project/JSONAPI.xcodeproj -scheme JSONAPI -sdk iphonesimulator test
