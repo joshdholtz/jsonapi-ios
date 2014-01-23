@@ -20,6 +20,8 @@
 + (id)jsonAPIResource:(NSDictionary*)dictionary withLinked:(NSDictionary*)linked;
 + (id)jsonAPIResource:(NSDictionary*)dictionary withLinked:(NSDictionary*)linked withClass:(Class)resourceObjectClass;
 
+- (id)initWithDictionary:(NSDictionary*)dict withLinked:(NSDictionary*)linked;
+
 - (id)objectForKey:(NSString*)key;
 - (id)linkedResourceForKey:(NSString*)key;
 
