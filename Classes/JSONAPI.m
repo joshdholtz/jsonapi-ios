@@ -112,9 +112,10 @@
                 for (NSDictionary *resourceDictionary in value) {
                     Class c = [JSONAPIResourceModeler resourceForLinkedType:[JSONAPIResourceLinker linkedType:key]];
                     JSONAPIResource *resource = [JSONAPIResource jsonAPIResource:resourceDictionary withLinked:nil withClass:c];
-                    [resources setObject:resource forKey:resource.ID];
-                    
-                    [linkedToLinkWithLinked addObject:resource];
+                    if (resource.ID != nil) {
+                        [resources setObject:resource forKey:resource.ID];
+                        [linkedToLinkWithLinked addObject:resource];
+                    }
                 }
                 [creatingLinked setObject:resources forKey:key];
                 
