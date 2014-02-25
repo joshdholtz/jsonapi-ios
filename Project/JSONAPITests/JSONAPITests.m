@@ -219,8 +219,8 @@
     JSONAPI *jsonAPI = [[JSONAPI alloc] initWithDictionary:json];
     PostResource *postResource = [jsonAPI resourceForKey:@"posts"];
     
-    XCTAssertEqual([postResource class], [PostResource class], @"Post resource is not of type PostResource, but %@", [postResource class]);
-    XCTAssertEqual([postResource.author class], [PeopleResource class], @"Post resource's author is not of type PeopleResource, but %@", [postResource.author class]);
+    XCTAssert([postResource class] == [PostResource class], @"Post resource is not of type PostResource, but %@", [postResource class]);
+    XCTAssert([postResource.author class] == [PeopleResource class], @"Post resource's author is not of type PeopleResource, but %@", [postResource.author class]);
     XCTAssertEqualObjects(postResource.name, [post objectForKey:@"name"], @"Post name is not equal to %@", [post objectForKey:@"name"]);
     XCTAssertEqualObjects(postResource.author.name, [linkedAuthor9 objectForKey:@"name"], @"Author name is not equal to %@", [post objectForKey:@"name"]);
 }
@@ -260,8 +260,8 @@
     JSONAPI *jsonAPI = [[JSONAPI alloc] initWithDictionary:json];
     PostResource *postResource = [jsonAPI resourceForKey:@"posts"];
     
-    XCTAssertEqual([postResource class], [PostResource class], @"Post resource is not of type PostResource, but %@", [postResource class]);
-    XCTAssertEqual([postResource.mapAuthor class], [PeopleResource class], @"Post resource's author is not of type PeopleResource, but %@", [postResource.mapAuthor class]);
+    XCTAssert([postResource class] == [PostResource class], @"Post resource is not of type PostResource, but %@", [postResource class]);
+    XCTAssert([postResource.mapAuthor class] == [PeopleResource class], @"Post resource's author is not of type PeopleResource, but %@", [postResource.mapAuthor class]);
     XCTAssertEqualObjects(postResource.mapName, [post objectForKey:@"name"], @"Post name is not equal to %@", [post objectForKey:@"name"]);
     XCTAssertEqualObjects(postResource.author.name, [linkedAuthor9 objectForKey:@"name"], @"Author name is not equal to %@", [post objectForKey:@"name"]);
 }

@@ -27,4 +27,6 @@
 
 - (void)linkLinks:(NSDictionary*)linked;
 
+- (NSDictionary *)mapKeysToProperties;
+
 @end
