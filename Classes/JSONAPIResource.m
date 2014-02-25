@@ -155,6 +155,7 @@
         // Gets linked objects for the resource
         id linksTo = [self.links objectForKey:linkTypeUnmapped];
         if ([linksTo isKindOfClass:[NSNumber class]] == YES || [linksTo isKindOfClass:[NSString class]] == YES) {
+            
             JSONAPIResource *linkedResource = [[linked objectForKey:linkType] objectForKey:linksTo];
             
             if (linkedResource != nil) {
@@ -164,7 +165,7 @@
         } else if ([linksTo isKindOfClass:[NSArray class]] == YES) {
             NSMutableArray *linkedResources = [NSMutableArray array];
             [self.__resourceLinks setObject:linkedResources forKey:linkTypeUnmapped];
-            for (NSNumber *linkedId in linksTo) {
+            for (id linkedId in linksTo) {
                 JSONAPIResource *linkedResource = [[linked objectForKey:linkType] objectForKey:linkedId];
                 if (linkedResource != nil) {
                     [linkedResources addObject:linkedResource];

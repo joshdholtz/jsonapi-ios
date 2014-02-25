@@ -24,6 +24,8 @@
 {
     [super viewDidLoad];
 
+    return;
+    
     // Setup
     [JSONAPIResourceLinker link:@"author" toLinkedType:@"people"];
     [JSONAPIResourceModeler useResource:[CommentResource class] toLinkedType:@"comments"];
