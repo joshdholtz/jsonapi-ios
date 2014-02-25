@@ -63,6 +63,27 @@
     if (self) {
         [self setWithDictionary:dict];
         [self linkLinks:linked];
+        
+        
+        for (NSString *key in [self mapKeysToProperties]) {
+            if ([key hasPrefix:@"links."] == YES) {
+                
+                NSString *propertyName = [[self mapKeysToProperties] objectForKey:key];
+                NSString *linkedResource = [key stringByReplacingOccurrencesOfString:@"links." withString:@""];
+                
+                id resource = [self linkedResourceForKey:linkedResource];
+                if (resource != nil) {
+                    @try {
+                        [self setValue:resource forKey:propertyName];
+                    }
+                    @catch (NSException *exception) {
+                        NSLog(@"JSONAPIResource Warning - %@", [exception description]);
+                    }
+                }
+                
+            }
+        }
+        
     }
     return self;
 }

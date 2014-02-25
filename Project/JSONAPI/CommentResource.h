@@ -10,6 +10,8 @@
 
 @interface CommentResource : JSONAPIResource
 
+@property (nonatomic, strong) NSString *mapText;
+
 - (NSString*)text;
 
 @end

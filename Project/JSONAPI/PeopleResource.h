@@ -10,6 +10,8 @@
 
 @interface PeopleResource : JSONAPIResource
 
+@property (nonatomic, strong) NSString *mapName;
+
 - (NSString*)name;
 
 @end

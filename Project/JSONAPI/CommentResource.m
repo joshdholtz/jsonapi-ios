@@ -14,4 +14,10 @@
     return [self objectForKey:@"text"];
 }
 
+- (NSDictionary *)mapKeysToProperties {
+    return @{
+             @"text" : @"mapText"
+             };
+}
+
 @end
