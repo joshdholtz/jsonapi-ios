@@ -129,6 +129,53 @@
     XCTAssertEqualObjects([post objectForKey:@"name"], [resource objectForKey:@"name"], @"Posts name does not equal %@", [post objectForKey:@"name"]);
 }
 
+- (void)testResourcesObjectWithStringId {
+    
+    NSDictionary *meta = @{ @"page_number" : @1, @"number_of_pages" : @5};
+    NSDictionary *linked = @{ @"authors" : @[ @{ @"id" : @"9", @"name" : @"Josh" } ] };
+    NSDictionary *post = @{ @"id" : @1, @"name" : @"Josh is awesome", @"links" : @{ @"author" : @"9" } };
+    NSArray *posts = @[ post ];
+    NSDictionary *json = @{ @"meta" : meta, @"linked" : linked, @"posts" : posts };
+    
+    JSONAPI *jsonAPI = [[JSONAPI alloc] initWithDictionary:json];
+    JSONAPIResource *resource = [jsonAPI resourceForKey:@"posts"];
+    
+    XCTAssertEqualObjects([post objectForKey:@"id"], resource.ID, @"Posts ID does not equal %@", [post objectForKey:@"id"]);
+    XCTAssertEqualObjects([post objectForKey:@"name"], [resource objectForKey:@"name"], @"Posts name does not equal %@", [post objectForKey:@"name"]);
+}
+
+- (void)testResourceObjectsWithArrayOfStringIds {
+    
+    NSDictionary *meta = @{ @"page_number" : @1, @"number_of_pages" : @5};
+    NSDictionary *linkedAuthor9 = @{ @"id" : @"9", @"name" : @"Josh" };
+    NSDictionary *linkedAuthor11 = @{ @"id" : @"11", @"name" : @"Bandit" };
+    NSArray *linkedAuthors = @[ linkedAuthor9, linkedAuthor11 ];
+    NSDictionary *linked = @{ @"authors" : linkedAuthors };
+    NSDictionary *post = @{ @"id" : @1, @"name" : @"Josh is awesome", @"links" : @{ @"authors" : @[ @"9", @"11" ] } };
+    NSArray *posts = @[ post ];
+    NSDictionary *json = @{ @"meta" : meta, @"linked" : linked, @"posts" : posts };
+    
+    JSONAPI *jsonAPI = [[JSONAPI alloc] initWithDictionary:json];
+    JSONAPIResource *resource = [jsonAPI resourceForKey:@"posts"];
+    
+    NSArray *linkedAuthorsResources = [resource linkedResourceForKey:@"authors"];
+    JSONAPIResource *linkedAuthorResource9, *linkedAuthorResource11;
+    for (JSONAPIResource *linkedAuthorResource in linkedAuthorsResources) {
+        if ([linkedAuthorResource.ID isEqualToString:[linkedAuthor9 objectForKey:@"id"]] == YES) {
+            linkedAuthorResource9 = linkedAuthorResource;
+        } else if ([linkedAuthorResource.ID isEqualToString:[linkedAuthor11 objectForKey:@"id"]] == YES) {
+            linkedAuthorResource11 = linkedAuthorResource;
+        }
+    }
+
+    XCTAssert(linkedAuthorsResources.count == linkedAuthors.count, @"Linked author resource count is not %d", linkedAuthors.count);
+    
+    XCTAssertEqualObjects([linkedAuthorResource9 objectForKey:@"name"], [linkedAuthor9 objectForKey:@"name"], @"Linked author's 9 name is not equal to %@", [linkedAuthor9 objectForKey:@"name"]);
+    
+    XCTAssertEqualObjects([linkedAuthorResource11 objectForKey:@"name"], [linkedAuthor11 objectForKey:@"name"], @"Linked author's 11 name is not equal to %@", [linkedAuthor9 objectForKey:@"name"]);
+    
+}
+
 - (void)testResourceLinkSameTypeName {
     
     NSDictionary *meta = @{ @"page_number" : @1, @"number_of_pages" : @5};

@@ -10,7 +10,7 @@
 
 @interface JSONAPIResource : NSObject
 
-@property (nonatomic, strong) NSNumber *ID;
+@property (nonatomic, strong) id ID;
 @property (nonatomic, strong) NSString *href;
 @property (nonatomic, strong) NSDictionary *links;
 
