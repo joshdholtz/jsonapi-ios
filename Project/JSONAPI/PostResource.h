@@ -13,6 +13,10 @@
 
 @interface PostResource : JSONAPIResource
 
+@property (nonatomic, strong) NSString *mapName;
+@property (nonatomic, strong) PeopleResource *mapAuthor;
+@property (nonatomic, strong) NSArray *mapComments;
+
 - (PeopleResource*)author;
 - (NSArray*)comments;
 - (NSString*)name;

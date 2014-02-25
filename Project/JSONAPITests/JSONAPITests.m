@@ -247,4 +247,23 @@
     XCTAssertEqualObjects([authorResource objectForKey:@"name"], [linkedAuthor11 objectForKey:@"name"], @"Author name should equal %@", [chapter objectForKey:@"name"]);
 }
 
+- (void)testMapKeysToProperties {
+    NSDictionary *meta = @{ @"page_number" : @1, @"number_of_pages" : @5};
+    NSDictionary *linkedAuthor9 = @{ @"id" : @9, @"name" : @"Josh" };
+    NSDictionary *linkedAuthor11 = @{ @"id" : @11, @"name" : @"Bandit" };
+    NSArray *linkedAuthors = @[ linkedAuthor9, linkedAuthor11 ];
+    NSDictionary *linked = @{ @"authors" : linkedAuthors };
+    NSDictionary *post = @{ @"id" : @1, @"name" : @"Josh is awesome", @"links" : @{ @"author" : @9 } };
+    NSArray *posts = @[ post ];
+    NSDictionary *json = @{ @"meta" : meta, @"linked" : linked, @"posts" : posts };
+    
+    JSONAPI *jsonAPI = [[JSONAPI alloc] initWithDictionary:json];
+    PostResource *postResource = [jsonAPI resourceForKey:@"posts"];
+    
+    XCTAssertEqual([postResource class], [PostResource class], @"Post resource is not of type PostResource, but %@", [postResource class]);
+    XCTAssertEqual([postResource.mapAuthor class], [PeopleResource class], @"Post resource's author is not of type PeopleResource, but %@", [postResource.mapAuthor class]);
+    XCTAssertEqualObjects(postResource.mapName, [post objectForKey:@"name"], @"Post name is not equal to %@", [post objectForKey:@"name"]);
+    XCTAssertEqualObjects(postResource.author.name, [linkedAuthor9 objectForKey:@"name"], @"Author name is not equal to %@", [post objectForKey:@"name"]);
+}
+
 @end

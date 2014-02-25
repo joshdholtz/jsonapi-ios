@@ -22,4 +22,12 @@
     return [self objectForKey:@"name"];
 }
 
+- (NSDictionary *)mapKeysToProperties {
+    return @{
+             @"name" : @"mapName",
+             @"links.author" : @"mapAuthor",
+             @"links.comments" : @"mapComments"
+             };
+}
+
 @end

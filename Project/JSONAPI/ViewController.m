@@ -33,6 +33,7 @@
     // Parsing using JSONAPI and JSONAPIResource
     JSONAPI *jsonApi = [JSONAPI JSONAPIWithDictionary:[self authorResponse]];
     
+    NSLog(@"------------ Parsing using JSONAPI and JSONAPIResource");
     NSArray *posts = [jsonApi resourcesForKey:@"posts"];
     for (JSONAPIResource *post in posts) {
         
@@ -46,6 +47,7 @@
     }
     
     // Parsing using JSONAPI and modeled resources (PostResource, PeopleResource, CommentResource
+    NSLog(@"\n\n------------ Parsing using JSONAPI and modeled resources (PostResource, PeopleResource, CommentResource");
     for (PostResource *post in posts) {
         
         PeopleResource *author = post.author;
@@ -54,6 +56,19 @@
         NSArray *comments = post.comments;
         for (CommentResource *comment in comments) {
             NSLog(@"\t%@", comment.text);
+        }
+    }
+    
+    // Parsing using JSONAPI, modeled resources, and mapped properties (PostResource, PeopleResource, CommentResource
+    NSLog(@"\n\n------------ Parsing using JSONAPI, modeled resources, and mapped properties (PostResource, PeopleResource, CommentResource");
+    for (PostResource *post in posts) {
+        
+        PeopleResource *author = post.author;
+        NSLog(@"\"%@\" by %@", post.mapName, author.mapName);
+        
+        NSArray *comments = post.mapComments;
+        for (CommentResource *comment in comments) {
+            NSLog(@"\t%@", comment.mapText);
         }
     }
     
