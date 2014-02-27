@@ -8,7 +8,7 @@ A library for loading data from a [JSON API](http://jsonapi.org) datasource. Par
 
 Version | Changes
 --- | ---
-**0.1.2** | `JSONAPIResource` IDs can either be numbers or strings (thanks [danylhebreux](https://github.com/danylhebreux)); `JSONAPIResource` subclass can have mappings defined to set JSON values into properties automatically - [see example](#example-mappings)
+**0.1.2** | `JSONAPIResource` IDs can either be numbers or strings (thanks [danylhebreux](https://github.com/danylhebreux)); `JSONAPIResource` subclass can have mappings defined to set JSON values into properties automatically - [see example](#resource-mappings)
 **0.1.1** | Fixed linked resources with links so they actually link to other linked resources
 **0.1.0** | Initial release
 
@@ -38,9 +38,9 @@ it simply add the following line to your Podfile:
 ### JSONAPIResource
 `JSONAPIResource` is an object that holds data for each resource in a JSON API document. This objects holds the "id", "href", and "links" as properties but also the rest of the object as an NSDictionary that can be accessed through `(id)objectForKey:(NSString*)key`. There is also a method for retrieving linked resources from the JSON API document by using `(id)linkedResourceForKey:(NSString*)key`.
 
+#### Resource mappings
 `(NSDictionary*)mapKeysToProperties` can be overwritten to define a dictionary mapping of JSON keys to map into properties of a subclassed JSONAPIResource. Use a "links." prefix on the JSON key to map a linked JSONAPIResource model or array of JSONAPIResource models
 
-#### Example mappings
 ````objc
 
 @implementation ASubclassedResource
