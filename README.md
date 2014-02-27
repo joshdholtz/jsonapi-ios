@@ -4,10 +4,19 @@
 
 A library for loading data from a [JSON API](http://jsonapi.org) datasource. Parses JSON API data into models with support for auto-linking of resources and custom model classes.
 
+### Updates
+
+Version | Changes
+--- | ---
+**0.1.2** | `JSONAPIResource` IDs can either be numbers or strings (thanks [danylhebreux](https://github.com/danylhebreux)); `JSONAPIResource` subclass can have mappings defined to set JSON values into properties automatically - [see example](#example-mappings)
+**0.1.1** | Fixed linked resources with links so they actually link to other linked resources
+**0.1.0** | Initial release
+
 ### Features
 - Parses datasource into manageable objects of `JSONAPIResource`
 - Auto-links resources with custom link mapping definitions using `JSONAPIResourceLinker` (ex: link 'book' to 'books', link 'person' to 'people')
 - Allows resource types to be created into subclasses of `JSONAPIResource` using `JSONAPIResourceModeler`
+- Set mapping for `JSONAPIResource` subclass to set JSON values into properties
 
 ## Installation
 
@@ -27,7 +36,28 @@ it simply add the following line to your Podfile:
 `JSONAPI` parses and validates a JSON API document into a usable object. This object holds the response as an NSDictionary but provides methods to accomdate the JSON API format such as `meta`, `linked`, and `(NSArray*)resourcesForKey:(NSString*)key`.
 
 ### JSONAPIResource
-`JSONAPIResource` is an object that holds data for each resource in a JSON API document. This objects holds the "id", "href", and "links" as properties but also the rest of the object as an NSDictionary that can be accessed through `(id)objectForKey:(NSString*)key`. There is also a method for retrieving linked resources from the JSON API document by using `(id)linkedResourceForKey:(NSString*)key`
+`JSONAPIResource` is an object that holds data for each resource in a JSON API document. This objects holds the "id", "href", and "links" as properties but also the rest of the object as an NSDictionary that can be accessed through `(id)objectForKey:(NSString*)key`. There is also a method for retrieving linked resources from the JSON API document by using `(id)linkedResourceForKey:(NSString*)key`.
+
+`(NSDictionary*)mapKeysToProperties` can be overwritten to define a dictionary mapping of JSON keys to map into properties of a subclassed JSONAPIResource. Use a "links." prefix on the JSON key to map a linked JSONAPIResource model or array of JSONAPIResource models
+
+#### Example mappings
+````objc
+
+@implementation ASubclassedResource
+
+- (NSDictionary *)mapKeysToProperties {
+    // Maps values in JSON key 'first_name' to 'firstName' property
+    // Maps linked resource in JSON key 'author' to 'author' property
+    // Maps linked resource in JSON key 'comments' to 'comments' property
+    return @{
+             @"first_name" : @"firstName",
+             @"links.author" : @"author",
+             @"links.comments" : @"comments"
+             };
+
+@end
+
+````
 
 ### JSONAPIResourceLinker
 `JSONAPIResourceLinker` is used for configuring the type of 'links' resources to 'linked' resources.
@@ -168,6 +198,111 @@ for (PostResource *post in posts) {
 
 ```` objc
 
+@interface PeopleResource : JSONAPIResource
+
+- (NSString*)name;
+
+@end
+
+@implementation PeopleResource
+
+- (NSString *)name {
+    return [self objectForKey:@"name"];
+}
+
+@end
+
+````
+
+### Parsing - Using linked resources, subclassed JSONAPIResource classes, and model mappings
+This example shows how a response can be mapped directly into properties of a sublcasses JSONAPIResource
+
+```` objc
+
+NSString *json = @"{\"posts\":[{\"id\":1,\"name\":\"A post!\",\"links\":{\"author\":9,\"comments\":[2,3]}},{\"id\":2,\"name\":\"Another post!\",\"links\":{\"author\":10,\"comments\":[3,4]}}],\"linked\":{\"people\":[{\"id\":9,\"name\":\"Josh Holtz\"},{\"id\":10,\"name\":\"Bandit the Cat\"}],\"comments\":[{\"id\":2,\"text\":\"Omg this post is awesome\"},{ \"id\":3,\"text\":\"Omg this post is awesomer\"},{ \"id\":4,\"text\":\"Meeeehhhhh\"}]}}";
+
+// Links "author" resource to "people" linked resources
+[JSONAPIResourceLinker link:@"author" toLinkedType:@"people"];
+
+//
+[JSONAPIResourceModeler useResource:[PeopleResource class] toLinkedType:@"people"];
+[JSONAPIResourceModeler useResource:[PostResource class] toLinkedType:@"posts"];
+[JSONAPIResourceModeler useResource:[CommentResource class] toLinkedType:@"comments"];
+
+// Parses JSON string into JSONAPI object
+JSONAPI *jsonApi = [JSONAPI JSONAPIWithString:json];
+
+// Gets posts from JSONAPI that will be an array of PostResource objects
+NSArray *posts = [jsonApi resourcesForKey:@"posts"];
+
+// Parsing using JSONAPI and modeled resources (PostResource, PeopleResource, CommentResource
+for (PostResource *post in posts) {
+    
+    PeopleResource *author = post.author;
+    NSLog(@"\"%@\" by %@", post.name, author.name);
+    
+    NSArray *comments = post.comments;
+    for (CommentResource *comment in comments) {
+        NSLog(@"\t%@", comment.text);
+    }
+}
+
+````
+
+#### PostResource.h, PostResource.m
+
+```` objc
+
+@interface PostResource : JSONAPIResource
+
+- (PeopleResource*)author;
+- (NSArray*)comments; // Array of CommentResource
+- (NSString*)name;
+
+@end
+
+@implementation PostResource
+
+- (NSDictionary *)mapKeysToProperties {
+    // Maps values in JSON key 'name' to 'name' property
+    // Maps linked resource in JSON key 'author' to 'author' property
+    // Maps linked resource in JSON key 'comments' to 'comments' property
+    return @{
+             @"name" : @"name",
+             @"links.author" : @"author",
+             @"links.comments" : @"comments"
+             };
+
+@end
+
+````
+
+#### PeopleResource.h, PeopleResource.m
+
+```` objc
+
+@interface PeopleResource : JSONAPIResource
+
+- (NSString*)name;
+
+@end
+
+@implementation PeopleResource
+
+- (NSDictionary *)mapKeysToProperties {
+    // Maps values in JSON key 'name' to 'name' property
+    return @{
+             @"name" : @"name"
+             };
+
+@end
+
+````
+
+#### CommentResource.h, CommentResource.m
+
+```` objc
+
 @interface CommentResource : JSONAPIResource
 
 - (NSString*)text;
@@ -176,9 +311,11 @@ for (PostResource *post in posts) {
 
 @implementation CommentResource
 
-- (NSString *)text {
-    return [self objectForKey:@"text"];
-}
+- (NSDictionary *)mapKeysToProperties {
+    // Maps values in JSON key 'text' to 'text' property
+    return @{
+             @"text" : @"text"
+             };
 
 @end
 
