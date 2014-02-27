@@ -23,8 +23,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
-    return;
     
     // Setup
     [JSONAPIResourceLinker link:@"author" toLinkedType:@"people"];
