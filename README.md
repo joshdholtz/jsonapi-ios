@@ -28,7 +28,7 @@ Clone the repository and drop in the .h and .m files from the "Classes" director
 JSONAPI is available through [CocoaPods](http://cocoapods.org), to install
 it simply add the following line to your Podfile:
 
-    pod 'JSONAPI', '~> 0.1.1'
+    pod 'JSONAPI', '~> 0.1.2'
 
 ## Usage
 
