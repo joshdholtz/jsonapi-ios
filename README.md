@@ -41,6 +41,8 @@ it simply add the following line to your Podfile:
 #### Resource mappings
 `(NSDictionary*)mapKeysToProperties` can be overwritten to define a dictionary mapping of JSON keys to map into properties of a subclassed JSONAPIResource. Use a "links." prefix on the JSON key to map a linked JSONAPIResource model or array of JSONAPIResource models
 
+##### Usage
+
 ````objc
 
 @implementation ASubclassedResource
@@ -56,6 +58,34 @@ it simply add the following line to your Podfile:
              };
 
 @end
+
+````
+
+##### Map values outside of `mapKeysToProperties` method
+If you need to map values that are a little odd, like mapping to enums or performing some sort of formatting before setting a property, you can override the `initWithDictionary` method and assign properties in there.
+
+````objc
+
+typedef enum {
+    JESSE,
+    CHESTER
+} Character;
+
+@property (nonatomic, assign) Character character;
+
+- (id)initWithDictionary:(NSDictionary *)dict withLinked:(NSDictionary *)linked {
+    self = [super initWithDictionary:dict withLinked:linked];
+    if (self) {
+        // Do stuff in there
+        NSString *tatoo = [self objectForKey:@"tatoo"];
+        if ([someKey isEqualToString:@"dude"]) {
+            character = JESSE;
+        } else if ([someKey isEqualToString:@"sweet"]) { {
+            character = CHESTER
+        }
+    }
+    return self;
+}
 
 ````
 
