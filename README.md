@@ -146,7 +146,7 @@ NSString *json = @"{\"posts\":[{\"id\":1,\"name\":\"A post!\",\"links\":{\"autho
 // Links "author" resource to "people" linked resources
 [JSONAPIResourceLinker link:@"author" toLinkedType:@"people"];
 
-//
+// Loads "people" into `PeopleResource` and  "posts" into `PostResource`
 [JSONAPIResourceModeler useResource:[PeopleResource class] toLinkedType:@"people"];
 [JSONAPIResourceModeler useResource:[PostResource class] toLinkedType:@"posts"];
 
@@ -224,7 +224,7 @@ NSString *json = @"{\"posts\":[{\"id\":1,\"name\":\"A post!\",\"links\":{\"autho
 // Links "author" resource to "people" linked resources
 [JSONAPIResourceLinker link:@"author" toLinkedType:@"people"];
 
-//
+// Loads "people" into `PeopleResource`, "posts" into `PostResource`, and "comments" into `CommentResource`
 [JSONAPIResourceModeler useResource:[PeopleResource class] toLinkedType:@"people"];
 [JSONAPIResourceModeler useResource:[PostResource class] toLinkedType:@"posts"];
 [JSONAPIResourceModeler useResource:[CommentResource class] toLinkedType:@"comments"];
