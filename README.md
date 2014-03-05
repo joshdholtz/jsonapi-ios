@@ -28,7 +28,7 @@ Clone the repository and drop in the .h and .m files from the "Classes" director
 JSONAPI is available through [CocoaPods](http://cocoapods.org), to install
 it simply add the following line to your Podfile:
 
-    pod 'JSONAPI', '~> 0.1.1'
+    pod 'JSONAPI', '~> 0.1.2'
 
 ## Usage
 
@@ -40,6 +40,8 @@ it simply add the following line to your Podfile:
 
 #### Resource mappings
 `(NSDictionary*)mapKeysToProperties` can be overwritten to define a dictionary mapping of JSON keys to map into properties of a subclassed JSONAPIResource. Use a "links." prefix on the JSON key to map a linked JSONAPIResource model or array of JSONAPIResource models
+
+##### Usage
 
 ````objc
 
@@ -56,6 +58,34 @@ it simply add the following line to your Podfile:
              };
 
 @end
+
+````
+
+##### Map values outside of `mapKeysToProperties` method
+If you need to map values that are a little odd, like mapping to enums or performing some sort of formatting before setting a property, you can override the `initWithDictionary` method and assign properties in there.
+
+````objc
+
+typedef enum {
+    JESSE,
+    CHESTER
+} Character;
+
+@property (nonatomic, assign) Character character;
+
+- (id)initWithDictionary:(NSDictionary *)dict withLinked:(NSDictionary *)linked {
+    self = [super initWithDictionary:dict withLinked:linked];
+    if (self) {
+        // Do stuff in there
+        NSString *tatoo = [self objectForKey:@"tatoo"];
+        if ([someKey isEqualToString:@"dude"]) {
+            character = JESSE;
+        } else if ([someKey isEqualToString:@"sweet"]) { {
+            character = CHESTER
+        }
+    }
+    return self;
+}
 
 ````
 
@@ -146,7 +176,7 @@ NSString *json = @"{\"posts\":[{\"id\":1,\"name\":\"A post!\",\"links\":{\"autho
 // Links "author" resource to "people" linked resources
 [JSONAPIResourceLinker link:@"author" toLinkedType:@"people"];
 
-//
+// Loads "people" into `PeopleResource` and  "posts" into `PostResource`
 [JSONAPIResourceModeler useResource:[PeopleResource class] toLinkedType:@"people"];
 [JSONAPIResourceModeler useResource:[PostResource class] toLinkedType:@"posts"];
 
@@ -224,7 +254,7 @@ NSString *json = @"{\"posts\":[{\"id\":1,\"name\":\"A post!\",\"links\":{\"autho
 // Links "author" resource to "people" linked resources
 [JSONAPIResourceLinker link:@"author" toLinkedType:@"people"];
 
-//
+// Loads "people" into `PeopleResource`, "posts" into `PostResource`, and "comments" into `CommentResource`
 [JSONAPIResourceModeler useResource:[PeopleResource class] toLinkedType:@"people"];
 [JSONAPIResourceModeler useResource:[PostResource class] toLinkedType:@"posts"];
 [JSONAPIResourceModeler useResource:[CommentResource class] toLinkedType:@"comments"];
