@@ -64,26 +64,6 @@
         [self setWithDictionary:dict];
         [self linkLinks:linked];
         
-        
-        for (NSString *key in [self mapKeysToProperties]) {
-            if ([key hasPrefix:@"links."] == YES) {
-                
-                NSString *propertyName = [[self mapKeysToProperties] objectForKey:key];
-                NSString *linkedResource = [key stringByReplacingOccurrencesOfString:@"links." withString:@""];
-                
-                id resource = [self linkedResourceForKey:linkedResource];
-                if (resource != nil) {
-                    @try {
-                        [self setValue:resource forKey:propertyName];
-                    }
-                    @catch (NSException *exception) {
-                        NSLog(@"JSONAPIResource Warning - %@", [exception description]);
-                    }
-                }
-                
-            }
-        }
-        
     }
     return self;
 }
@@ -169,6 +149,26 @@
                 JSONAPIResource *linkedResource = [[linked objectForKey:linkType] objectForKey:linkedId];
                 if (linkedResource != nil) {
                     [linkedResources addObject:linkedResource];
+                }
+            }
+            
+        }
+    }
+    
+    // Link links for mapped key to properties
+    for (NSString *key in [self mapKeysToProperties]) {
+        if ([key hasPrefix:@"links."] == YES) {
+            
+            NSString *propertyName = [[self mapKeysToProperties] objectForKey:key];
+            NSString *linkedResource = [key stringByReplacingOccurrencesOfString:@"links." withString:@""];
+            
+            id resource = [self linkedResourceForKey:linkedResource];
+            if (resource != nil) {
+                @try {
+                    [self setValue:resource forKey:propertyName];
+                }
+                @catch (NSException *exception) {
+                    NSLog(@"JSONAPIResource Warning - %@", [exception description]);
                 }
             }
             
