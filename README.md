@@ -46,7 +46,25 @@ it simply add the following line to your Podfile:
 #### Formatter
 `JSONAPIResourceFormatter` is used to format values before getting mapped from `mapKeysToProperties`.
 
+Below is an example to register a "Date" function to format a date in a NSString object to an NSDate object before its mapped to the JSONAPIResource instance.
 
+````objc
+
+[JSONAPIResourceFormatter registerFormat:@"Date" withBlock:^id(id jsonValue) {
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"]];
+    [dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZ"];
+    
+    NSDate *date = nil;
+    NSError *error = nil;
+    if (![dateFormatter getObjectValue:&date forString:jsonValue range:nil error:&error]) {
+        NSLog(@"Date '%@' could not be parsed: %@", jsonValue, error);
+    }
+    
+    return date;
+}];
+
+````
 
 ##### Usage
 
@@ -76,27 +94,6 @@ it simply add the following line to your Podfile:
              };
 
 @end
-
-````
-
-##### Using `JSONAPIResourceFormatter` to format values
-Below is an example to register a "Date" function to format a date in a NSString object to an NSDate object before its mapped to the JSONAPIResource instance.
-
-````objc
-
-[JSONAPIResourceFormatter registerFormat:@"Date" withBlock:^id(id jsonValue) {
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"]];
-    [dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZ"];
-    
-    NSDate *date = nil;
-    NSError *error = nil;
-    if (![dateFormatter getObjectValue:&date forString:jsonValue range:nil error:&error]) {
-        NSLog(@"Date '%@' could not be parsed: %@", jsonValue, error);
-    }
-    
-    return date;
-}];
 
 ````
 
