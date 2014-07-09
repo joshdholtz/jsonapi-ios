@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface JSONAPIResource : NSObject
+@interface JSONAPIResource : NSObject<NSCoding>
 
 @property (nonatomic, strong) id ID;
 @property (nonatomic, strong) NSString *href;
