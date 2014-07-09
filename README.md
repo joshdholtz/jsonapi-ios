@@ -9,7 +9,7 @@ A library for loading data from a [JSON API](http://jsonapi.org) datasource. Par
 
 Version | Changes
 --- | ---
-**0.1.3** | Added `NSCopying` and `NSCoded` to `JSONAPIResource`; Added `JSONAPIResourceFormatter` to format values before getting mapped - [more info](#formatter)
+**0.2.0** | Added `NSCopying` and `NSCoded` to `JSONAPIResource`; Added `JSONAPIResourceFormatter` to format values before getting mapped - [more info](#formatter)
 **0.1.2** | `JSONAPIResource` IDs can either be numbers or strings (thanks [danylhebreux](https://github.com/danylhebreux)); `JSONAPIResource` subclass can have mappings defined to set JSON values into properties automatically - [more info](#resource-mappings)
 **0.1.1** | Fixed linked resources with links so they actually link to other linked resources
 **0.1.0** | Initial release
@@ -30,7 +30,7 @@ Clone the repository and drop in the .h and .m files from the "Classes" director
 JSONAPI is available through [CocoaPods](http://cocoapods.org), to install
 it simply add the following line to your Podfile:
 
-    pod 'JSONAPI', '~> 0.1.3'
+    pod 'JSONAPI', '~> 0.2.0'
 
 ## Usage
 
