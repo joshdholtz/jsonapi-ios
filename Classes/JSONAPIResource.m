@@ -179,6 +179,19 @@
     }
 }
 
+#pragma mark - NSCopying
+
+- (id)copyWithZone:(NSZone *)zone {
+    id copy = [[[self class] alloc] initWithDictionary:[self.__dictionary copyWithZone:zone] withLinked:nil];
+    
+    if (copy) {
+        // Copy NSObject subclasses
+        [copy set__resourceLinks:[self.__resourceLinks copyWithZone:zone]];
+    }
+    
+    return copy;
+}
+
 #pragma mark - NSCoding
 
 - (NSArray *)propertyKeys

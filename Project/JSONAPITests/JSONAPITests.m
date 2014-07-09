@@ -313,4 +313,24 @@
     XCTAssertEqualObjects(postResource.author.name, [linkedAuthor9 objectForKey:@"name"], @"Author name is not equal to %@", [post objectForKey:@"name"]);
 }
 
+- (void)testCopying {
+    NSDictionary *meta = @{ @"page_number" : @1, @"number_of_pages" : @5};
+    NSDictionary *linkedAuthor9 = @{ @"id" : @9, @"name" : @"Josh" };
+    NSDictionary *linkedAuthor11 = @{ @"id" : @11, @"name" : @"Bandit" };
+    NSArray *linkedAuthors = @[ linkedAuthor9, linkedAuthor11 ];
+    NSDictionary *linked = @{ @"authors" : linkedAuthors };
+    NSDictionary *post = @{ @"id" : @1, @"name" : @"Josh is awesome", @"links" : @{ @"author" : @9 } };
+    NSArray *posts = @[ post ];
+    NSDictionary *json = @{ @"meta" : meta, @"linked" : linked, @"posts" : posts };
+    
+    JSONAPI *jsonAPI = [[JSONAPI alloc] initWithDictionary:json];
+    PostResource *postResource = [jsonAPI resourceForKey:@"posts"];
+    
+    PostResource *copyPostResource = [postResource copy];
+    
+    XCTAssertNotEqual(postResource, copyPostResource, @"Post is not equal to copy");
+    XCTAssertEqualObjects(postResource.name, copyPostResource.name, @"Post name is not equal to %@", copyPostResource.name);
+    XCTAssertEqualObjects(postResource.author.name, copyPostResource.author.name, @"Author name is not equal to %@", copyPostResource.author.name);
+}
+
 @end
