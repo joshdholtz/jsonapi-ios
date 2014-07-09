@@ -1,6 +1,7 @@
 # JSONAPI - iOS
 
 [![Build Status](https://travis-ci.org/joshdholtz/jsonapi-ios.png?branch=master)](https://travis-ci.org/joshdholtz/jsonapi-ios)
+![](https://cocoapod-badges.herokuapp.com/v/JSONAPI/badge.png)
 
 A library for loading data from a [JSON API](http://jsonapi.org) datasource. Parses JSON API data into models with support for auto-linking of resources and custom model classes.
 
@@ -8,6 +9,7 @@ A library for loading data from a [JSON API](http://jsonapi.org) datasource. Par
 
 Version | Changes
 --- | ---
+**0.1.3** | Added `NSCopying` and `NSCoded` to `JSONAPIResource`; Added `JSONAPIResourceFormatter` to format values before getting mapped - [more info](#formatter)
 **0.1.2** | `JSONAPIResource` IDs can either be numbers or strings (thanks [danylhebreux](https://github.com/danylhebreux)); `JSONAPIResource` subclass can have mappings defined to set JSON values into properties automatically - [more info](#resource-mappings)
 **0.1.1** | Fixed linked resources with links so they actually link to other linked resources
 **0.1.0** | Initial release
@@ -41,18 +43,34 @@ it simply add the following line to your Podfile:
 #### Resource mappings
 `(NSDictionary*)mapKeysToProperties` can be overwritten to define a dictionary mapping of JSON keys to map into properties of a subclassed JSONAPIResource. Use a "links." prefix on the JSON key to map a linked JSONAPIResource model or array of JSONAPIResource models
 
+#### Formatter
+`JSONAPIResourceFormatter` is used to format values before getting mapped from `mapKeysToProperties`.
+
+
+
 ##### Usage
 
 ````objc
+
+@interface ASubclassedResource
+
+@property (nonatomic, strong) NSString *firstName;
+@property (nonatomic, strong) NSDate *date;
+@property (nonatomic, strong) NSArray *authors;
+@property (nonatomic, strong) NSArray *comments;
+
+@end
 
 @implementation ASubclassedResource
 
 - (NSDictionary *)mapKeysToProperties {
     // Maps values in JSON key 'first_name' to 'firstName' property
+    // Maps values in JSON key 'date' to 'date' property using the 'Date' formatter
     // Maps linked resource in JSON key 'author' to 'author' property
     // Maps linked resource in JSON key 'comments' to 'comments' property
     return @{
              @"first_name" : @"firstName",
+             @"date" : @"Date:date",
              @"links.author" : @"author",
              @"links.comments" : @"comments"
              };
@@ -61,31 +79,24 @@ it simply add the following line to your Podfile:
 
 ````
 
-##### Map values outside of `mapKeysToProperties` method
-If you need to map values that are a little odd, like mapping to enums or performing some sort of formatting before setting a property, you can override the `initWithDictionary` method and assign properties in there.
+##### Using `JSONAPIResourceFormatter` to format values
+Below is an example to register a "Date" function to format a date in a NSString object to an NSDate object before its mapped to the JSONAPIResource instance.
 
 ````objc
 
-typedef enum {
-    JESSE,
-    CHESTER
-} Character;
-
-@property (nonatomic, assign) Character character;
-
-- (id)initWithDictionary:(NSDictionary *)dict withLinked:(NSDictionary *)linked {
-    self = [super initWithDictionary:dict withLinked:linked];
-    if (self) {
-        // Do stuff in there
-        NSString *tatoo = [self objectForKey:@"tatoo"];
-        if ([someKey isEqualToString:@"dude"]) {
-            character = JESSE;
-        } else if ([someKey isEqualToString:@"sweet"]) { {
-            character = CHESTER
-        }
+[JSONAPIResourceFormatter registerFormat:@"Date" withBlock:^id(id jsonValue) {
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"]];
+    [dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZ"];
+    
+    NSDate *date = nil;
+    NSError *error = nil;
+    if (![dateFormatter getObjectValue:&date forString:jsonValue range:nil error:&error]) {
+        NSLog(@"Date '%@' could not be parsed: %@", jsonValue, error);
     }
-    return self;
-}
+    
+    return date;
+}];
 
 ````
 
