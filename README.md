@@ -1,6 +1,7 @@
 # JSONAPI - iOS
 
 [![Build Status](https://travis-ci.org/joshdholtz/jsonapi-ios.png?branch=master)](https://travis-ci.org/joshdholtz/jsonapi-ios)
+![](https://cocoapod-badges.herokuapp.com/v/JSONAPI/badge.png)
 
 A library for loading data from a [JSON API](http://jsonapi.org) datasource. Parses JSON API data into models with support for auto-linking of resources and custom model classes.
 
@@ -8,6 +9,7 @@ A library for loading data from a [JSON API](http://jsonapi.org) datasource. Par
 
 Version | Changes
 --- | ---
+**0.2.0** | Added `NSCopying` and `NSCoded` to `JSONAPIResource`; Added `JSONAPIResourceFormatter` to format values before getting mapped - [more info](#formatter)
 **0.1.2** | `JSONAPIResource` IDs can either be numbers or strings (thanks [danylhebreux](https://github.com/danylhebreux)); `JSONAPIResource` subclass can have mappings defined to set JSON values into properties automatically - [more info](#resource-mappings)
 **0.1.1** | Fixed linked resources with links so they actually link to other linked resources
 **0.1.0** | Initial release
@@ -28,7 +30,7 @@ Clone the repository and drop in the .h and .m files from the "Classes" director
 JSONAPI is available through [CocoaPods](http://cocoapods.org), to install
 it simply add the following line to your Podfile:
 
-    pod 'JSONAPI', '~> 0.1.2'
+    pod 'JSONAPI', '~> 0.2.0'
 
 ## Usage
 
@@ -41,51 +43,57 @@ it simply add the following line to your Podfile:
 #### Resource mappings
 `(NSDictionary*)mapKeysToProperties` can be overwritten to define a dictionary mapping of JSON keys to map into properties of a subclassed JSONAPIResource. Use a "links." prefix on the JSON key to map a linked JSONAPIResource model or array of JSONAPIResource models
 
+#### Formatter
+`JSONAPIResourceFormatter` is used to format values before getting mapped from `mapKeysToProperties`.
+
+Below is an example to register a "Date" function to format a date in a NSString object to an NSDate object before its mapped to the JSONAPIResource instance.
+
+````objc
+
+[JSONAPIResourceFormatter registerFormat:@"Date" withBlock:^id(id jsonValue) {
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"]];
+    [dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZ"];
+    
+    NSDate *date = nil;
+    NSError *error = nil;
+    if (![dateFormatter getObjectValue:&date forString:jsonValue range:nil error:&error]) {
+        NSLog(@"Date '%@' could not be parsed: %@", jsonValue, error);
+    }
+    
+    return date;
+}];
+
+````
+
 ##### Usage
 
 ````objc
+
+@interface ASubclassedResource
+
+@property (nonatomic, strong) NSString *firstName;
+@property (nonatomic, strong) NSDate *date;
+@property (nonatomic, strong) NSArray *authors;
+@property (nonatomic, strong) NSArray *comments;
+
+@end
 
 @implementation ASubclassedResource
 
 - (NSDictionary *)mapKeysToProperties {
     // Maps values in JSON key 'first_name' to 'firstName' property
+    // Maps values in JSON key 'date' to 'date' property using the 'Date' formatter
     // Maps linked resource in JSON key 'author' to 'author' property
     // Maps linked resource in JSON key 'comments' to 'comments' property
     return @{
              @"first_name" : @"firstName",
+             @"date" : @"Date:date",
              @"links.author" : @"author",
              @"links.comments" : @"comments"
              };
 
 @end
-
-````
-
-##### Map values outside of `mapKeysToProperties` method
-If you need to map values that are a little odd, like mapping to enums or performing some sort of formatting before setting a property, you can override the `initWithDictionary` method and assign properties in there.
-
-````objc
-
-typedef enum {
-    JESSE,
-    CHESTER
-} Character;
-
-@property (nonatomic, assign) Character character;
-
-- (id)initWithDictionary:(NSDictionary *)dict withLinked:(NSDictionary *)linked {
-    self = [super initWithDictionary:dict withLinked:linked];
-    if (self) {
-        // Do stuff in there
-        NSString *tatoo = [self objectForKey:@"tatoo"];
-        if ([someKey isEqualToString:@"dude"]) {
-            character = JESSE;
-        } else if ([someKey isEqualToString:@"sweet"]) { {
-            character = CHESTER
-        }
-    }
-    return self;
-}
 
 ````
 
@@ -164,83 +172,6 @@ for (JSONAPIResource *post in posts) {
     // Prints post name and author
     NSLog(@"\"%@\" by %@", [post objectForKey:@"name"], [author objectForKey:@"name"]);
 }
-
-````
-
-### Parsing - Using linked resources and subclassed JSONAPIResource classes
-
-```` objc
-
-NSString *json = @"{\"posts\":[{\"id\":1,\"name\":\"A post!\",\"links\":{\"author\":9}},{\"id\":2,\"name\":\"Another post!\",\"links\":{\"author\":10}}],\"linked\":{\"people\":[{\"id\":9,\"name\":\"Josh Holtz\"},{\"id\":10,\"name\":\"Bandit the Cat\"}]}}";
-
-// Links "author" resource to "people" linked resources
-[JSONAPIResourceLinker link:@"author" toLinkedType:@"people"];
-
-// Loads "people" into `PeopleResource` and  "posts" into `PostResource`
-[JSONAPIResourceModeler useResource:[PeopleResource class] toLinkedType:@"people"];
-[JSONAPIResourceModeler useResource:[PostResource class] toLinkedType:@"posts"];
-
-// Parses JSON string into JSONAPI object
-JSONAPI *jsonApi = [JSONAPI JSONAPIWithString:json];
-
-// Gets posts from JSONAPI that will be an array of PostResource objects
-NSArray *posts = [jsonApi resourcesForKey:@"posts"];
-
-// Parsing using JSONAPI and modeled resources (PostResource, PeopleResource, CommentResource
-for (PostResource *post in posts) {
-    
-    PeopleResource *author = post.author;
-    NSLog(@"\"%@\" by %@", post.name, author.name);
-}
-
-````
-
-#### PostResource.h, PostResource.m
-
-```` objc
-
-@interface PostResource : JSONAPIResource
-
-- (PeopleResource*)author;
-- (NSString*)name;
-
-@end
-
-@implementation PostResource
-
-- (PeopleResource *)author {
-    return [self linkedResourceForKey:@"author"];
-}
-
-- (NSArray *)comments {
-    return [self linkedResourceForKey:@"comments"];
-}
-
-- (NSString *)name {
-    return [self objectForKey:@"name"];
-}
-
-@end
-
-````
-
-#### PeopleResource.h, PeopleResource.m
-
-```` objc
-
-@interface PeopleResource : JSONAPIResource
-
-- (NSString*)name;
-
-@end
-
-@implementation PeopleResource
-
-- (NSString *)name {
-    return [self objectForKey:@"name"];
-}
-
-@end
 
 ````
 

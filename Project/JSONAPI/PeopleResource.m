@@ -10,13 +10,9 @@
 
 @implementation PeopleResource
 
-- (NSString *)name {
-    return [self objectForKey:@"name"];
-}
-
 - (NSDictionary *)mapKeysToProperties {
     return @{
-             @"name" : @"mapName"
+             @"name" : @"name"
              };
 }
 

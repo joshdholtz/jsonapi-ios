@@ -10,13 +10,9 @@
 
 @implementation CommentResource
 
-- (NSString *)text {
-    return [self objectForKey:@"text"];
-}
-
 - (NSDictionary *)mapKeysToProperties {
     return @{
-             @"text" : @"mapText"
+             @"text" : @"text"
              };
 }
 

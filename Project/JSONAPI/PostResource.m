@@ -10,23 +10,12 @@
 
 @implementation PostResource
 
-- (PeopleResource *)author {
-    return [self linkedResourceForKey:@"author"];
-}
-
-- (NSArray *)comments {
-    return [self linkedResourceForKey:@"comments"];
-}
-
-- (NSString *)name {
-    return [self objectForKey:@"name"];
-}
-
 - (NSDictionary *)mapKeysToProperties {
     return @{
-             @"name" : @"mapName",
-             @"links.author" : @"mapAuthor",
-             @"links.comments" : @"mapComments"
+             @"name" : @"name",
+             @"date" : @"Date:date",
+             @"links.author" : @"author",
+             @"links.comments" : @"comments"
              };
 }
 

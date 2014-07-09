@@ -8,7 +8,11 @@
 
 #import "JSONAPIResource.h"
 
+#import "JSONAPIResourceFormatter.h"
 #import "JSONAPIResourceLinker.h"
+
+#import <objc/runtime.h>
+#import <objc/message.h>
 
 #pragma mark - JSONAPIResource
 
@@ -20,6 +24,9 @@
 @end
 
 @implementation JSONAPIResource
+
+#pragma mark -
+#pragma mark - Class Methods
 
 + (NSArray*)jsonAPIResources:(NSArray*)array withLinked:(NSDictionary*)linked {
     return [JSONAPIResource jsonAPIResources:array withLinked:linked withClass:[self class]];
@@ -49,6 +56,9 @@
     
     return [[resourceObjectClass alloc] initWithDictionary:dictionary withLinked:linked];
 }
+
+#pragma mark -
+#pragma mark - Instance Methods
 
 - (id)init {
     self = [super init];
@@ -107,7 +117,10 @@
                 if (inflateRange.location != NSNotFound) {
 
                 } else if (formatRange.location != NSNotFound) {
-  
+                    NSString *formatFunction = [property substringToIndex:formatRange.location];
+                    property = [property substringFromIndex:(formatRange.location+1)];
+                    
+                    [self setValue:[JSONAPIResourceFormatter performFormatBlock:[dict objectForKey:key] withName:formatFunction] forKey:property ];
                 } else {
                     [self setValue:[dict objectForKey:key] forKey:property ];
                 }
@@ -164,6 +177,7 @@
             
             id resource = [self linkedResourceForKey:linkedResource];
             if (resource != nil) {
+                
                 @try {
                     [self setValue:resource forKey:propertyName];
                 }
@@ -173,6 +187,104 @@
             }
             
         }
+    }
+}
+
+#pragma mark - NSCopying
+
+- (id)copyWithZone:(NSZone *)zone {
+    id copy = [[[self class] alloc] initWithDictionary:[self.__dictionary copyWithZone:zone] withLinked:nil];
+    
+    if (copy) {
+        // Copy NSObject subclasses
+        NSLog(@"__resourceLinks - %@", self.__resourceLinks);
+        [copy set__resourceLinks:[self.__resourceLinks copyWithZone:zone]];
+        
+        // Link links for mapped key to properties
+        for (NSString *key in [copy __resourceLinks]) {
+            @try {
+                [copy setValue:[[copy __resourceLinks] objectForKey:key] forKey:key];
+            }
+            @catch (NSException *exception) {
+                NSLog(@"JSONAPIResource Warning - %@", [exception description]);
+            }
+        }
+
+    }
+    
+    return copy;
+}
+
+#pragma mark - NSCoding
+
+- (NSArray *)propertyKeys
+{
+    NSMutableArray *array = [NSMutableArray array];
+    Class class = [self class];
+    while (class != [NSObject class])
+    {
+        unsigned int propertyCount;
+        objc_property_t *properties = class_copyPropertyList(class, &propertyCount);
+        for (int i = 0; i < propertyCount; i++)
+        {
+            //get property
+            objc_property_t property = properties[i];
+            const char *propertyName = property_getName(property);
+            NSString *key = [NSString stringWithCString:propertyName encoding:NSUTF8StringEncoding];
+            
+            //check if read-only
+            BOOL readonly = NO;
+            const char *attributes = property_getAttributes(property);
+            NSString *encoding = [NSString stringWithCString:attributes encoding:NSUTF8StringEncoding];
+            if ([[encoding componentsSeparatedByString:@","] containsObject:@"R"])
+            {
+                readonly = YES;
+                
+                //see if there is a backing ivar with a KVC-compliant name
+                NSRange iVarRange = [encoding rangeOfString:@",V"];
+                if (iVarRange.location != NSNotFound)
+                {
+                    NSString *iVarName = [encoding substringFromIndex:iVarRange.location + 2];
+                    if ([iVarName isEqualToString:key] ||
+                        [iVarName isEqualToString:[@"_" stringByAppendingString:key]])
+                    {
+                        //setValue:forKey: will still work
+                        readonly = NO;
+                    }
+                }
+            }
+            
+            if (!readonly)
+            {
+                //exclude read-only properties
+                [array addObject:key];
+            }
+        }
+        free(properties);
+        class = [class superclass];
+    }
+    return array;
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+    if ((self = [self init]))
+    {
+        for (NSString *key in [self propertyKeys])
+        {
+            id value = [aDecoder decodeObjectForKey:key];
+            [self setValue:value forKey:key];
+        }
+    }
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)aCoder
+{
+    for (NSString *key in [self propertyKeys])
+    {
+        id value = [self valueForKey:key];
+        [aCoder encodeObject:value forKey:key];
     }
 }
 
