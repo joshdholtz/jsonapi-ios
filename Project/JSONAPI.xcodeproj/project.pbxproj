@@ -30,6 +30,7 @@
 		03A055E61868E038004807F0 /* JSONAPITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 03A055E51868E038004807F0 /* JSONAPITests.m */; };
 		03A055F71868E08A004807F0 /* JSONAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = 03A055F41868E08A004807F0 /* JSONAPI.m */; };
 		03A055F81868E08A004807F0 /* JSONAPI.podspec in Resources */ = {isa = PBXBuildFile; fileRef = 03A055F51868E08A004807F0 /* JSONAPI.podspec */; };
+		03A9ED58196DEF9B00E61E2E /* JSONAPIResourceFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 03A9ED57196DEF9B00E61E2E /* JSONAPIResourceFormatter.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -78,6 +79,8 @@
 		03A055F31868E08A004807F0 /* JSONAPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONAPI.h; sourceTree = "<group>"; };
 		03A055F41868E08A004807F0 /* JSONAPI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSONAPI.m; sourceTree = "<group>"; };
 		03A055F51868E08A004807F0 /* JSONAPI.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = JSONAPI.podspec; path = ../JSONAPI.podspec; sourceTree = "<group>"; };
+		03A9ED56196DEF9B00E61E2E /* JSONAPIResourceFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONAPIResourceFormatter.h; sourceTree = "<group>"; };
+		03A9ED57196DEF9B00E61E2E /* JSONAPIResourceFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSONAPIResourceFormatter.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -201,6 +204,8 @@
 				03A055F41868E08A004807F0 /* JSONAPI.m */,
 				033A6C5D18695CD2001CF9FA /* JSONAPIResource.h */,
 				033A6C5E18695CD2001CF9FA /* JSONAPIResource.m */,
+				03A9ED56196DEF9B00E61E2E /* JSONAPIResourceFormatter.h */,
+				03A9ED57196DEF9B00E61E2E /* JSONAPIResourceFormatter.m */,
 				0386643B186A0DAD00985CEC /* JSONAPIResourceLinker.h */,
 				0386643C186A0DAD00985CEC /* JSONAPIResourceLinker.m */,
 				0386644C186A8DA000985CEC /* JSONAPIResourceModeler.h */,
@@ -316,6 +321,7 @@
 				03A055F71868E08A004807F0 /* JSONAPI.m in Sources */,
 				033A6C5F18695CD2001CF9FA /* JSONAPIResource.m in Sources */,
 				03866454186A94B700985CEC /* CommentResource.m in Sources */,
+				03A9ED58196DEF9B00E61E2E /* JSONAPIResourceFormatter.m in Sources */,
 				03A055CB1868E038004807F0 /* AppDelegate.m in Sources */,
 				0386644E186A8DA000985CEC /* JSONAPIResourceModeler.m in Sources */,
 				03A055C71868E038004807F0 /* main.m in Sources */,

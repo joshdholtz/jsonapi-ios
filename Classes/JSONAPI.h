@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 
 #import "JSONAPIResource.h"
+#import "JSONAPIResourceFormatter.h"
 #import "JSONAPIResourceLinker.h"
 #import "JSONAPIResourceModeler.h"
 

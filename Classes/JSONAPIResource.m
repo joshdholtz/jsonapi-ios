@@ -8,6 +8,7 @@
 
 #import "JSONAPIResource.h"
 
+#import "JSONAPIResourceFormatter.h"
 #import "JSONAPIResourceLinker.h"
 
 #import <objc/runtime.h>
@@ -23,6 +24,9 @@
 @end
 
 @implementation JSONAPIResource
+
+#pragma mark -
+#pragma mark - Class Methods
 
 + (NSArray*)jsonAPIResources:(NSArray*)array withLinked:(NSDictionary*)linked {
     return [JSONAPIResource jsonAPIResources:array withLinked:linked withClass:[self class]];
@@ -52,6 +56,9 @@
     
     return [[resourceObjectClass alloc] initWithDictionary:dictionary withLinked:linked];
 }
+
+#pragma mark -
+#pragma mark - Instance Methods
 
 - (id)init {
     self = [super init];
@@ -110,7 +117,10 @@
                 if (inflateRange.location != NSNotFound) {
 
                 } else if (formatRange.location != NSNotFound) {
-  
+                    NSString *formatFunction = [property substringToIndex:formatRange.location];
+                    property = [property substringFromIndex:(formatRange.location+1)];
+                    
+                    [self setValue:[JSONAPIResourceFormatter performFormatBlock:[dict objectForKey:key] withName:formatFunction] forKey:property ];
                 } else {
                     [self setValue:[dict objectForKey:key] forKey:property ];
                 }
@@ -167,6 +177,7 @@
             
             id resource = [self linkedResourceForKey:linkedResource];
             if (resource != nil) {
+                
                 @try {
                     [self setValue:resource forKey:propertyName];
                 }
@@ -186,7 +197,19 @@
     
     if (copy) {
         // Copy NSObject subclasses
+        NSLog(@"__resourceLinks - %@", self.__resourceLinks);
         [copy set__resourceLinks:[self.__resourceLinks copyWithZone:zone]];
+        
+        // Link links for mapped key to properties
+        for (NSString *key in [copy __resourceLinks]) {
+            @try {
+                [copy setValue:[[copy __resourceLinks] objectForKey:key] forKey:key];
+            }
+            @catch (NSException *exception) {
+                NSLog(@"JSONAPIResource Warning - %@", [exception description]);
+            }
+        }
+
     }
     
     return copy;

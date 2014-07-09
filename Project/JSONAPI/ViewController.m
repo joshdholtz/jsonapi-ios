@@ -29,46 +29,37 @@
     [JSONAPIResourceModeler useResource:[CommentResource class] toLinkedType:@"comments"];
     [JSONAPIResourceModeler useResource:[PeopleResource class] toLinkedType:@"people"];
     [JSONAPIResourceModeler useResource:[PostResource class] toLinkedType:@"posts"];
+    
+    // Register formatting
+    [JSONAPIResourceFormatter registerFormat:@"Date" withBlock:^id(id jsonValue) {
+        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"]];
+        [dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZ"];
+        
+        NSDate *date = nil;
+        NSError *error = nil;
+        if (![dateFormatter getObjectValue:&date forString:jsonValue range:nil error:&error]) {
+            NSLog(@"Date '%@' could not be parsed: %@", jsonValue, error);
+        }
+        
+        return date;
+    }];
 	
     // Parsing using JSONAPI and JSONAPIResource
     JSONAPI *jsonApi = [JSONAPI JSONAPIWithDictionary:[self authorResponse]];
     
-    NSLog(@"------------ Parsing using JSONAPI and JSONAPIResource");
+    NSLog(@"------------ Parsing using JSONAPI, modeled resources, and mapped properties (PostResource, PeopleResource, CommentResource");
     NSArray *posts = [jsonApi resourcesForKey:@"posts"];
-    for (JSONAPIResource *post in posts) {
-        
-        JSONAPIResource *author = [post linkedResourceForKey:@"author"];
-        NSLog(@"\"%@\" by %@", [post objectForKey:@"name"], [author objectForKey:@"name"]);
-        
-        NSArray *comments = [post linkedResourceForKey:@"comments"];
-        for (JSONAPIResource *comment in comments) {
-            NSLog(@"\t%@", [comment objectForKey:@"text"]);
-        }
-    }
     
-    // Parsing using JSONAPI and modeled resources (PostResource, PeopleResource, CommentResource
-    NSLog(@"\n\n------------ Parsing using JSONAPI and modeled resources (PostResource, PeopleResource, CommentResource");
+    // Parsing using JSONAPI, modeled resources, and mapped properties (PostResource, PeopleResource, CommentResource
     for (PostResource *post in posts) {
         
         PeopleResource *author = post.author;
-        NSLog(@"\"%@\" by %@", post.name, author.name);
+        NSLog(@"\"%@\" by %@ on %@", post.name, author.name, post.date);
         
         NSArray *comments = post.comments;
         for (CommentResource *comment in comments) {
             NSLog(@"\t%@", comment.text);
-        }
-    }
-    
-    // Parsing using JSONAPI, modeled resources, and mapped properties (PostResource, PeopleResource, CommentResource
-    NSLog(@"\n\n------------ Parsing using JSONAPI, modeled resources, and mapped properties (PostResource, PeopleResource, CommentResource");
-    for (PostResource *post in posts) {
-        
-        PeopleResource *author = post.author;
-        NSLog(@"\"%@\" by %@", post.mapName, author.mapName);
-        
-        NSArray *comments = post.mapComments;
-        for (CommentResource *comment in comments) {
-            NSLog(@"\t%@", comment.mapText);
         }
     }
     
@@ -94,8 +85,8 @@
                                       @{ @"id" : @4, @"text" : @"Meeeehhhhh" }
                                       ]};
     
-    NSDictionary *post1 = @{ @"id" : @1, @"name" : @"Josh is awesome", @"links" : @{ @"author" : @9, @"comments" : @[ @2, @3 ] } };
-    NSDictionary *post2 = @{ @"id" : @2, @"name" : @"Bandit is awesome", @"links" : @{ @"author" : @10, @"comments" : @[ @4 ] } };
+    NSDictionary *post1 = @{ @"id" : @1, @"name" : @"Josh is awesome", @"date" : @"2013-10-14T05:34:32+600", @"links" : @{ @"author" : @9, @"comments" : @[ @2, @3 ] } };
+    NSDictionary *post2 = @{ @"id" : @2, @"name" : @"Bandit is awesome", @"date" : @"2013-10-14T05:34:32+600", @"links" : @{ @"author" : @10, @"comments" : @[ @4 ] } };
     
     NSArray *posts = @[ post1, post2 ];
     NSDictionary *json = @{ @"meta" : meta, @"linked" : linked, @"posts" : posts };
