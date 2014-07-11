@@ -45,7 +45,7 @@
 - (void)inflateWithString:(NSString*)string {
     id json = [NSJSONSerialization JSONObjectWithData:[string dataUsingEncoding:NSUTF8StringEncoding] options:0 error:nil];
     
-    if ([json isKindOfClass:[NSDictionary class]] == YES) {
+    if ([json isKindOfClass:[NSDictionary class]]) {
         [self inflateWithDictionary:json];
     } else {
         _error = [NSError errorWithDomain:@"Could not parse JSON" code:0 userInfo:nil];
@@ -70,13 +70,13 @@
 }
 
 - (NSArray*)resourcesForKey:(NSString*)key {
-    if ([key isEqualToString:@"meta"] == YES || [key isEqualToString:@"linked"] == YES) {
+    if ([key isEqualToString:@"meta"] || [key isEqualToString:@"linked"]) {
         return nil;
     }
     
     NSArray *rawResources = [_dictionary objectForKey:key];
     NSArray *resources = nil;
-    if ([rawResources isKindOfClass:[NSArray class]] == YES) {
+    if ([rawResources isKindOfClass:[NSArray class]]) {
         Class c = [JSONAPIResourceModeler resourceForLinkedType:[JSONAPIResourceLinker linkedType:key]];
         resources = [JSONAPIResource jsonAPIResources:rawResources withLinked:self.linked withClass:c];
     }
@@ -99,7 +99,7 @@
     // Sets linked
     NSMutableDictionary *creatingLinked = [NSMutableDictionary dictionary];
     NSDictionary *rawLinked = [dictionary objectForKey:@"linked"];
-    if ([rawLinked isKindOfClass:[NSDictionary class]] == YES) {
+    if ([rawLinked isKindOfClass:[NSDictionary class]]) {
         
         NSMutableArray *linkedToLinkWithLinked = [NSMutableArray array];
         
@@ -107,7 +107,7 @@
         for (NSString *key in rawLinked.allKeys) {
             NSArray *value = [rawLinked objectForKey:key];
             
-            if ([value isKindOfClass:[NSArray class]] == YES) {
+            if ([value isKindOfClass:[NSArray class]]) {
                 NSMutableDictionary *resources = [NSMutableDictionary dictionary];
                 for (NSDictionary *resourceDictionary in value) {
                     Class c = [JSONAPIResourceModeler resourceForLinkedType:[JSONAPIResourceLinker linkedType:key]];

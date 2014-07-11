@@ -20,8 +20,7 @@
 
 @implementation JSONAPITests
 
-- (void)setUp
-{
+- (void)setUp {
     [super setUp];
 
     [JSONAPIResourceLinker link:@"author" toLinkedType:@"authors"];
@@ -37,16 +36,14 @@
     
 }
 
-- (void)tearDown
-{
+- (void)tearDown {
     [JSONAPIResourceLinker unlinkAll];
     [JSONAPIResourceModeler unmodelAll];
     
     [super tearDown];
 }
 
-- (void)testMeta
-{
+- (void)testMeta {
     NSDictionary *meta = @{ @"page_number" : @1, @"number_of_pages" : @5};
     NSDictionary *linked = @{ @"authors" : @[ @{ @"id" : @9, @"name" : @"Josh" } ] };
     NSDictionary *json = @{ @"meta" : meta, @"linked" : linked, @"posts" : @[ @{ @"id" : @1, @"name" : @"Josh is awesome", @"links" : @{ @"author" : @9 } } ] };
@@ -56,8 +53,7 @@
     
 }
 
-- (void)testBadMeta
-{
+- (void)testBadMeta {
     NSArray *meta = @[ @{ @"page_number" : @1, @"number_of_pages" : @5} ];
     NSDictionary *linked = @{ @"authors" : @[ @{ @"id" : @9, @"name" : @"Josh" } ] };
     NSDictionary *json = @{ @"meta" : meta, @"linked" : linked, @"posts" : @[ @{ @"id" : @1, @"name" : @"Josh is awesome", @"links" : @{ @"author" : @9 } } ] };
@@ -67,14 +63,13 @@
     
 }
 
-- (void)testLinkedCount
-{
+- (void)testLinkedCount {
     NSDictionary *meta = @{ @"page_number" : @1, @"number_of_pages" : @5};
     NSDictionary *linked = @{ @"authors" : @[ @{ @"id" : @9, @"name" : @"Josh" } ] };
     NSDictionary *json = @{ @"meta" : meta, @"linked" : linked, @"posts" : @[ @{ @"id" : @1, @"name" : @"Josh is awesome", @"links" : @{ @"author" : @9 } } ] };
     
     JSONAPI *jsonAPI = [[JSONAPI alloc] initWithDictionary:json];
-    XCTAssert(linked.count == jsonAPI.linked.count, @"Linked count does not equal %d", linked.count);
+    XCTAssert(linked.count == jsonAPI.linked.count, @"Linked count does not equal %lu", (unsigned long)linked.count);
     
 }
 
@@ -90,16 +85,14 @@
     XCTAssertEqualObjects([linkedAuthor9 objectForKey:@"name"], [linkedAuthorResource objectForKey:@"name"] , @"Author resource name does not equal %@", [linkedAuthor9 objectForKey:@"name"]);
 }
 
-- (void)testBadLinked
-{
+- (void)testBadLinked {
     NSDictionary *meta = @{ @"page_number" : @1, @"number_of_pages" : @5};
     NSArray *linked = @[ @{ @"authors" : @[ @{ @"id" : @9, @"name" : @"Josh" } ] } ];
     NSDictionary *json = @{ @"meta" : meta, @"linked" : linked, @"posts" : @[ @{ @"id" : @1, @"name" : @"Josh is awesome", @"links" : @{ @"author" : @9 } } ] };
     
     JSONAPI *jsonAPI = [[JSONAPI alloc] initWithDictionary:json];
-    NSLog(@"%d HRM %d", jsonAPI.linked.count, 0);
+    NSLog(@"%lu HRM %d", (unsigned long)jsonAPI.linked.count, 0);
     XCTAssert(jsonAPI.linked.count == 0, @"Linked is not 0");
-    
 }
 
 - (void)testResourcesCount {
@@ -111,7 +104,7 @@
     NSDictionary *json = @{ @"meta" : meta, @"linked" : linked, @"posts" : posts };
     
     JSONAPI *jsonAPI = [[JSONAPI alloc] initWithDictionary:json];
-    XCTAssert(posts.count == [jsonAPI resourcesForKey:@"posts"].count, @"Posts count does not equal %d", posts.count);
+    XCTAssert(posts.count == [jsonAPI resourcesForKey:@"posts"].count, @"Posts count does not equal %lu", (unsigned long)posts.count);
 }
 
 - (void)testResourcesObject {
@@ -161,14 +154,14 @@
     NSArray *linkedAuthorsResources = [resource linkedResourceForKey:@"authors"];
     JSONAPIResource *linkedAuthorResource9, *linkedAuthorResource11;
     for (JSONAPIResource *linkedAuthorResource in linkedAuthorsResources) {
-        if ([linkedAuthorResource.ID isEqualToString:[linkedAuthor9 objectForKey:@"id"]] == YES) {
+        if ([linkedAuthorResource.ID isEqualToString:[linkedAuthor9 objectForKey:@"id"]]) {
             linkedAuthorResource9 = linkedAuthorResource;
-        } else if ([linkedAuthorResource.ID isEqualToString:[linkedAuthor11 objectForKey:@"id"]] == YES) {
+        } else if ([linkedAuthorResource.ID isEqualToString:[linkedAuthor11 objectForKey:@"id"]]) {
             linkedAuthorResource11 = linkedAuthorResource;
         }
     }
 
-    XCTAssert(linkedAuthorsResources.count == linkedAuthors.count, @"Linked author resource count is not %d", linkedAuthors.count);
+    XCTAssert(linkedAuthorsResources.count == linkedAuthors.count, @"Linked author resource count is not %lu", (unsigned long)linkedAuthors.count);
     
     XCTAssertEqualObjects([linkedAuthorResource9 objectForKey:@"name"], [linkedAuthor9 objectForKey:@"name"], @"Linked author's 9 name is not equal to %@", [linkedAuthor9 objectForKey:@"name"]);
     
@@ -213,14 +206,14 @@
     NSArray *linkedAuthorsResources = [resource linkedResourceForKey:@"authors"];
     JSONAPIResource *linkedAuthorResource9, *linkedAuthorResource11;
     for (JSONAPIResource *linkedAuthorResource in linkedAuthorsResources) {
-        if ([linkedAuthorResource.ID isEqualToNumber:[linkedAuthor9 objectForKey:@"id"]] == YES) {
+        if ([linkedAuthorResource.ID isEqualToNumber:[linkedAuthor9 objectForKey:@"id"]]) {
             linkedAuthorResource9 = linkedAuthorResource;
-        } else if ([linkedAuthorResource.ID isEqualToNumber:[linkedAuthor11 objectForKey:@"id"]] == YES) {
+        } else if ([linkedAuthorResource.ID isEqualToNumber:[linkedAuthor11 objectForKey:@"id"]]) {
             linkedAuthorResource11 = linkedAuthorResource;
         }
     }
     
-    XCTAssert(linkedAuthorsResources.count == linkedAuthors.count, @"Linked author resource count is not %d", linkedAuthors.count);
+    XCTAssert(linkedAuthorsResources.count == linkedAuthors.count, @"Linked author resource count is not %lu", (unsigned long)linkedAuthors.count);
     
     XCTAssertEqualObjects([linkedAuthorResource9 objectForKey:@"name"], [linkedAuthor9 objectForKey:@"name"], @"Linked author's 9 name is not equal to %@", [linkedAuthor9 objectForKey:@"name"]);
     XCTAssertEqualObjects([linkedAuthorResource9 objectForKey:@"name"], [linkedAuthor9 objectForKey:@"name"], @"Linked author's 9 name is not equal to %@", [linkedAuthor9 objectForKey:@"name"]);
@@ -328,6 +321,7 @@
     
     PostResource *copyPostResource = [postResource copy];
     
+    XCTAssertTrue([copyPostResource isEqual:postResource], @"Copy post must be equal to original");
     XCTAssertNotEqual(copyPostResource, postResource, @"Copy post is equal to original");
     XCTAssertNotNil(copyPostResource.name, @"Copy post name is nil");
     XCTAssertEqualObjects(copyPostResource.name, postResource.name, @"Copy post name is not equal to %@", postResource.name);
@@ -383,6 +377,63 @@
     XCTAssertNotEqual(postResource, copyPostResource, @"Post is not equal to copy");
     XCTAssertNotNil(postResource.date, @"Post date is not nil");
     XCTAssertEqualObjects(postResource.date, date, @"Post date is not equal to %@", date);
+}
+
+- (void)testEquality {
+    PostResource *postResource = [[PostResource alloc] init];
+    PostResource *otherPostResource = [[PostResource alloc] init];
+    
+    postResource.ID = @99;
+    otherPostResource.ID = @99;
+    
+    XCTAssertTrue([postResource isEqual:otherPostResource], @"Post must be equal to other post");
+}
+
+- (void)testInequality {
+    PostResource *postResource = [[PostResource alloc] init];
+    PostResource *otherPostResource = [[PostResource alloc] init];
+    
+    postResource.ID = @99;
+    otherPostResource.ID = @101;
+    
+    XCTAssertFalse([postResource isEqual:otherPostResource], @"Post must not be equal to other post");
+}
+
+- (void)testUnmapped {
+    [JSONAPIDeveloperAssistant setDevelopmentModeEnabled:TRUE];
+    [JSONAPIDeveloperAssistant resetDefaultDeveloperAssistant];
+
+    // Create date for testing
+    NSString *dateToTestWith = @"2013-10-14T05:34:32+600";
+    
+    NSDictionary *meta = @{ @"page_number" : @1, @"number_of_pages" : @5};
+    NSDictionary *linkedAuthor9 = @{ @"id" : @9, @"name" : @"Josh" };
+    NSDictionary *linkedAuthor11 = @{ @"id" : @11, @"name" : @"Bandit" };
+    NSArray *linkedAuthors = @[ linkedAuthor9, linkedAuthor11 ];
+    NSDictionary *linked = @{ @"authors" : linkedAuthors };
+    NSDictionary *post = @{ @"id" : @1, @"name" : @"Josh is awesome", @"links" : @{ @"author" : @9 }, @"date" : dateToTestWith, @"tags" : @[@"movies", @"action"], @"category" : @"entertainment" };
+    NSArray *posts = @[ post ];
+    NSDictionary *json = @{ @"meta" : meta, @"linked" : linked, @"posts" : posts, @"comments" : @[@"none"] };
+    
+    JSONAPI *jsonAPI = [[JSONAPI alloc] initWithDictionary:json];
+    PostResource *postResource __unused = [jsonAPI resourceForKey:@"posts"];
+    
+    JSONAPIDeveloperAssistant *da = [JSONAPIDeveloperAssistant defaultDeveloperAssistant];
+    
+    NSString *className = NSStringFromClass([PostResource class]);
+    NSArray *mapped = [da mappedKeysForClassName:className];
+    NSArray *unmapped = [da unmappedKeysForClassName:className];
+    
+    [da logMappedModels];
+    [JSONAPIDeveloperAssistant resetDefaultDeveloperAssistant];
+    
+    // The extra keys which will not be mapped are tags and category in the post resource
+    
+    XCTAssertTrue([mapped containsObject:@"name"], @"The 'name' key should be mapped");
+    XCTAssertTrue([mapped containsObject:@"author"], @"The 'author' key should be mapped");
+    XCTAssertTrue([mapped containsObject:@"date"], @"The 'date' key should be mapped");
+    XCTAssertTrue([unmapped containsObject:@"category"], @"The 'category' key should not be mapped");
+    XCTAssertTrue([unmapped containsObject:@"tags"], @"The 'tags' key should not be mapped");
 }
 
 @end

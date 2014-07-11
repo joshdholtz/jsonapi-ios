@@ -12,6 +12,7 @@
 #import "JSONAPIResourceFormatter.h"
 #import "JSONAPIResourceLinker.h"
 #import "JSONAPIResourceModeler.h"
+#import "JSONAPIDeveloperAssistant.h"
 
 @interface JSONAPI : NSObject
 
