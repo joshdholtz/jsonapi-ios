@@ -31,6 +31,7 @@
 		03A055F71868E08A004807F0 /* JSONAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = 03A055F41868E08A004807F0 /* JSONAPI.m */; };
 		03A055F81868E08A004807F0 /* JSONAPI.podspec in Resources */ = {isa = PBXBuildFile; fileRef = 03A055F51868E08A004807F0 /* JSONAPI.podspec */; };
 		03A9ED58196DEF9B00E61E2E /* JSONAPIResourceFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 03A9ED57196DEF9B00E61E2E /* JSONAPIResourceFormatter.m */; };
+		26733EE1196F5F8C0058384A /* JSONAPIDeveloperAssistant.m in Sources */ = {isa = PBXBuildFile; fileRef = 26733EE0196F5F8C0058384A /* JSONAPIDeveloperAssistant.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -81,6 +82,8 @@
 		03A055F51868E08A004807F0 /* JSONAPI.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = JSONAPI.podspec; path = ../JSONAPI.podspec; sourceTree = "<group>"; };
 		03A9ED56196DEF9B00E61E2E /* JSONAPIResourceFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONAPIResourceFormatter.h; sourceTree = "<group>"; };
 		03A9ED57196DEF9B00E61E2E /* JSONAPIResourceFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSONAPIResourceFormatter.m; sourceTree = "<group>"; };
+		26733EDF196F5F8C0058384A /* JSONAPIDeveloperAssistant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONAPIDeveloperAssistant.h; sourceTree = "<group>"; };
+		26733EE0196F5F8C0058384A /* JSONAPIDeveloperAssistant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSONAPIDeveloperAssistant.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -210,6 +213,8 @@
 				0386643C186A0DAD00985CEC /* JSONAPIResourceLinker.m */,
 				0386644C186A8DA000985CEC /* JSONAPIResourceModeler.h */,
 				0386644D186A8DA000985CEC /* JSONAPIResourceModeler.m */,
+				26733EDF196F5F8C0058384A /* JSONAPIDeveloperAssistant.h */,
+				26733EE0196F5F8C0058384A /* JSONAPIDeveloperAssistant.m */,
 			);
 			name = Classes;
 			path = ../Classes;
@@ -259,7 +264,7 @@
 		03A055AF1868E038004807F0 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0500;
+				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = "Josh Holtz";
 				TargetAttributes = {
 					03A055D71868E038004807F0 = {
@@ -324,6 +329,7 @@
 				03A9ED58196DEF9B00E61E2E /* JSONAPIResourceFormatter.m in Sources */,
 				03A055CB1868E038004807F0 /* AppDelegate.m in Sources */,
 				0386644E186A8DA000985CEC /* JSONAPIResourceModeler.m in Sources */,
+				26733EE1196F5F8C0058384A /* JSONAPIDeveloperAssistant.m in Sources */,
 				03A055C71868E038004807F0 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -378,7 +384,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -417,7 +422,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -475,7 +479,6 @@
 		03A055ED1868E038004807F0 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/JSONAPI.app/JSONAPI";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
@@ -498,7 +501,6 @@
 		03A055EE1868E038004807F0 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/JSONAPI.app/JSONAPI";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
