@@ -5,36 +5,36 @@
 	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
 	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
-	<string>F88BDF8C-DA51-4F26-8F41-0B24041871ED</string>
+	<string>9C75BB05-BF12-49C2-97E7-55A9185AE497</string>
 	<key>IDESourceControlProjectName</key>
 	<string>JSONAPI</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>FE443601-535A-449B-8B87-CC41DD4F8383</key>
-		<string>ssh://github.com/joshdholtz/jsonapi-ios.git</string>
+		<key>B3DD3412-9367-4750-B876-F2E6A2364B05</key>
+		<string>https://github.com/SpotHopperLLC/jsonapi-ios.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>Project/JSONAPI.xcodeproj/project.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>FE443601-535A-449B-8B87-CC41DD4F8383</key>
+		<key>B3DD3412-9367-4750-B876-F2E6A2364B05</key>
 		<string>../../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>ssh://github.com/joshdholtz/jsonapi-ios.git</string>
+	<string>https://github.com/SpotHopperLLC/jsonapi-ios.git</string>
 	<key>IDESourceControlProjectVersion</key>
 	<integer>110</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>FE443601-535A-449B-8B87-CC41DD4F8383</string>
+	<string>B3DD3412-9367-4750-B876-F2E6A2364B05</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>FE443601-535A-449B-8B87-CC41DD4F8383</string>
+			<string>B3DD3412-9367-4750-B876-F2E6A2364B05</string>
 			<key>IDESourceControlWCCName</key>
-			<string>JSONAPI</string>
+			<string>jsonapi-ios</string>
 		</dict>
 	</array>
 </dict>

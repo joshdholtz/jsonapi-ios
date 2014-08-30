@@ -8,36 +8,57 @@
 
 #import "JSONAPIResourceModeler.h"
 
+#import "JSONAPI.h"
+
 @implementation JSONAPIResourceModeler
 
-+ (instancetype)sharedModeler {
-    static JSONAPIResourceModeler *_sharedModeler = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        _sharedModeler = [[JSONAPIResourceModeler alloc] init];
-    });
++ (instancetype)defaultInstance {
+    static JSONAPIResourceModeler *_defaultInstance = nil;
+    if (!_defaultInstance) {
+         _defaultInstance = [[JSONAPIResourceModeler alloc] init];
+    }
     
-    return _sharedModeler;
+    return _defaultInstance;
 }
 
 - (id)init {
     self = [super init];
     if (self) {
-        self.resourceToLinkedType = [NSMutableDictionary dictionary];
+        self.resourceToLinkedType = @{}.mutableCopy;
     }
     return self;
 }
 
 + (void)useResource:(Class)jsonApiResource toLinkedType:(NSString *)linkedType {
-    [[JSONAPIResourceModeler sharedModeler].resourceToLinkedType setValue:jsonApiResource forKey:linkedType];
+    [[JSONAPIResourceModeler defaultInstance].resourceToLinkedType setValue:jsonApiResource forKey:linkedType];
 }
 
 + (Class)resourceForLinkedType:(NSString *)linkedType {
-    return [[JSONAPIResourceModeler sharedModeler].resourceToLinkedType valueForKey:linkedType];
+    return [[JSONAPIResourceModeler defaultInstance].resourceToLinkedType valueForKey:linkedType];
 }
 
 + (void)unmodelAll {
-    [[JSONAPIResourceModeler sharedModeler].resourceToLinkedType removeAllObjects];
+    [[JSONAPIResourceModeler defaultInstance].resourceToLinkedType removeAllObjects];
+}
+
+- (void)useResource:(Class)jsonApiResource toLinkedType:(NSString *)linkedType {
+    [self.resourceToLinkedType setValue:jsonApiResource forKey:linkedType];
+}
+
+- (Class)resourceForLinkedType:(NSString *)linkedType {
+    Class c = [self.resourceToLinkedType valueForKey:linkedType];
+
+#ifndef NDEBUG
+    if ([JSONAPI isDebuggingEnabled]) {
+        NSLog(@"Warning: Class not defined for '%@' (%@)", linkedType, NSStringFromSelector(_cmd));
+    }
+#endif
+    
+    return c;
+}
+
+- (void)unmodelAll {
+    [self.resourceToLinkedType removeAllObjects];
 }
 
 @end

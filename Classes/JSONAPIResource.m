@@ -8,6 +8,7 @@
 
 #import "JSONAPIResource.h"
 
+#import "JSONAPI.h"
 #import "JSONAPIResourceFormatter.h"
 #import "JSONAPIResourceLinker.h"
 
@@ -33,11 +34,16 @@
 }
 
 + (NSArray*)jsonAPIResources:(NSArray*)array withLinked:(NSDictionary*)linked withClass:(Class)resourceObjectClass {
+#ifndef NDEBUG
+    if ([JSONAPI isDebuggingEnabled]) {
+        NSLog(@"Warning: Class not defined for linked resources: %@ (%@)", array, NSStringFromSelector(_cmd));
+    }
+#endif
     if (resourceObjectClass == nil) {
         resourceObjectClass = [self class];
     }
     
-    NSMutableArray *mutableArray = [[NSMutableArray alloc] init];
+    NSMutableArray *mutableArray = @[].mutableCopy;
     for (NSDictionary *dict in array) {
         [mutableArray addObject:[[resourceObjectClass alloc] initWithDictionary:dict withLinked:linked]];
     }
@@ -63,7 +69,7 @@
 - (id)init {
     self = [super init];
     if (self) {
-        self.__resourceLinks = [NSMutableDictionary dictionary];
+        self.__resourceLinks = @{}.mutableCopy;
     }
     return self;
 }
@@ -79,11 +85,11 @@
 }
 
 - (id)objectForKey:(NSString*)key {
-    return [self.__dictionary objectForKey:key];
+    return (self.__dictionary)[key];
 }
 
 - (id)linkedResourceForKey:(NSString *)key {
-    return [self.__resourceLinks objectForKey:key];
+    return (self.__resourceLinks)[key];
 }
 
 - (NSDictionary *)mapKeysToProperties {
@@ -106,9 +112,9 @@
     for (NSString *key in [map allKeys]) {
         
         // Checks if the key to map is in the dictionary to map
-        if ([dict objectForKey:key] != nil && [dict objectForKey:key] != [NSNull null]) {
+        if (dict[key] != nil && dict[key] != [NSNull null]) {
             
-            NSString *property = [map objectForKey:key];
+            NSString *property = map[key];
             
             NSRange inflateRange = [property rangeOfString:@"."];
             NSRange formatRange = [property rangeOfString:@":"];
@@ -120,9 +126,9 @@
                     NSString *formatFunction = [property substringToIndex:formatRange.location];
                     property = [property substringFromIndex:(formatRange.location+1)];
                     
-                    [self setValue:[JSONAPIResourceFormatter performFormatBlock:[dict objectForKey:key] withName:formatFunction] forKey:property ];
+                    [self setValue:[[JSONAPIResourceFormatter defaultInstance] performFormatBlock:dict[key] withName:formatFunction] forKey:property ];
                 } else {
-                    [self setValue:[dict objectForKey:key] forKey:property ];
+                    [self setValue:dict[key] forKey:property ];
                 }
             }
             @catch (NSException *exception) {
@@ -140,26 +146,26 @@
     // Loops through links of resources
     for (NSString *linkTypeUnmapped in self.links.allKeys) {
         
-        NSString *linkType = [JSONAPIResourceLinker linkedType:linkTypeUnmapped];
+        NSString *linkType = [[JSONAPIResourceLinker defaultInstance] linkedType:linkTypeUnmapped];
         if (linkType == nil) {
             linkType = linkTypeUnmapped;
         }
         
         // Gets linked objects for the resource
-        id linksTo = [self.links objectForKey:linkTypeUnmapped];
+        id linksTo = (self.links)[linkTypeUnmapped];
         if ([linksTo isKindOfClass:[NSNumber class]] == YES || [linksTo isKindOfClass:[NSString class]] == YES) {
             
-            JSONAPIResource *linkedResource = [[linked objectForKey:linkType] objectForKey:linksTo];
+            JSONAPIResource *linkedResource = linked[linkType][linksTo];
             
             if (linkedResource != nil) {
-                [self.__resourceLinks setObject:linkedResource forKey:linkTypeUnmapped];
+                (self.__resourceLinks)[linkTypeUnmapped] = linkedResource;
             }
             
         } else if ([linksTo isKindOfClass:[NSArray class]] == YES) {
-            NSMutableArray *linkedResources = [NSMutableArray array];
-            [self.__resourceLinks setObject:linkedResources forKey:linkTypeUnmapped];
+            NSMutableArray *linkedResources = @[].mutableCopy;
+            (self.__resourceLinks)[linkTypeUnmapped] = linkedResources;
             for (id linkedId in linksTo) {
-                JSONAPIResource *linkedResource = [[linked objectForKey:linkType] objectForKey:linkedId];
+                JSONAPIResource *linkedResource = linked[linkType][linkedId];
                 if (linkedResource != nil) {
                     [linkedResources addObject:linkedResource];
                 }
@@ -172,7 +178,7 @@
     for (NSString *key in [self mapKeysToProperties]) {
         if ([key hasPrefix:@"links."] == YES) {
             
-            NSString *propertyName = [[self mapKeysToProperties] objectForKey:key];
+            NSString *propertyName = [self mapKeysToProperties][key];
             NSString *linkedResource = [key stringByReplacingOccurrencesOfString:@"links." withString:@""];
             
             id resource = [self linkedResourceForKey:linkedResource];
@@ -190,6 +196,10 @@
     }
 }
 
+- (NSDictionary *)linkedResources {
+    return self.__resourceLinks;
+}
+
 #pragma mark - NSCopying
 
 - (id)copyWithZone:(NSZone *)zone {
@@ -203,7 +213,7 @@
         // Link links for mapped key to properties
         for (NSString *key in [copy __resourceLinks]) {
             @try {
-                [copy setValue:[[copy __resourceLinks] objectForKey:key] forKey:key];
+                [copy setValue:[copy __resourceLinks][key] forKey:key];
             }
             @catch (NSException *exception) {
                 NSLog(@"JSONAPIResource Warning - %@", [exception description]);
@@ -217,9 +227,8 @@
 
 #pragma mark - NSCoding
 
-- (NSArray *)propertyKeys
-{
-    NSMutableArray *array = [NSMutableArray array];
+- (NSArray *)propertyKeys {
+    NSMutableArray *array = @[].mutableCopy;
     Class class = [self class];
     while (class != [NSObject class])
     {
@@ -230,12 +239,12 @@
             //get property
             objc_property_t property = properties[i];
             const char *propertyName = property_getName(property);
-            NSString *key = [NSString stringWithCString:propertyName encoding:NSUTF8StringEncoding];
+            NSString *key = @(propertyName);
             
             //check if read-only
             BOOL readonly = NO;
             const char *attributes = property_getAttributes(property);
-            NSString *encoding = [NSString stringWithCString:attributes encoding:NSUTF8StringEncoding];
+            NSString *encoding = @(attributes);
             if ([[encoding componentsSeparatedByString:@","] containsObject:@"R"])
             {
                 readonly = YES;
@@ -266,8 +275,7 @@
     return array;
 }
 
-- (id)initWithCoder:(NSCoder *)aDecoder
-{
+- (id)initWithCoder:(NSCoder *)aDecoder {
     if ((self = [self init]))
     {
         for (NSString *key in [self propertyKeys])
@@ -279,8 +287,7 @@
     return self;
 }
 
-- (void)encodeWithCoder:(NSCoder *)aCoder
-{
+- (void)encodeWithCoder:(NSCoder *)aCoder {
     for (NSString *key in [self propertyKeys])
     {
         id value = [self valueForKey:key];

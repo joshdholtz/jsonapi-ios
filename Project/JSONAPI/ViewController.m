@@ -20,18 +20,21 @@
 
 @implementation ViewController
 
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
     [super viewDidLoad];
     
-    // Setup
-    [JSONAPIResourceLinker link:@"author" toLinkedType:@"people"];
-    [JSONAPIResourceModeler useResource:[CommentResource class] toLinkedType:@"comments"];
-    [JSONAPIResourceModeler useResource:[PeopleResource class] toLinkedType:@"people"];
-    [JSONAPIResourceModeler useResource:[PostResource class] toLinkedType:@"posts"];
+    [JSONAPI setIsDebuggingEnabled:TRUE];
     
-    // Register formatting
-    [JSONAPIResourceFormatter registerFormat:@"Date" withBlock:^id(id jsonValue) {
+    // Linking
+    [[JSONAPIResourceLinker defaultInstance] link:@"author" toLinkedType:@"people"];
+    
+    // Modeling
+    [[JSONAPIResourceModeler defaultInstance] useResource:[CommentResource class] toLinkedType:@"comments"];
+    [[JSONAPIResourceModeler defaultInstance] useResource:[PeopleResource class] toLinkedType:@"people"];
+    [[JSONAPIResourceModeler defaultInstance] useResource:[PostResource class] toLinkedType:@"posts"];
+    
+    // Formatting
+    [[JSONAPIResourceFormatter defaultInstance] registerFormat:@"Date" withBlock:^id(id jsonValue) {
         NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
         [dateFormatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"]];
         [dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZ"];
@@ -62,13 +65,6 @@
             NSLog(@"\t%@", comment.text);
         }
     }
-    
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 #pragma mark - Response Generator
