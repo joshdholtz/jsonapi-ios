@@ -19,6 +19,11 @@
 @property (nonatomic, strong) NSDictionary *linked;
 @property (nonatomic, strong) NSError *error;
 
+@property (nonatomic, readonly) NSDictionary *dictionary;
+
++ (void)setIsDebuggingEnabled:(BOOL)enabled;
++ (BOOL)isDebuggingEnabled;
+
 + (id)JSONAPIWithString:(NSString*)string;
 + (id)JSONAPIWithDictionary:(NSDictionary*)dictionary;
 

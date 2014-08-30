@@ -10,30 +10,41 @@
 
 @implementation JSONAPIResourceLinker
 
-+ (instancetype)sharedLinker {
-    static JSONAPIResourceLinker *_sharedLinker = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        _sharedLinker = [[JSONAPIResourceLinker alloc] init];
-    });
++ (instancetype)defaultInstance {
+    static JSONAPIResourceLinker *_defaultInstance = nil;
+    if (!_defaultInstance) {
+        _defaultInstance = [[JSONAPIResourceLinker alloc] init];
+    }
     
-    return _sharedLinker;
+    return _defaultInstance;
 }
 
 - (id)init {
     self = [super init];
     if (self) {
-        self.linkedTypeToLinksType = [NSMutableDictionary dictionary];
+        self.linkedTypeToLinksType = @{}.mutableCopy;
     }
     return self;
 }
 
 + (void)link:(NSString*)resourceLinkType toLinkedType:(NSString*)linkedType {
-    [[JSONAPIResourceLinker sharedLinker].linkedTypeToLinksType setObject:linkedType forKey:resourceLinkType];
+    [[JSONAPIResourceLinker defaultInstance] link:resourceLinkType toLinkedType:linkedType];
 }
 
 + (NSString*)linkedType:(NSString*)resourceLinkType {
-    NSString *type = [[JSONAPIResourceLinker sharedLinker].linkedTypeToLinksType objectForKey:resourceLinkType];
+    return [[JSONAPIResourceLinker defaultInstance] linkedType:resourceLinkType];
+}
+
++ (void)unlinkAll {
+    [[JSONAPIResourceLinker defaultInstance] unlinkAll];
+}
+
+- (void)link:(NSString*)resourceLinkType toLinkedType:(NSString*)linkedType {
+    (self.linkedTypeToLinksType)[resourceLinkType] = linkedType;
+}
+
+- (NSString*)linkedType:(NSString*)resourceLinkType {
+    NSString *type = (self.linkedTypeToLinksType)[resourceLinkType];
     if (type == nil) {
         type = resourceLinkType;
     }
@@ -41,16 +52,8 @@
     return type;
 }
 
-+ (void)unlinkAll {
-    [[JSONAPIResourceLinker sharedLinker].linkedTypeToLinksType removeAllObjects];
-}
-
-- (void)link:(NSString*)resourceLinkType toLinked:(NSString*)linkedType {
-    [self.linkedTypeToLinksType setObject:linkedType forKey:resourceLinkType];
-}
-
-- (NSString*)linkedType:(NSString*)resourceLinkType {
-    return [self.linkedTypeToLinksType objectForKey:resourceLinkType];
+- (void)unlinkAll {
+    [self.linkedTypeToLinksType removeAllObjects];
 }
 
 @end

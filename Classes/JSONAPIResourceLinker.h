@@ -12,9 +12,16 @@
 
 @property (nonatomic, strong) NSMutableDictionary *linkedTypeToLinksType;
 
-+ (void)link:(NSString*)resourceLinkType toLinkedType:(NSString*)linkedType;
-+ (NSString*)linkedType:(NSString*)resourceLinkType;
++ (instancetype)defaultInstance;
 
-+ (void)unlinkAll;
++ (void)link:(NSString*)resourceLinkType toLinkedType:(NSString*)linkedType __deprecated;
++ (NSString*)linkedType:(NSString*)resourceLinkType __deprecated;
+
++ (void)unlinkAll __deprecated;
+
+- (void)link:(NSString*)resourceLinkType toLinkedType:(NSString*)linkedType;
+- (NSString*)linkedType:(NSString*)resourceLinkType;
+
+- (void)unlinkAll;
 
 @end

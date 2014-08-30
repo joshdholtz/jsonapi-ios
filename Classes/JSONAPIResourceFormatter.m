@@ -8,22 +8,27 @@
 
 #import "JSONAPIResourceFormatter.h"
 
-@interface JSONAPIResourceFormatter()
+#import "JSONAPI.h"
 
-@property (nonatomic, strong) NSMutableDictionary *formatBlocks;
+@interface JSONAPIResourceFormatter ()
+
+@property (nonatomic, strong, readwrite) NSMutableDictionary *formatBlocks;
 
 @end
 
 @implementation JSONAPIResourceFormatter
 
-+ (instancetype)sharedFormatter {
-    static JSONAPIResourceFormatter *_sharedFormatter = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        _sharedFormatter = [[JSONAPIResourceFormatter alloc] init];
-    });
+- (NSString *)description {
+    return [NSString stringWithFormat:@"Format Blocks: %@", self.formatBlocks.allKeys];
+}
+
++ (instancetype)defaultInstance {
+    static JSONAPIResourceFormatter *_defaultInstance = nil;
+    if (!_defaultInstance) {
+        _defaultInstance = [[JSONAPIResourceFormatter alloc] init];
+    }
     
-    return _sharedFormatter;
+    return _defaultInstance;
 }
 
 - (id)init {
@@ -35,17 +40,40 @@
 }
 
 + (void)registerFormat:(NSString*)name withBlock:(id(^)(id jsonValue))block {
-    [[JSONAPIResourceFormatter sharedFormatter].formatBlocks setObject:[block copy] forKey:name];
+    [[JSONAPIResourceFormatter defaultInstance] registerFormat:name withBlock:block];
 }
 
 + (id)performFormatBlock:(NSString*)value withName:(NSString*)name {
+    return [[JSONAPIResourceFormatter defaultInstance] performFormatBlock:value withName:name];
+}
+
+- (void)registerFormat:(NSString*)name withBlock:(id(^)(id jsonValue))block {
+    self.formatBlocks[name] = [block copy];
+}
+
+- (id)performFormatBlock:(NSString*)value withName:(NSString*)name {
     id(^block)(NSString *);
-    block = [[JSONAPIResourceFormatter sharedFormatter].formatBlocks objectForKey:name];
+    block = (self.formatBlocks)[name];
     if (block != nil) {
         return block(value);
-    } else {
+    }
+    else {
+#ifndef NDEBUG
+        if ([JSONAPI isDebuggingEnabled]) {
+            NSLog(@"Warning: Formatting block was not defined for '%@' (%@)", name, NSStringFromSelector(_cmd));
+        }
+#endif
         return nil;
     }
+}
+
+- (BOOL)hasFormatBlock:(NSString*)name {
+    NSAssert(self.formatBlocks, @"Property must be defined");
+    return [self.formatBlocks.allKeys containsObject:name];
+}
+
+- (void)unregisterAll {
+    [self.formatBlocks removeAllObjects];
 }
 
 @end

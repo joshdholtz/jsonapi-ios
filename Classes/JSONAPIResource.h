@@ -14,6 +14,8 @@
 @property (nonatomic, strong) NSString *href;
 @property (nonatomic, strong) NSDictionary *links;
 
+@property (nonatomic, readonly) NSDictionary *linkedResources;
+
 + (NSArray*)jsonAPIResources:(NSArray*)array withLinked:(NSDictionary*)linked;
 + (NSArray*)jsonAPIResources:(NSArray*)array withLinked:(NSDictionary*)linked withClass:(Class)resourceObjectClass;
 

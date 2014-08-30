@@ -10,11 +10,23 @@
 
 @interface JSONAPI()
 
-@property (nonatomic, strong) NSDictionary *dictionary;
+@property (nonatomic, strong, readwrite) NSDictionary *dictionary;
 
 @end
 
 @implementation JSONAPI
+
+static BOOL _isDebuggingEnabled;
+
+#pragma mark - Debugging
+
++ (void)setIsDebuggingEnabled:(BOOL)enabled {
+    _isDebuggingEnabled = enabled;
+}
+
++ (BOOL)isDebuggingEnabled {
+    return _isDebuggingEnabled;
+}
 
 #pragma mark - Init
 
@@ -55,7 +67,7 @@
 #pragma mark - Resources
 
 - (id)objectForKey:(NSString*)key {
-    return [_dictionary objectForKey:key];
+    return _dictionary[key];
 }
 
 - (id)resourceForKey:(NSString*)key {
@@ -63,7 +75,7 @@
     
     NSArray *resources = [self resourcesForKey:key];
     if (resources.count > 0) {
-        return [resources objectAtIndex:0];
+        return resources[0];
     }
     
     return resource;
@@ -74,10 +86,10 @@
         return nil;
     }
     
-    NSArray *rawResources = [_dictionary objectForKey:key];
+    NSArray *rawResources = _dictionary[key];
     NSArray *resources = nil;
     if ([rawResources isKindOfClass:[NSArray class]] == YES) {
-        Class c = [JSONAPIResourceModeler resourceForLinkedType:[JSONAPIResourceLinker linkedType:key]];
+        Class c = [[JSONAPIResourceModeler defaultInstance] resourceForLinkedType:[[JSONAPIResourceLinker defaultInstance] linkedType:key]];
         resources = [JSONAPIResource jsonAPIResources:rawResources withLinked:self.linked withClass:c];
     }
     
@@ -91,43 +103,40 @@
     _dictionary = dictionary;
     
     // Sets meta
-    _meta = [dictionary objectForKey:@"meta"];
+    _meta = dictionary[@"meta"];
     if ([_meta isKindOfClass:[NSDictionary class]] == NO) {
         _meta = nil;
     }
     
     // Sets linked
-    NSMutableDictionary *creatingLinked = [NSMutableDictionary dictionary];
-    NSDictionary *rawLinked = [dictionary objectForKey:@"linked"];
+    NSMutableDictionary *creatingLinked = @{}.mutableCopy;
+    NSDictionary *rawLinked = dictionary[@"linked"];
     if ([rawLinked isKindOfClass:[NSDictionary class]] == YES) {
         
-        NSMutableArray *linkedToLinkWithLinked = [NSMutableArray array];
+        NSMutableArray *linkedToLinkWithLinked = @[].mutableCopy;
         
         // Loops through linked arrays
         for (NSString *key in rawLinked.allKeys) {
-            NSArray *value = [rawLinked objectForKey:key];
+            NSArray *value = rawLinked[key];
             
             if ([value isKindOfClass:[NSArray class]] == YES) {
-                NSMutableDictionary *resources = [NSMutableDictionary dictionary];
+                NSMutableDictionary *resources = @{}.mutableCopy;
                 for (NSDictionary *resourceDictionary in value) {
-                    Class c = [JSONAPIResourceModeler resourceForLinkedType:[JSONAPIResourceLinker linkedType:key]];
+                    Class c = [[JSONAPIResourceModeler defaultInstance] resourceForLinkedType:[[JSONAPIResourceLinker defaultInstance] linkedType:key]];
                     JSONAPIResource *resource = [JSONAPIResource jsonAPIResource:resourceDictionary withLinked:nil withClass:c];
                     if (resource.ID != nil) {
-                        [resources setObject:resource forKey:resource.ID];
+                        resources[resource.ID] = resource;
                         [linkedToLinkWithLinked addObject:resource];
                     }
                 }
-                [creatingLinked setObject:resources forKey:key];
-                
+                creatingLinked[key] = resources;
             }
-            
         }
         
         // Linked the linked
         for (JSONAPIResource *resource in linkedToLinkWithLinked) {
             [resource linkLinks:creatingLinked];
         }
-        
     }
     
     _linked = creatingLinked;

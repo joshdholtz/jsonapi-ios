@@ -12,9 +12,16 @@
 
 @property (nonatomic, strong) NSMutableDictionary *resourceToLinkedType;
 
-+ (void)useResource:(Class)jsonApiResource toLinkedType:(NSString*)linkedType;
-+ (Class)resourceForLinkedType:(NSString*)linkedType;
++ (instancetype)defaultInstance;
 
-+ (void)unmodelAll;
++ (void)useResource:(Class)jsonApiResource toLinkedType:(NSString*)linkedType __deprecated;
++ (Class)resourceForLinkedType:(NSString*)linkedType __deprecated;
+
++ (void)unmodelAll __deprecated;
+
+- (void)useResource:(Class)jsonApiResource toLinkedType:(NSString*)linkedType;
+- (Class)resourceForLinkedType:(NSString*)linkedType;
+
+- (void)unmodelAll;
 
 @end
