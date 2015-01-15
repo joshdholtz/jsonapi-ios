@@ -90,6 +90,15 @@
     return [[NSDictionary alloc] init];
 }
 
+- (BOOL)setWithResource:(id)otherResource {
+    if ([otherResource isKindOfClass:[self class]] == YES) {
+        
+        return YES;
+    }
+    
+    return NO;
+}
+
 - (void)setWithDictionary:(NSDictionary*)dict {
     self.__dictionary = dict;
     
@@ -148,9 +157,7 @@
         // Gets linked objects for the resource
         id linksTo = [self.links objectForKey:linkTypeUnmapped];
         if ([linksTo isKindOfClass:[NSNumber class]] == YES || [linksTo isKindOfClass:[NSString class]] == YES) {
-            
             JSONAPIResource *linkedResource = [[linked objectForKey:linkType] objectForKey:linksTo];
-            
             if (linkedResource != nil) {
                 [self.__resourceLinks setObject:linkedResource forKey:linkTypeUnmapped];
             }

@@ -59,14 +59,27 @@
 }
 
 - (id)resourceForKey:(NSString*)key {
-    JSONAPIResource *resource;
+    if ([key isEqualToString:@"meta"] == YES || [key isEqualToString:@"linked"] == YES) {
+        return nil;
+    }
     
-    NSArray *resources = [self resourcesForKey:key];
-    if (resources.count > 0) {
-        return [resources objectAtIndex:0];
+    NSDictionary *rawResource = [_dictionary objectForKey:key];
+    JSONAPIResource *resource = nil;
+    if ([rawResource isKindOfClass:[NSDictionary class]] == YES) {
+        Class c = [JSONAPIResourceModeler resourceForLinkedType:[JSONAPIResourceLinker linkedType:key]];
+        resource = [JSONAPIResource jsonAPIResource:rawResource withLinked:self.linked withClass:c];
+    }
+    
+    // Fall back to first element in array
+    if (resource == nil) {
+        id resources = [self resourcesForKey:key];
+        if ([resources isKindOfClass:[NSArray class]] == YES) {
+            return [resources firstObject];
+        }
     }
     
     return resource;
+
 }
 
 - (NSArray*)resourcesForKey:(NSString*)key {
