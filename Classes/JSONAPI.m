@@ -97,6 +97,20 @@
     return resources;
 }
 
+- (NSMutableArray *)arrayFromDictionary:(NSDictionary *)dictionary withKey:(NSString *)key
+{
+    NSMutableArray *array = [[NSMutableArray alloc]init];
+    
+    if([[dictionary objectForKey:key] isKindOfClass:[NSDictionary class]]) {
+        [array addObject:[dictionary objectForKey:key]];
+    }
+    else {
+        array = [dictionary objectForKey:key];
+    }
+    
+    return array;
+}
+
 #pragma mark - Private
 
 - (void)inflateWithDictionary:(NSDictionary*)dictionary {
@@ -118,7 +132,7 @@
         
         // Loops through linked arrays
         for (NSString *key in rawLinked.allKeys) {
-            NSArray *value = [rawLinked objectForKey:key];
+            NSArray *value = [self arrayFromDictionary:rawLinked withKey:key];
             
             if ([value isKindOfClass:[NSArray class]] == YES) {
                 NSMutableDictionary *resources = [NSMutableDictionary dictionary];
