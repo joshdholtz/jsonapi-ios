@@ -219,6 +219,15 @@
 
     }
     
+    BOOL isEmptyDictionary = !self.__dictionary || self.__dictionary.count == 0;
+    
+    if (isEmptyDictionary) {
+        for (NSString *key in self.propertyKeys) {
+            id selfValue = [self valueForKey:key];
+            [copy setValue:selfValue forKey:key];
+        }
+    }
+    
     return copy;
 }
 
