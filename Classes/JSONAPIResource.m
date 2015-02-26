@@ -295,4 +295,32 @@
     }
 }
 
+#pragma mark - NSObject -
+
+- (BOOL)isEqual:(id)object
+{
+    if (self == object) return YES;
+    if (![object isMemberOfClass:[self class]]) return NO;
+    
+    for (NSString *key in self.propertyKeys) {
+        id selfValue = [self valueForKey:key];
+        id objectValue = [object valueForKey:key];
+        
+        BOOL valuesEqual = ((selfValue == nil && objectValue == nil) || [selfValue isEqual:objectValue]);
+        if (!valuesEqual) return NO;
+    }
+    
+    return YES;
+}
+
+- (NSUInteger)hash {
+    NSUInteger value = 0;
+    
+    for (NSString *key in self.propertyKeys) {
+        value ^= [[self valueForKey:key] hash];
+    }
+    
+    return value;
+}
+
 @end
