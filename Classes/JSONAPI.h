@@ -26,7 +26,7 @@
 - (id)initWithDictionary:(NSDictionary*)dictionary;
 
 - (id)objectForKey:(NSString*)key;
-- (id)resourceForKey:(NSString*)key;
-- (NSArray*)resourcesForKey:(NSString*)key;
+- (id)resource;
+- (NSArray*)resources;
 
 @end

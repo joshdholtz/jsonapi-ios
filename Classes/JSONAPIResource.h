@@ -15,10 +15,7 @@
 @property (nonatomic, strong) NSDictionary *links;
 
 + (NSArray*)jsonAPIResources:(NSArray*)array withLinked:(NSDictionary*)linked;
-+ (NSArray*)jsonAPIResources:(NSArray*)array withLinked:(NSDictionary*)linked withClass:(Class)resourceObjectClass;
-
 + (id)jsonAPIResource:(NSDictionary*)dictionary withLinked:(NSDictionary*)linked;
-+ (id)jsonAPIResource:(NSDictionary*)dictionary withLinked:(NSDictionary*)linked withClass:(Class)resourceObjectClass;
 
 - (id)initWithDictionary:(NSDictionary*)dict withLinked:(NSDictionary*)linked;
 - (void)setWithDictionary:(NSDictionary*)dict;

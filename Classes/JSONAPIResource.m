@@ -10,6 +10,7 @@
 
 #import "JSONAPIResourceFormatter.h"
 #import "JSONAPIResourceLinker.h"
+#import "JSONAPIResourceModeler.h"
 
 #import <objc/runtime.h>
 #import <objc/message.h>
@@ -29,16 +30,11 @@
 #pragma mark - Class Methods
 
 + (NSArray*)jsonAPIResources:(NSArray*)array withLinked:(NSDictionary*)linked {
-    return [JSONAPIResource jsonAPIResources:array withLinked:linked withClass:[self class]];
-}
-
-+ (NSArray*)jsonAPIResources:(NSArray*)array withLinked:(NSDictionary*)linked withClass:(Class)resourceObjectClass {
-    if (resourceObjectClass == nil) {
-        resourceObjectClass = [self class];
-    }
     
     NSMutableArray *mutableArray = [[NSMutableArray alloc] init];
     for (NSDictionary *dict in array) {
+        NSString *type = dict[@"type"] ?: @"";
+        Class resourceObjectClass = [JSONAPIResourceModeler resourceForLinkedType:[JSONAPIResourceLinker linkedType:type]];
         [mutableArray addObject:[[resourceObjectClass alloc] initWithDictionary:dict withLinked:linked]];
     }
     
@@ -46,13 +42,8 @@
 }
 
 + (id)jsonAPIResource:(NSDictionary*)dictionary withLinked:(NSDictionary*)linked {
-    return [JSONAPIResource jsonAPIResource:dictionary withLinked:linked withClass:[self class]];
-}
-
-+ (id)jsonAPIResource:(NSDictionary*)dictionary withLinked:(NSDictionary*)linked withClass:(Class)resourceObjectClass {
-    if (resourceObjectClass == nil) {
-        resourceObjectClass = [self class];
-    }
+    NSString *type = dictionary[@"type"] ?: @"";
+    Class resourceObjectClass = [JSONAPIResourceModeler resourceForLinkedType:[JSONAPIResourceLinker linkedType:type]];
     
     return [[resourceObjectClass alloc] initWithDictionary:dictionary withLinked:linked];
 }
@@ -146,31 +137,38 @@
 }
 
 - (void)linkLinks:(NSDictionary*)linked {
+    
     // Loops through links of resources
-    for (NSString *linkTypeUnmapped in self.links.allKeys) {
-        
-        NSString *linkType = [JSONAPIResourceLinker linkedType:linkTypeUnmapped];
-        if (linkType == nil) {
-            linkType = linkTypeUnmapped;
-        }
+    for (NSString *linkKey in self.links.allKeys) {
         
         // Gets linked objects for the resource
-        id linksTo = [self.links objectForKey:linkTypeUnmapped];
-        if ([linksTo isKindOfClass:[NSNumber class]] == YES || [linksTo isKindOfClass:[NSString class]] == YES) {
-            JSONAPIResource *linkedResource = [[linked objectForKey:linkType] objectForKey:linksTo];
-            if (linkedResource != nil) {
-                [self.__resourceLinks setObject:linkedResource forKey:linkTypeUnmapped];
-            }
+        id linksTo = [self.links objectForKey:linkKey];
+        if ([linksTo isKindOfClass:[NSDictionary class]] == YES) {
             
-        } else if ([linksTo isKindOfClass:[NSArray class]] == YES) {
-            NSMutableArray *linkedResources = [NSMutableArray array];
-            [self.__resourceLinks setObject:linkedResources forKey:linkTypeUnmapped];
-            for (id linkedId in linksTo) {
-                JSONAPIResource *linkedResource = [[linked objectForKey:linkType] objectForKey:linkedId];
+            NSString *linkType = linksTo[@"type"];
+            linkType = [JSONAPIResourceLinker linkedType:linkType] ?: linkType;
+            
+            if (linksTo[@"id"] != nil) {
+                id linksToId = linksTo[@"id"];
+                
+                JSONAPIResource *linkedResource = [[linked objectForKey:linkType] objectForKey:linksToId];
                 if (linkedResource != nil) {
-                    [linkedResources addObject:linkedResource];
+                    [self.__resourceLinks setObject:linkedResource forKey:linkKey];
+                }
+            } else if (linksTo[@"ids"] != nil) {
+                id linksToIds = linksTo[@"ids"];
+                
+                NSMutableArray *linkedResources = [NSMutableArray array];
+                [self.__resourceLinks setObject:linkedResources forKey:linkKey];
+                
+                for (id linkedId in linksToIds) {
+                    JSONAPIResource *linkedResource = [[linked objectForKey:linkType] objectForKey:linkedId];
+                    if (linkedResource != nil) {
+                        [linkedResources addObject:linkedResource];
+                    }
                 }
             }
+            
             
         }
     }
