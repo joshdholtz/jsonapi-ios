@@ -8,6 +8,7 @@
 
 #import "JSONAPIResource.h"
 
+#import "JSONAPI.h"
 #import "JSONAPIResourceFormatter.h"
 #import "JSONAPIResourceLinker.h"
 #import "JSONAPIResourceModeler.h"
@@ -98,6 +99,7 @@
     [map addEntriesFromDictionary:@{
                                          @"id" : @"ID",
                                          @"href" : @"href",
+                                         @"type" : @"type",
                                          @"links" : @"links"
                                          }];
     
@@ -134,64 +136,75 @@
     }
 }
 
-//- (void)linkLinks:(NSDictionary*)linked {
-//    
-//    // Loops through links of resources
-//    for (NSString *linkKey in self.links.allKeys) {
-//        
-//        // Gets linked objects for the resource
-//        id linksTo = [self.links objectForKey:linkKey];
-//        if ([linksTo isKindOfClass:[NSDictionary class]] == YES) {
-//            
-//            NSString *linkType = linksTo[@"type"];
-//            linkType = [JSONAPIResourceLinker linkedType:linkType] ?: linkType;
-//            
-//            if (linksTo[@"id"] != nil) {
-//                id linksToId = linksTo[@"id"];
-//                
-//                JSONAPIResource *linkedResource = [[linked objectForKey:linkType] objectForKey:linksToId];
-//                if (linkedResource != nil) {
-//                    [self.__resourceLinks setObject:linkedResource forKey:linkKey];
-//                }
-//            } else if (linksTo[@"ids"] != nil) {
-//                id linksToIds = linksTo[@"ids"];
-//                
-//                NSMutableArray *linkedResources = [NSMutableArray array];
-//                [self.__resourceLinks setObject:linkedResources forKey:linkKey];
-//                
-//                for (id linkedId in linksToIds) {
-//                    JSONAPIResource *linkedResource = [[linked objectForKey:linkType] objectForKey:linkedId];
-//                    if (linkedResource != nil) {
-//                        [linkedResources addObject:linkedResource];
-//                    }
-//                }
-//            }
-//            
-//            
-//        }
-//    }
-//    
-//    // Link links for mapped key to properties
-//    for (NSString *key in [self mapKeysToProperties]) {
-//        if ([key hasPrefix:@"links."] == YES) {
-//            
-//            NSString *propertyName = [[self mapKeysToProperties] objectForKey:key];
-//            NSString *linkedResource = [key stringByReplacingOccurrencesOfString:@"links." withString:@""];
-//            
-//            id resource = [self linkedResourceForKey:linkedResource];
-//            if (resource != nil) {
-//                
-//                @try {
-//                    [self setValue:resource forKey:propertyName];
-//                }
-//                @catch (NSException *exception) {
-//                    NSLog(@"JSONAPIResource Warning - %@", [exception description]);
-//                }
-//            }
-//            
-//        }
-//    }
-//}
+- (void)linkWithIncluded:(JSONAPI*)jsonAPI {
+    
+    NSDictionary *included = jsonAPI.includedResources;
+    
+    // Loops through links of resources
+    for (NSString *linkKey in self.links.allKeys) {
+        
+        // Gets linked objects for the resource
+        id linksTo = self.links[linkKey];
+        if ([linksTo isKindOfClass:[NSDictionary class]] == YES) {
+            
+            id linkage = linksTo[@"linkage"];
+            if ([linkage isKindOfClass:[NSDictionary class]] == YES) {
+
+                NSString *linkType = linkage[@"type"];
+                linkType = [JSONAPIResourceLinker linkedType:linkType] ?: linkType;
+                
+                if (linkage[@"id"] != nil) {
+                    id linksToId = linkage[@"id"];
+                    
+                    JSONAPIResource *linkedResource = included[linkType][linksToId];
+                    if (linkedResource != nil) {
+                        [self.__resourceLinks setObject:linkedResource forKey:linkKey];
+                    }
+                }
+
+            } else if ([linkage isKindOfClass:[NSArray class]] == YES) {
+                
+                NSMutableArray *linkedResources = @[].mutableCopy;
+                for (NSDictionary *linkageData in linkage) {
+                    NSString *linkType = linkageData[@"type"];
+                    linkType = [JSONAPIResourceLinker linkedType:linkType] ?: linkType;
+                    
+                    if (linkageData[@"id"] != nil) {
+                        id linksToId = linkageData[@"id"];
+                        
+                        JSONAPIResource *linkedResource = included[linkType][linksToId];
+                        if (linkedResource != nil) {
+                            [linkedResources addObject:linkedResources];
+                        }
+                    }
+                }
+                [self.__resourceLinks setObject:linkedResources forKey:linkKey];
+                
+            }
+        }
+    }
+    
+    // Link links for mapped key to properties
+    for (NSString *key in [self mapKeysToProperties]) {
+        if ([key hasPrefix:@"links."] == YES) {
+            
+            NSString *propertyName = [[self mapKeysToProperties] objectForKey:key];
+            NSString *linkedResource = [key stringByReplacingOccurrencesOfString:@"links." withString:@""];
+            
+            id resource = [self linkedResourceForKey:linkedResource];
+            if (resource != nil) {
+                
+                @try {
+                    [self setValue:resource forKey:propertyName];
+                }
+                @catch (NSException *exception) {
+                    NSLog(@"JSONAPIResource Warning - %@", [exception description]);
+                }
+            }
+            
+        }
+    }
+}
 
 #pragma mark - NSCopying
 

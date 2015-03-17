@@ -21,6 +21,7 @@
 
 @property (readonly) id resource;
 @property (nonatomic, strong, readonly) NSArray *resources;
+@property (nonatomic, strong, readonly) NSDictionary *includedResources;
 
 @property (nonatomic, strong, readonly) NSError *internalError;
 
@@ -29,5 +30,7 @@
 + (instancetype)jsonAPIWithString:(NSString *)string;
 - (instancetype)initWithDictionary:(NSDictionary*)dictionary;
 - (instancetype)initWithString:(NSString*)string;
+
+- (id)includedResource:(id)ID withType:(NSString*)type;
 
 @end

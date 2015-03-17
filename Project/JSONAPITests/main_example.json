@@ -42,14 +42,24 @@
                  "id": "5",
                  "body": "First!",
                  "links": {
-                 "self": "http://example.com/comments/5"
+                 "self": "http://example.com/comments/5",
+                 "author": {
+                 "self": "http://example.com/posts/1/links/author",
+                 "related": "http://example.com/posts/1/author",
+                 "linkage": { "type": "people", "id": "9" }
+                 }
                  }
                  }, {
                  "type": "comments",
                  "id": "12",
                  "body": "I like XML better",
                  "links": {
-                 "self": "http://example.com/comments/12"
+                 "self": "http://example.com/comments/12",
+                 "author": {
+                 "self": "http://example.com/posts/1/links/author",
+                 "related": "http://example.com/posts/1/author",
+                 "linkage": { "type": "people", "id": "9" }
+                 }
                  }
                  }]
 }

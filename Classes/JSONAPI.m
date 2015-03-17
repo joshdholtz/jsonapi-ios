@@ -60,48 +60,11 @@
     return _resources.firstObject;
 }
 
-//- (id)objectForKey:(NSString*)key {
-//    return [_dictionary objectForKey:key];
-//}
-
-//- (id)resource {
-//    NSString *key = @"data";
-//    if ([key isEqualToString:@"meta"] == YES || [key isEqualToString:@"linked"] == YES) {
-//        return nil;
-//    }
-//    
-//    NSDictionary *rawResource = [_dictionary objectForKey:key];
-//    JSONAPIResource *resource = nil;
-//    if ([rawResource isKindOfClass:[NSDictionary class]] == YES) {
-//        resource = [JSONAPIResource jsonAPIResource:rawResource withLinked:self.linked];
-//    }
-//    
-//    // Fall back to first element in array
-//    if (resource == nil) {
-//        id resources = [self resources];
-//        if ([resources isKindOfClass:[NSArray class]] == YES) {
-//            return [resources firstObject];
-//        }
-//    }
-//    
-//    return resource;
-//
-//}
-
-//- (NSArray*)resources {
-//    NSString *key = @"data";
-//    if ([key isEqualToString:@"meta"] == YES || [key isEqualToString:@"linked"] == YES) {
-//        return nil;
-//    }
-//    
-//    NSArray *rawResources = [_dictionary objectForKey:key];
-//    NSArray *resources = nil;
-//    if ([rawResources isKindOfClass:[NSArray class]] == YES) {
-//        resources = [JSONAPIResource jsonAPIResources:rawResources withLinked:self.linked];
-//    }
-//    
-//    return resources;
-//}
+- (id)includedResource:(id)ID withType:(NSString *)type {
+    if (ID == nil) return nil;
+    if (type == nil) return nil;
+    return _includedResources[type][ID];
+}
 
 #pragma mark - Private
 
@@ -133,37 +96,36 @@
         if (resource) [resources addObject:resource];
     }
     _resources = resources;
+    
+    // Parses included resources
+    NSArray *included = _dictionary[@"included"];
+    NSMutableDictionary *includedResources = @{}.mutableCopy;
+    for (NSDictionary *data in included) {
+        
+        JSONAPIResource *resource = [self inflateResourceData:data];
+        if (resource) {
 
-//    // Sets linked
-//    NSMutableDictionary *creatingLinked = [NSMutableDictionary dictionary];
-//    NSDictionary *rawLinked = [dictionary objectForKey:@"linked"];
-//    if ([rawLinked isKindOfClass:[NSArray class]] == YES) {
-//        
-//        NSMutableArray *linkedToLinkWithLinked = [NSMutableArray array];
-//        
-//        // Loops through linked arrays
-//        for (NSDictionary *resourceDictionary in rawLinked) {
-//            
-//            NSString *type = resourceDictionary[@"type"];
-//            NSMutableDictionary *resources = creatingLinked[type] ?: @{}.mutableCopy;
-//            [creatingLinked setObject:resources forKey:type];
-//            
-//            JSONAPIResource *resource = [JSONAPIResource jsonAPIResource:resourceDictionary withLinked:nil];
-//            if (resource.ID != nil) {
-//                [resources setObject:resource forKey:resource.ID];
-//                [linkedToLinkWithLinked addObject:resource];
-//            }
-//            
-//        }
-//        
-//        // Linked the linked
-//        for (JSONAPIResource *resource in linkedToLinkWithLinked) {
-//            [resource linkLinks:creatingLinked];
-//        }
-//        
-//    }
-//    
-//    _linked = creatingLinked;
+            NSMutableDictionary *typeDict = includedResources[resource.type] ?: @{}.mutableCopy;
+            typeDict[resource.ID] = resource;
+            
+            includedResources[resource.type] = typeDict;
+        }
+    }
+    _includedResources = includedResources;
+    
+    // Link included with included
+    // TODO: Need to look into / stop circular references
+    for (NSDictionary *typeIncluded in _includedResources.allValues) {
+        for (JSONAPIResource *resource in typeIncluded.allValues) {
+            [resource linkWithIncluded:self];
+        }
+    }
+    
+    // Link data with included
+    for (JSONAPIResource *resource in _resources) {
+        [resource linkWithIncluded:self];
+    }
+
 }
 
 - (id)inflateResourceData:(NSDictionary*)data {

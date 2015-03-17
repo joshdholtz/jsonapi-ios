@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+@class JSONAPI;
+
 @interface JSONAPIResource : NSObject<NSCopying, NSCoding>
 
 @property (nonatomic, strong) id ID;
@@ -18,5 +20,6 @@
 + (NSArray*)jsonAPIResources:(NSArray*)array;
 
 - (NSDictionary *)mapKeysToProperties;
+- (void)linkWithIncluded:(JSONAPI*)jsonAPI;
 
 @end
