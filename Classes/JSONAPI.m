@@ -8,6 +8,8 @@
 
 #import "JSONAPI.h"
 
+#import "JSONAPIErrorResource.h"
+
 @interface JSONAPI()
 
 @property (nonatomic, strong) NSDictionary *dictionary;
@@ -64,6 +66,10 @@
     if (ID == nil) return nil;
     if (type == nil) return nil;
     return _includedResources[type][ID];
+}
+
+- (BOOL)hasErrors {
+    return _errors.count > 0;
 }
 
 #pragma mark - Private
@@ -126,6 +132,16 @@
         [resource linkWithIncluded:self];
     }
 
+    // Parse errors
+    NSMutableArray *errors = @[].mutableCopy;
+    NSLog(@"ERROS - %@", _dictionary[@"errors"]);
+    for (NSDictionary *data in _dictionary[@"errors"]) {
+        
+        JSONAPIErrorResource *resource = [[JSONAPIErrorResource alloc] initWithDictionary:data];
+        NSLog(@"Error resource - %@", resource);
+        if (resource) [errors addObject:resource];
+    }
+    _errors = errors;
 }
 
 - (id)inflateResourceData:(NSDictionary*)data {

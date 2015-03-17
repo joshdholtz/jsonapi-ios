@@ -9,6 +9,7 @@
 #import <XCTest/XCTest.h>
 
 #import "JSONAPI.h"
+#import "JSONAPIErrorResource.h"
 
 #import "CommentResource.h"
 #import "PeopleResource.h"
@@ -73,7 +74,7 @@
     XCTAssertEqual(post.comments.count, 2, @"Post should contain 2 comments");
 }
 
-- (void)testIncludedIsLinked {
+- (void)testIncludedCommentIsLinked {
     NSDictionary *json = [self mainExampleJSON];
     JSONAPI *jsonAPI = [JSONAPI jsonAPIWithDictionary:json];
     
@@ -82,10 +83,31 @@
     XCTAssertEqualObjects(comment.author.ID, @"9", @"Comment's author's ID should be 9");
 }
 
+- (void)testNoError {
+    NSDictionary *json = [self mainExampleJSON];
+    JSONAPI *jsonAPI = [JSONAPI jsonAPIWithDictionary:json];
+ 
+    XCTAssertFalse([jsonAPI hasErrors], @"JSON API should not have errors");
+}
+
+- (void)testError {
+    NSDictionary *json = [self errorExampleJSON];
+    JSONAPI *jsonAPI = [JSONAPI jsonAPIWithDictionary:json];
+    
+    XCTAssertTrue([jsonAPI hasErrors], @"JSON API should have errors");
+    
+    JSONAPIErrorResource *error = jsonAPI.errors.firstObject;
+    XCTAssertEqualObjects(error.ID, @"123456", @"Error id should be 123456");
+}
+
 #pragma mark - Private
 
 - (NSDictionary*)mainExampleJSON {
     return [self jsonFor:@"main_example" ofType:@"json"];
+}
+
+- (NSDictionary*)errorExampleJSON {
+    return [self jsonFor:@"error_example" ofType:@"json"];
 }
 
 - (NSDictionary*)jsonFor:(NSString*)resource ofType:(NSString*)type {

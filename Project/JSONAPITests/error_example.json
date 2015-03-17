@@ -1,0 +1,21 @@
+{
+    "meta": {
+        "hehe": "hoho"
+    },
+    "links": {
+        "self": "http://example.com/posts",
+        "next": "http://example.com/posts?page[offset]=2",
+        "last": "http://example.com/posts?page[offset]=10"
+    },
+    "data": [],
+    "errors": [{
+                 "id": "123456",
+                 "href": "/internet/is/fun",
+                 "status": "400",
+                 "code": "123abc",
+                 "title": "some title",
+                 "detail": "some detail",
+                 "links": ["a_link"],
+                 "paths": ["a_path"]
+                 }]
+}

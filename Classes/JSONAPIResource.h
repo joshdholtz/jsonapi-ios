@@ -14,10 +14,12 @@
 
 @property (nonatomic, strong) id ID;
 @property (nonatomic, strong) NSString *type;
-@property (nonatomic, strong) NSDictionary *links;
+@property (nonatomic, strong) id links;
 
 + (id)jsonAPIResource:(NSDictionary*)dictionary;
 + (NSArray*)jsonAPIResources:(NSArray*)array;
+
+- (id)initWithDictionary:(NSDictionary*)dict;
 
 - (NSDictionary *)mapKeysToProperties;
 - (void)linkWithIncluded:(JSONAPI*)jsonAPI;

@@ -10,8 +10,8 @@
 
 #import "JSONAPIResource.h"
 #import "JSONAPIResourceFormatter.h"
-#import "JSONAPIResourceLinker.h"
 #import "JSONAPIResourceModeler.h"
+#import "JSONAPIErrorResource.h"
 
 @interface JSONAPI : NSObject
 
@@ -32,5 +32,6 @@
 - (instancetype)initWithString:(NSString*)string;
 
 - (id)includedResource:(id)ID withType:(NSString*)type;
+- (BOOL)hasErrors;
 
 @end

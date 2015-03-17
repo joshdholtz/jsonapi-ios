@@ -10,7 +10,6 @@
 
 #import "JSONAPI.h"
 #import "JSONAPIResourceFormatter.h"
-#import "JSONAPIResourceLinker.h"
 #import "JSONAPIResourceModeler.h"
 
 #import <objc/runtime.h>
@@ -35,7 +34,7 @@
     NSMutableArray *mutableArray = @[].mutableCopy;
     for (NSDictionary *dict in array) {
         NSString *type = dict[@"type"] ?: @"";
-        Class resourceObjectClass = [JSONAPIResourceModeler resourceForLinkedType:[JSONAPIResourceLinker linkedType:type]];
+        Class resourceObjectClass = [JSONAPIResourceModeler resourceForLinkedType:type];
         [mutableArray addObject:[[resourceObjectClass alloc] initWithDictionary:dict]];
     }
     
@@ -44,7 +43,7 @@
 
 + (id)jsonAPIResource:(NSDictionary*)dictionary {
     NSString *type = dictionary[@"type"] ?: @"";
-    Class resourceObjectClass = [JSONAPIResourceModeler resourceForLinkedType:[JSONAPIResourceLinker linkedType:type]];
+    Class resourceObjectClass = [JSONAPIResourceModeler resourceForLinkedType:type];
     
     return [[resourceObjectClass alloc] initWithDictionary:dictionary];
 }
@@ -141,7 +140,8 @@
     NSDictionary *included = jsonAPI.includedResources;
     
     // Loops through links of resources
-    for (NSString *linkKey in self.links.allKeys) {
+    NSDictionary *links = self.links;
+    for (NSString *linkKey in links.allKeys) {
         
         // Gets linked objects for the resource
         id linksTo = self.links[linkKey];
@@ -151,7 +151,6 @@
             if ([linkage isKindOfClass:[NSDictionary class]] == YES) {
 
                 NSString *linkType = linkage[@"type"];
-                linkType = [JSONAPIResourceLinker linkedType:linkType] ?: linkType;
                 
                 if (linkage[@"id"] != nil) {
                     id linksToId = linkage[@"id"];
@@ -167,7 +166,6 @@
                 NSMutableArray *linkedResources = @[].mutableCopy;
                 for (NSDictionary *linkageData in linkage) {
                     NSString *linkType = linkageData[@"type"];
-                    linkType = [JSONAPIResourceLinker linkedType:linkType] ?: linkType;
                     
                     if (linkageData[@"id"] != nil) {
                         id linksToId = linkageData[@"id"];
