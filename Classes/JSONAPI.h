@@ -15,18 +15,19 @@
 
 @interface JSONAPI : NSObject
 
-@property (nonatomic, strong) NSDictionary *meta;
-@property (nonatomic, strong) NSDictionary *linked;
-@property (nonatomic, strong) NSError *error;
+@property (nonatomic, strong, readonly) NSDictionary *meta;
+@property (nonatomic, strong, readonly) id data;
+@property (nonatomic, strong, readonly) NSArray *errors;
 
-+ (id)JSONAPIWithString:(NSString*)string;
-+ (id)JSONAPIWithDictionary:(NSDictionary*)dictionary;
+@property (readonly) id resource;
+@property (nonatomic, strong, readonly) NSArray *resources;
 
-- (id)initWithString:(NSString*)string;
-- (id)initWithDictionary:(NSDictionary*)dictionary;
+@property (nonatomic, strong, readonly) NSError *internalError;
 
-- (id)objectForKey:(NSString*)key;
-- (id)resource;
-- (NSArray*)resources;
+// Initializers
++ (instancetype)jsonAPIWithDictionary:(NSDictionary *)dictionary;
++ (instancetype)jsonAPIWithString:(NSString *)string;
+- (instancetype)initWithDictionary:(NSDictionary*)dictionary;
+- (instancetype)initWithString:(NSString*)string;
 
 @end
