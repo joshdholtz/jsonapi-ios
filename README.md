@@ -9,6 +9,7 @@ A library for loading data from a [JSON API](http://jsonapi.org) datasource. Par
 
 Version | Changes
 --- | ---
+**1.0.0-rc1** | Rewrote core of `JSONAPI` and `JSONAPIResource` and all unit tests to be up to spec with JSON API spec 1.0.0-rc3. Removed `JSONAPIResourceLinker`. Added `JSONAPIErrorResource`
 **0.2.0** | Added `NSCopying` and `NSCoded` to `JSONAPIResource`; Added `JSONAPIResourceFormatter` to format values before getting mapped - [more info](#formatter)
 **0.1.2** | `JSONAPIResource` IDs can either be numbers or strings (thanks [danylhebreux](https://github.com/danylhebreux)); `JSONAPIResource` subclass can have mappings defined to set JSON values into properties automatically - [more info](#resource-mappings)
 **0.1.1** | Fixed linked resources with links so they actually link to other linked resources
@@ -16,7 +17,6 @@ Version | Changes
 
 ### Features
 - Parses datasource into manageable objects of `JSONAPIResource`
-- Auto-links resources with custom link mapping definitions using `JSONAPIResourceLinker` (ex: link 'book' to 'books', link 'person' to 'people')
 - Allows resource types to be created into subclasses of `JSONAPIResource` using `JSONAPIResourceModeler`
 - Set mapping for `JSONAPIResource` subclass to set JSON values into properties
 
@@ -30,7 +30,7 @@ Clone the repository and drop in the .h and .m files from the "Classes" director
 JSONAPI is available through [CocoaPods](http://cocoapods.org), to install
 it simply add the following line to your Podfile:
 
-    pod 'JSONAPI', '~> 0.2.0'
+    pod 'JSONAPI', '~> 1.0.0-rc1'
 
 ## Usage
 
@@ -54,13 +54,13 @@ Below is an example to register a "Date" function to format a date in a NSString
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"]];
     [dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZ"];
-    
+
     NSDate *date = nil;
     NSError *error = nil;
     if (![dateFormatter getObjectValue:&date forString:jsonValue range:nil error:&error]) {
         NSLog(@"Date '%@' could not be parsed: %@", jsonValue, error);
     }
-    
+
     return date;
 }];
 
@@ -97,35 +97,6 @@ Below is an example to register a "Date" function to format a date in a NSString
 
 ````
 
-### JSONAPIResourceLinker
-`JSONAPIResourceLinker` is used for configuring the type of 'links' resources to 'linked' resources.
-
-#### Example
-The "author" defined in "links" need to be mapped to the "people" type in "linked"
-
-````
-{
-    "posts":[
-        {
-            "id":1,
-            "name":"A post!",
-            "links":{
-                "author":9
-            }
-        }
-    ],
-    "linked":{
-        "people":[
-            {
-                "id":9,
-                "name":"Josh Holtz"
-            }
-        ]
-    }
-}
-
-````
-
 ### JSONAPIResourceModeler
 
 `JSONAPIResourceModeler` is used for configuring what type of JSONAPIResource subclass that resource types are created into.
@@ -136,13 +107,13 @@ The "author" defined in "links" need to be mapped to the "people" type in "linke
 
 ```` objc
 
-NSString *json = @"{\"posts\":[{\"id\":1,\"name\":\"A post!\"},{\"id\":2,\"name\":\"Another post!\"}]}";
+NSString *json = @"{\"data\":[{\"id\":1,\"type\":\"posts\",\"name\":\"A post!\"},{\"id\":2,\"type\":\"posts\",\"name\":\"Another post!\"}]}";
 
 // Parses JSON string into JSONAPI object
 JSONAPI *jsonApi = [JSONAPI JSONAPIWithString:json];
 
 // Iterates over JSONAPIResources for "posts"
-NSArray *posts = [jsonApi resourcesForKey:@"posts"];
+NSArray *posts = jsonApi.resources;
 for (JSONAPIResource *post in posts) {
     // Prints post name
     NSLog(@"\"%@\"", [post objectForKey:@"name"]);
@@ -151,39 +122,12 @@ for (JSONAPIResource *post in posts) {
 
 ````
 
-### Parsing - Using linked resources
-
-```` objc
-
-NSString *json = @"{\"posts\":[{\"id\":1,\"name\":\"A post!\",\"links\":{\"author\":9}},{\"id\":2,\"name\":\"Another post!\",\"links\":{\"author\":10}}],\"linked\":{\"people\":[{\"id\":9,\"name\":\"Josh Holtz\"},{\"id\":10,\"name\":\"Bandit the Cat\"}]}}";
-
-// Links "author" resource to "people" linked resources
-[JSONAPIResourceLinker link:@"author" toLinkedType:@"people"];
-
-// Parses JSON string into JSONAPI object
-JSONAPI *jsonApi = [JSONAPI JSONAPIWithString:json];
-
-// Iterates over JSONAPIResources for "posts"
-NSArray *posts = [jsonApi resourcesForKey:@"posts"];
-for (JSONAPIResource *post in posts) {
-    // Gets linked author resource
-    JSONAPIResource *author = [post linkedResourceForKey:@"author"];
-    
-    // Prints post name and author
-    NSLog(@"\"%@\" by %@", [post objectForKey:@"name"], [author objectForKey:@"name"]);
-}
-
-````
-
-### Parsing - Using linked resources, subclassed JSONAPIResource classes, and model mappings
+### Parsing - Using  subclassed JSONAPIResource classes, and model mappings
 This example shows how a response can be mapped directly into properties of a sublcasses JSONAPIResource
 
 ```` objc
 
-NSString *json = @"{\"posts\":[{\"id\":1,\"name\":\"A post!\",\"links\":{\"author\":9,\"comments\":[2,3]}},{\"id\":2,\"name\":\"Another post!\",\"links\":{\"author\":10,\"comments\":[3,4]}}],\"linked\":{\"people\":[{\"id\":9,\"name\":\"Josh Holtz\"},{\"id\":10,\"name\":\"Bandit the Cat\"}],\"comments\":[{\"id\":2,\"text\":\"Omg this post is awesome\"},{ \"id\":3,\"text\":\"Omg this post is awesomer\"},{ \"id\":4,\"text\":\"Meeeehhhhh\"}]}}";
-
-// Links "author" resource to "people" linked resources
-[JSONAPIResourceLinker link:@"author" toLinkedType:@"people"];
+NSString *json = @"{ \"data\": [{ \"type\": \"posts\", \"id\": \"1\", \"title\": \"JSON API paints my bikeshed!\", \"links\": { \"self\": \"http:\/\/example.com\/posts\/1\", \"author\": { \"linkage\": { \"type\": \"people\", \"id\": \"9\" } }, \"comments\": { \"linkage\": [ { \"type\": \"comments\", \"id\": \"5\" }, { \"type\": \"comments\", \"id\": \"12\" } ] } } }], \"included\": [{ \"type\": \"people\", \"id\": \"9\", \"first-name\": \"Dan\", \"last-name\": \"Gebhardt\", \"twitter\": \"dgeb\", \"links\": { } }, { \"type\": \"comments\", \"id\": \"5\", \"body\": \"First!\", \"links\": { \"author\": { \"linkage\": { \"type\": \"people\", \"id\": \"9\" } } } }, { \"type\": \"comments\", \"id\": \"12\", \"body\": \"I like XML better\", \"links\": { \"author\": { \"linkage\": { \"type\": \"people\", \"id\": \"9\" } } } }] }";
 
 // Loads "people" into `PeopleResource`, "posts" into `PostResource`, and "comments" into `CommentResource`
 [JSONAPIResourceModeler useResource:[PeopleResource class] toLinkedType:@"people"];
@@ -194,14 +138,14 @@ NSString *json = @"{\"posts\":[{\"id\":1,\"name\":\"A post!\",\"links\":{\"autho
 JSONAPI *jsonApi = [JSONAPI JSONAPIWithString:json];
 
 // Gets posts from JSONAPI that will be an array of PostResource objects
-NSArray *posts = [jsonApi resourcesForKey:@"posts"];
+NSArray *posts = jsonApi.resources;
 
 // Parsing using JSONAPI and modeled resources (PostResource, PeopleResource, CommentResource
 for (PostResource *post in posts) {
-    
+
     PeopleResource *author = post.author;
     NSLog(@"\"%@\" by %@", post.name, author.name);
-    
+
     NSArray *comments = post.comments;
     for (CommentResource *comment in comments) {
         NSLog(@"\t%@", comment.text);
@@ -289,5 +233,3 @@ Josh Holtz, me@joshholtz.com, [@joshdholtz](https://twitter.com/joshdholtz)
 ## License
 
 JSONAPI is available under the MIT license. See the LICENSE file for more info.
-
-

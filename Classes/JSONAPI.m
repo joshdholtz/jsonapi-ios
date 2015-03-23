@@ -8,6 +8,8 @@
 
 #import "JSONAPI.h"
 
+#import "JSONAPIErrorResource.h"
+
 @interface JSONAPI()
 
 @property (nonatomic, strong) NSDictionary *dictionary;
@@ -16,28 +18,30 @@
 
 @implementation JSONAPI
 
-#pragma mark - Init
+#pragma mark - Class
 
-+ (id)JSONAPIWithString:(NSString*)string {
-    return [[JSONAPI alloc] initWithString:string];
-}
-
-+ (id)JSONAPIWithDictionary:(NSDictionary*)dictionary {
++ (instancetype)jsonAPIWithDictionary:(NSDictionary *)dictionary {
     return [[JSONAPI alloc] initWithDictionary:dictionary];
 }
 
-- (id)initWithString:(NSString*)string {
++ (instancetype)jsonAPIWithString:(NSString *)string {
+    return [[JSONAPI alloc] initWithString:string];
+}
+
+#pragma mark - Instance
+
+- (instancetype)initWithDictionary:(NSDictionary*)dictionary {
     self = [super init];
     if (self) {
-        [self inflateWithString:string];
+        [self inflateWithDictionary:dictionary];
     }
     return self;
 }
 
-- (id)initWithDictionary:(NSDictionary*)dictionary {
+- (instancetype)initWithString:(NSString*)string {
     self = [super init];
     if (self) {
-        [self inflateWithDictionary:dictionary];
+        [self inflateWithString:string];
     }
     return self;
 }
@@ -48,102 +52,100 @@
     if ([json isKindOfClass:[NSDictionary class]] == YES) {
         [self inflateWithDictionary:json];
     } else {
-        _error = [NSError errorWithDomain:@"Could not parse JSON" code:0 userInfo:nil];
+        _internalError = [NSError errorWithDomain:@"Could not parse JSON" code:0 userInfo:nil];
     }
 }
 
 #pragma mark - Resources
 
-- (id)objectForKey:(NSString*)key {
-    return [_dictionary objectForKey:key];
+- (id)resource {
+    return _resources.firstObject;
 }
 
-- (id)resourceForKey:(NSString*)key {
-    if ([key isEqualToString:@"meta"] == YES || [key isEqualToString:@"linked"] == YES) {
-        return nil;
-    }
-    
-    NSDictionary *rawResource = [_dictionary objectForKey:key];
-    JSONAPIResource *resource = nil;
-    if ([rawResource isKindOfClass:[NSDictionary class]] == YES) {
-        Class c = [JSONAPIResourceModeler resourceForLinkedType:[JSONAPIResourceLinker linkedType:key]];
-        resource = [JSONAPIResource jsonAPIResource:rawResource withLinked:self.linked withClass:c];
-    }
-    
-    // Fall back to first element in array
-    if (resource == nil) {
-        id resources = [self resourcesForKey:key];
-        if ([resources isKindOfClass:[NSArray class]] == YES) {
-            return [resources firstObject];
-        }
-    }
-    
-    return resource;
-
+- (id)includedResource:(id)ID withType:(NSString *)type {
+    if (ID == nil) return nil;
+    if (type == nil) return nil;
+    return _includedResources[type][ID];
 }
 
-- (NSArray*)resourcesForKey:(NSString*)key {
-    if ([key isEqualToString:@"meta"] == YES || [key isEqualToString:@"linked"] == YES) {
-        return nil;
-    }
-    
-    NSArray *rawResources = [_dictionary objectForKey:key];
-    NSArray *resources = nil;
-    if ([rawResources isKindOfClass:[NSArray class]] == YES) {
-        Class c = [JSONAPIResourceModeler resourceForLinkedType:[JSONAPIResourceLinker linkedType:key]];
-        resources = [JSONAPIResource jsonAPIResources:rawResources withLinked:self.linked withClass:c];
-    }
-    
-    return resources;
+- (BOOL)hasErrors {
+    return _errors.count > 0;
 }
 
 #pragma mark - Private
 
 - (void)inflateWithDictionary:(NSDictionary*)dictionary {
-    // Sets dictionary
+    
+    // Sets internal dictionary
     _dictionary = dictionary;
     
     // Sets meta
-    _meta = [dictionary objectForKey:@"meta"];
+    _meta = dictionary[@"meta"];
     if ([_meta isKindOfClass:[NSDictionary class]] == NO) {
         _meta = nil;
     }
     
-    // Sets linked
-    NSMutableDictionary *creatingLinked = [NSMutableDictionary dictionary];
-    NSDictionary *rawLinked = [dictionary objectForKey:@"linked"];
-    if ([rawLinked isKindOfClass:[NSDictionary class]] == YES) {
+    // Parse resources
+    _data = _dictionary[@"data"];
+    
+    NSMutableArray *resources = @[].mutableCopy;
+    if ([_data isKindOfClass:[NSArray class]] == YES) {
         
-        NSMutableArray *linkedToLinkWithLinked = [NSMutableArray array];
-        
-        // Loops through linked arrays
-        for (NSString *key in rawLinked.allKeys) {
-            NSArray *value = [rawLinked objectForKey:key];
-            
-            if ([value isKindOfClass:[NSArray class]] == YES) {
-                NSMutableDictionary *resources = [NSMutableDictionary dictionary];
-                for (NSDictionary *resourceDictionary in value) {
-                    Class c = [JSONAPIResourceModeler resourceForLinkedType:[JSONAPIResourceLinker linkedType:key]];
-                    JSONAPIResource *resource = [JSONAPIResource jsonAPIResource:resourceDictionary withLinked:nil withClass:c];
-                    if (resource.ID != nil) {
-                        [resources setObject:resource forKey:resource.ID];
-                        [linkedToLinkWithLinked addObject:resource];
-                    }
-                }
-                [creatingLinked setObject:resources forKey:key];
-                
-            }
-            
+        NSArray *dataArray = (NSArray*) _data;
+        for (NSDictionary *data in dataArray) {
+            id resource = [self inflateResourceData:data];
+            if (resource) [resources addObject:resource];
         }
         
-        // Linked the linked
-        for (JSONAPIResource *resource in linkedToLinkWithLinked) {
-            [resource linkLinks:creatingLinked];
-        }
+    } else if ([_data isKindOfClass:[NSDictionary class]] == YES) {
+        id resource = [self inflateResourceData:_data];
+        if (resource) [resources addObject:resource];
+    }
+    _resources = resources;
+    
+    // Parses included resources
+    NSArray *included = _dictionary[@"included"];
+    NSMutableDictionary *includedResources = @{}.mutableCopy;
+    for (NSDictionary *data in included) {
         
+        JSONAPIResource *resource = [self inflateResourceData:data];
+        if (resource) {
+
+            NSMutableDictionary *typeDict = includedResources[resource.type] ?: @{}.mutableCopy;
+            typeDict[resource.ID] = resource;
+            
+            includedResources[resource.type] = typeDict;
+        }
+    }
+    _includedResources = includedResources;
+    
+    // Link included with included
+    // TODO: Need to look into / stop circular references
+    for (NSDictionary *typeIncluded in _includedResources.allValues) {
+        for (JSONAPIResource *resource in typeIncluded.allValues) {
+            [resource linkWithIncluded:self];
+        }
     }
     
-    _linked = creatingLinked;
+    // Link data with included
+    for (JSONAPIResource *resource in _resources) {
+        [resource linkWithIncluded:self];
+    }
+
+    // Parse errors
+    NSMutableArray *errors = @[].mutableCopy;
+    NSLog(@"ERROS - %@", _dictionary[@"errors"]);
+    for (NSDictionary *data in _dictionary[@"errors"]) {
+        
+        JSONAPIErrorResource *resource = [[JSONAPIErrorResource alloc] initWithDictionary:data];
+        NSLog(@"Error resource - %@", resource);
+        if (resource) [errors addObject:resource];
+    }
+    _errors = errors;
+}
+
+- (id)inflateResourceData:(NSDictionary*)data {
+    return [JSONAPIResource jsonAPIResource:data];
 }
 
 @end

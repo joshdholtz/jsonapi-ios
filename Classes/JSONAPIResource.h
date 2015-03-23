@@ -8,26 +8,20 @@
 
 #import <Foundation/Foundation.h>
 
+@class JSONAPI;
+
 @interface JSONAPIResource : NSObject<NSCopying, NSCoding>
 
 @property (nonatomic, strong) id ID;
-@property (nonatomic, strong) NSString *href;
-@property (nonatomic, strong) NSDictionary *links;
+@property (nonatomic, strong) NSString *type;
+@property (nonatomic, strong) id links;
 
-+ (NSArray*)jsonAPIResources:(NSArray*)array withLinked:(NSDictionary*)linked;
-+ (NSArray*)jsonAPIResources:(NSArray*)array withLinked:(NSDictionary*)linked withClass:(Class)resourceObjectClass;
++ (id)jsonAPIResource:(NSDictionary*)dictionary;
++ (NSArray*)jsonAPIResources:(NSArray*)array;
 
-+ (id)jsonAPIResource:(NSDictionary*)dictionary withLinked:(NSDictionary*)linked;
-+ (id)jsonAPIResource:(NSDictionary*)dictionary withLinked:(NSDictionary*)linked withClass:(Class)resourceObjectClass;
-
-- (id)initWithDictionary:(NSDictionary*)dict withLinked:(NSDictionary*)linked;
-- (void)setWithDictionary:(NSDictionary*)dict;
-
-- (id)objectForKey:(NSString*)key;
-- (id)linkedResourceForKey:(NSString*)key;
-
-- (void)linkLinks:(NSDictionary*)linked;
+- (id)initWithDictionary:(NSDictionary*)dict;
 
 - (NSDictionary *)mapKeysToProperties;
+- (void)linkWithIncluded:(JSONAPI*)jsonAPI;
 
 @end

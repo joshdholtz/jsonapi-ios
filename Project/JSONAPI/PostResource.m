@@ -12,7 +12,7 @@
 
 - (NSDictionary *)mapKeysToProperties {
     return @{
-             @"name" : @"name",
+             @"title" : @"title",
              @"date" : @"Date:date",
              @"links.author" : @"author",
              @"links.comments" : @"comments"

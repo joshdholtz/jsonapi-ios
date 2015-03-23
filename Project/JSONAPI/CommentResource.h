@@ -8,8 +8,11 @@
 
 #import "JSONAPIResource.h"
 
+@class PeopleResource;
+
 @interface CommentResource : JSONAPIResource
 
 @property (nonatomic, strong) NSString *text;
+@property (nonatomic, strong) PeopleResource *author;
 
 @end
