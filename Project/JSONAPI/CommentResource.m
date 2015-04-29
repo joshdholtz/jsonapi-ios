@@ -8,13 +8,27 @@
 
 #import "CommentResource.h"
 
+#import "JSONAPIPropertyDescriptor.h"
+#import "JSONAPIResourceDescriptor.h"
+
+#import "PeopleResource.h"
+
+
 @implementation CommentResource
 
-- (NSDictionary *)mapKeysToProperties {
-    return @{
-             @"text" : @"text",
-             @"links.author" : @"author",
-             };
+static JSONAPIResourceDescriptor *_descriptor = nil;
+
++ (JSONAPIResourceDescriptor*)descriptor {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        _descriptor = [[JSONAPIResourceDescriptor alloc] initWithClass:[self class] forLinkedType:@"comments"];
+
+        [_descriptor addProperty:@"text" withDescription:[[JSONAPIPropertyDescriptor alloc] initWithJsonName:@"body"]];
+        
+        [_descriptor hasOne:[PeopleResource class] withName:@"author"];
+    });
+
+    return _descriptor;
 }
 
 @end

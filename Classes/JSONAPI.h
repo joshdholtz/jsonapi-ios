@@ -8,12 +8,12 @@
 
 #import <Foundation/Foundation.h>
 
-#import "JSONAPIResource.h"
-#import "JSONAPIResourceFormatter.h"
-#import "JSONAPIResourceModeler.h"
-#import "JSONAPIErrorResource.h"
+@class JSONAPIResource;
 
 @interface JSONAPI : NSObject
+
+// Class variables
++ (NSString*)MEDIA_TYPE;
 
 @property (nonatomic, strong, readonly) NSDictionary *meta;
 @property (nonatomic, strong, readonly) id data;
@@ -28,8 +28,12 @@
 // Initializers
 + (instancetype)jsonAPIWithDictionary:(NSDictionary *)dictionary;
 + (instancetype)jsonAPIWithString:(NSString *)string;
++ (instancetype)jsonAPIWithResource:(JSONAPIResource*)resource;
+
 - (instancetype)initWithDictionary:(NSDictionary*)dictionary;
 - (instancetype)initWithString:(NSString*)string;
+
+- (NSDictionary*)dictionary;
 
 - (id)includedResource:(id)ID withType:(NSString*)type;
 - (BOOL)hasErrors;

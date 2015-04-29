@@ -8,16 +8,25 @@
 
 #import "JSONAPIErrorResource.h"
 
+#import "JSONAPIResourceDescriptor.h"
+
 @implementation JSONAPIErrorResource
 
-- (NSDictionary *)mapKeysToProperties {
-    return @{
-             @"status" : @"status",
-             @"code" : @"code",
-             @"title" : @"title",
-             @"detail" : @"detail",
-             @"paths" : @"paths",
-             };
++ (JSONAPIResourceDescriptor*)descriptor {
+    static JSONAPIResourceDescriptor *_descriptor = nil;
+    
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        _descriptor = [[JSONAPIResourceDescriptor alloc] initWithClass:[self class] forLinkedType:@"errors"];
+        
+        [_descriptor addProperty:@"status"];
+        [_descriptor addProperty:@"code"];
+        [_descriptor addProperty:@"title"];
+        [_descriptor addProperty:@"detail"];
+        [_descriptor addProperty:@"paths"];
+        [_descriptor addProperty:@"links"];
+    });
+    
+    return _descriptor;
 }
-
 @end

@@ -10,6 +10,8 @@
 
 @interface PeopleResource : JSONAPIResource
 
-@property (nonatomic, strong) NSString *name;
+@property (nonatomic, strong) NSString *firstName;
+@property (nonatomic, strong) NSString *lastName;
+@property (nonatomic, strong) NSString *twitter;
 
 @end

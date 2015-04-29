@@ -9,6 +9,7 @@
 #import <XCTest/XCTest.h>
 
 #import "JSONAPI.h"
+#import "JSONAPIResourceDescriptor.h"
 #import "JSONAPIErrorResource.h"
 
 #import "CommentResource.h"
@@ -24,9 +25,9 @@
 - (void)setUp {
     [super setUp];
 
-    [JSONAPIResourceModeler useResource:[CommentResource class] toLinkedType:@"comments"];
-    [JSONAPIResourceModeler useResource:[PeopleResource class] toLinkedType:@"people"];
-    [JSONAPIResourceModeler useResource:[PostResource class] toLinkedType:@"posts"];
+    [JSONAPIResourceDescriptor addResource:[CommentResource class]];
+    [JSONAPIResourceDescriptor addResource:[PeopleResource class]];
+    [JSONAPIResourceDescriptor addResource:[PostResource class]];
 }
 
 - (void)tearDown {
@@ -98,6 +99,16 @@
     
     JSONAPIErrorResource *error = jsonAPI.errors.firstObject;
     XCTAssertEqualObjects(error.ID, @"123456", @"Error id should be 123456");
+}
+
+- (void)testCreate {
+  PeopleResource *newAuthor = [[PeopleResource alloc] init];
+  
+  newAuthor.firstName = @"Karl";
+  newAuthor.lastName = @"Armstrong";
+  
+  JSONAPI *jsonAPI = [JSONAPI jsonAPIWithResource:newAuthor];
+  XCTAssertEqualObjects([jsonAPI dictionary][@"data"][@"type"], @"people", @"Did not create person!");
 }
 
 #pragma mark - Private

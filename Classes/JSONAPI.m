@@ -9,6 +9,10 @@
 #import "JSONAPI.h"
 
 #import "JSONAPIErrorResource.h"
+#import "JSONAPIResourceDescriptor.h"
+
+
+static NSString *gMEDIA_TYPE = @"application/vnd.api+json";
 
 @interface JSONAPI()
 
@@ -20,12 +24,20 @@
 
 #pragma mark - Class
 
++ (NSString*)MEDIA_TYPE {
+    return gMEDIA_TYPE;
+}
+
 + (instancetype)jsonAPIWithDictionary:(NSDictionary *)dictionary {
     return [[JSONAPI alloc] initWithDictionary:dictionary];
 }
 
 + (instancetype)jsonAPIWithString:(NSString *)string {
     return [[JSONAPI alloc] initWithString:string];
+}
+
++ (instancetype)jsonAPIWithResource:(JSONAPIResource *)resource {
+    return [[JSONAPI alloc] initWithResource:resource];
 }
 
 #pragma mark - Instance
@@ -42,6 +54,14 @@
     self = [super init];
     if (self) {
         [self inflateWithString:string];
+    }
+    return self;
+}
+
+-(instancetype)initWithResource:(JSONAPIResource*)resource {
+    self = [super init];
+    if (self) {
+        [self inflateWithResource:resource];
     }
     return self;
 }
@@ -110,11 +130,12 @@
         
         JSONAPIResource *resource = [self inflateResourceData:data];
         if (resource) {
-
-            NSMutableDictionary *typeDict = includedResources[resource.type] ?: @{}.mutableCopy;
+            JSONAPIResourceDescriptor *desc = [JSONAPIResourceDescriptor forLinkedType:data[@"type"]];
+            
+            NSMutableDictionary *typeDict = includedResources[desc.type] ?: @{}.mutableCopy;
             typeDict[resource.ID] = resource;
             
-            includedResources[resource.type] = typeDict;
+            includedResources[desc.type] = typeDict;
         }
     }
     _includedResources = includedResources;
@@ -134,7 +155,7 @@
 
     // Parse errors
     NSMutableArray *errors = @[].mutableCopy;
-    NSLog(@"ERROS - %@", _dictionary[@"errors"]);
+    NSLog(@"ERRORS - %@", _dictionary[@"errors"]);
     for (NSDictionary *data in _dictionary[@"errors"]) {
         
         JSONAPIErrorResource *resource = [[JSONAPIErrorResource alloc] initWithDictionary:data];
@@ -146,6 +167,40 @@
 
 - (id)inflateResourceData:(NSDictionary*)data {
     return [JSONAPIResource jsonAPIResource:data];
+}
+
+- (void)inflateWithResource:(JSONAPIResource*)resource
+{
+    NSMutableArray *resourceArray = [[NSMutableArray alloc] init];
+    [resourceArray addObject:resource];
+    _resources = resourceArray;
+    
+    NSMutableDictionary *newDictionary = [[NSMutableDictionary alloc] init];
+    
+    _meta = @{
+              @"hehe" : @"hoho"
+              };
+    newDictionary[@"meta"] = _meta;
+    
+    _data = [resource dictionary];
+    newDictionary[@"data"] = _data;
+    
+    NSArray *included = [resource relatedResources];
+    newDictionary[@"included"] = included;
+
+    NSMutableDictionary *includedResources = @{}.mutableCopy;
+    for (JSONAPIResource *resource in included) {
+        
+        JSONAPIResourceDescriptor *desc = [[resource class] descriptor];
+        
+        NSMutableDictionary *typeDict = includedResources[desc.type] ?: @{}.mutableCopy;
+        typeDict[resource.ID] = resource;
+        
+        includedResources[desc.type] = typeDict;
+    }
+    _includedResources = includedResources;
+    
+    _dictionary = newDictionary;
 }
 
 @end
