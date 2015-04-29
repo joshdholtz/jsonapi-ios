@@ -2,9 +2,6 @@
 //  JSONAPIProperty.h
 //  JSONAPI
 //
-//  Created by Jonathan Karl Armstrong on 4/19/15.
-//  Copyright (c) 2015 Josh Holtz. All rights reserved.
-//
 
 #import <Foundation/Foundation.h>
 
