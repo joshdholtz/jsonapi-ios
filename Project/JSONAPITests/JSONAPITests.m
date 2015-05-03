@@ -101,6 +101,60 @@
     XCTAssertEqualObjects(error.ID, @"123456", @"Error id should be 123456");
 }
 
+- (void)testSerializeSimple {
+    PeopleResource *newAuthor = [[PeopleResource alloc] init];
+    
+    newAuthor.firstName = @"Karl";
+    newAuthor.lastName = @"Armstrong";
+    
+    NSDictionary *json = [newAuthor dictionary];
+    XCTAssertEqualObjects(json[@"type"], @"people", @"Did not create person!");
+    XCTAssertEqualObjects(json[@"first-name"], @"Karl", @"Wrong first name!");
+    XCTAssertNil(json[@"twitter"], @"Wrong Twitter!.");
+}
+
+- (void)testSerializeWithFormat {
+    PostResource *newPost = [[PostResource alloc] init];
+    newPost.title = @"Title";
+    newPost.date = [NSDate date];
+    
+    NSDictionary *json = [newPost dictionary];
+    XCTAssertEqualObjects(json[@"type"], @"posts", @"Did not create post!");
+    XCTAssertNotNil(json[@"date"], @"Wrong date!");
+    XCTAssertTrue([json[@"date"] isKindOfClass:[NSString class]], @"Date should be string!.");
+}
+
+- (void)testSerializeComplex {
+    PeopleResource *newAuthor = [[PeopleResource alloc] init];
+    
+    newAuthor.ID = [NSUUID UUID];
+    newAuthor.firstName = @"Karl";
+    newAuthor.lastName = @"Armstrong";
+    
+    CommentResource *newComment = [[CommentResource alloc] init];
+    newComment.ID = [NSUUID UUID];
+    newComment.author = newAuthor;
+    newComment.text = @"First!";
+    
+    PostResource *newPost = [[PostResource alloc] init];
+    newPost.title = @"Title";
+    newPost.author = newAuthor;
+    newPost.date = [NSDate date];
+    newPost.comments = [[NSArray alloc] initWithObjects:newComment, nil];
+    
+    NSDictionary *json = [newPost dictionary];
+    XCTAssertEqualObjects(json[@"type"], @"posts", @"Did not create Post!");
+    XCTAssertNotNil(json[@"links"], @"Did not create links!");
+    XCTAssertNotNil(json[@"links"][@"author"], @"Did not create links!");
+    XCTAssertNotNil(json[@"links"][@"author"][@"linkage"], @"Did not create links!");
+    XCTAssertEqualObjects(json[@"links"][@"author"][@"linkage"][@"id"], newAuthor.ID, @"Wrong link ID!.");
+    XCTAssertNil(json[@"links"][@"author"][@"first-name"], @"Bad link!");
+
+    XCTAssertNotNil(json[@"links"][@"comments"], @"Did not create links!");
+    XCTAssertTrue([json[@"links"][@"comments"] isKindOfClass:[NSArray class]], @"Comments should be array!.");
+    XCTAssertEqual([json[@"links"][@"comments"] count], 1, @"Comments should have 1 element!.");
+}
+
 - (void)testCreate {
   PeopleResource *newAuthor = [[PeopleResource alloc] init];
   

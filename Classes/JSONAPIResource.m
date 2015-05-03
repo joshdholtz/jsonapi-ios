@@ -209,10 +209,10 @@
                         
                         for (id valueElement in selfArray) {
                             JSONAPIResource *resource = valueElement;
-                            [valueArray addObject:[resource linkFrom:self withKey:key]];
+                            [valueArray addObject:[resource linkFrom:self withKey:[property jsonName]]];
                         }
                         
-                        [linkage setValue:valueArray forKey:key];
+                        [linkage setValue:valueArray forKey:[property jsonName]];
                         
                     } else {
                         NSFormatter *format = [property formatter];
@@ -225,7 +225,7 @@
                             }
                         }
                         
-                        [dictionary setValue:valueArray forKey:key];
+                        [dictionary setValue:valueArray forKey:[property jsonName]];
                     }
                 }
             } else {
@@ -235,13 +235,13 @@
                     }
                     
                     JSONAPIResource *resource = value;
-                    [linkage setValue:[resource linkFrom:self withKey:key] forKey:key];
+                    [linkage setValue:[resource linkFrom:self withKey:[property jsonName]] forKey:[property jsonName]];
                 } else {
                     NSFormatter *format = [property formatter];
                     if (format) {
-                        [dictionary setValue:[format stringForObjectValue:value] forKey:key];
+                        [dictionary setValue:[format stringForObjectValue:value] forKey:[property jsonName]];
                     } else {
-                        [dictionary setValue:value forKey:key];
+                        [dictionary setValue:value forKey:[property jsonName]];
                     }
                 }
             }
@@ -299,10 +299,12 @@
         [reference setValue:related forKey:@"related"];
     }
     
-    [reference setValue:@{
-                          @"type" : descriptor.type,
-                          @"id"   : self.ID
-                          } forKey:@"linkage"];
+    if (self.ID) {
+        [reference setValue:@{
+                              @"type" : descriptor.type,
+                              @"id"   : self.ID
+                              } forKey:@"linkage"];
+    }
     
     return reference;
 }
