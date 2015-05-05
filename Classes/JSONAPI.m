@@ -177,28 +177,25 @@ static NSString *gMEDIA_TYPE = @"application/vnd.api+json";
     
     NSMutableDictionary *newDictionary = [[NSMutableDictionary alloc] init];
     
-    _meta = @{
-              @"hehe" : @"hoho"
-              };
-    newDictionary[@"meta"] = _meta;
-    
     _data = [resource dictionary];
     newDictionary[@"data"] = _data;
     
     NSArray *included = [resource relatedResources];
-    newDictionary[@"included"] = included;
-
-    NSMutableDictionary *includedResources = @{}.mutableCopy;
-    for (JSONAPIResource *resource in included) {
+    if (included.count) {
+        newDictionary[@"included"] = included;
         
-        JSONAPIResourceDescriptor *desc = [[resource class] descriptor];
-        
-        NSMutableDictionary *typeDict = includedResources[desc.type] ?: @{}.mutableCopy;
-        typeDict[resource.ID] = resource;
-        
-        includedResources[desc.type] = typeDict;
+        NSMutableDictionary *includedResources = @{}.mutableCopy;
+        for (JSONAPIResource *resource in included) {
+            
+            JSONAPIResourceDescriptor *desc = [[resource class] descriptor];
+            
+            NSMutableDictionary *typeDict = includedResources[desc.type] ?: @{}.mutableCopy;
+            typeDict[resource.ID] = resource;
+            
+            includedResources[desc.type] = typeDict;
+        }
+        _includedResources = includedResources;
     }
-    _includedResources = includedResources;
     
     _dictionary = newDictionary;
 }
