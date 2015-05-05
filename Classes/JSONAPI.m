@@ -152,17 +152,19 @@ static NSString *gMEDIA_TYPE = @"application/vnd.api+json";
     for (JSONAPIResource *resource in _resources) {
         [resource linkWithIncluded:self];
     }
-
+    
     // Parse errors
     NSMutableArray *errors = @[].mutableCopy;
-    NSLog(@"ERRORS - %@", _dictionary[@"errors"]);
-    for (NSDictionary *data in _dictionary[@"errors"]) {
-        
-        JSONAPIErrorResource *resource = [[JSONAPIErrorResource alloc] initWithDictionary:data];
-        NSLog(@"Error resource - %@", resource);
-        if (resource) [errors addObject:resource];
+    if (errors) {
+        NSLog(@"ERRORS - %@", _dictionary[@"errors"]);
+        for (NSDictionary *data in _dictionary[@"errors"]) {
+            
+            JSONAPIErrorResource *resource = [[JSONAPIErrorResource alloc] initWithDictionary:data];
+            NSLog(@"Error resource - %@", resource);
+            if (resource) [errors addObject:resource];
+        }
+        _errors = errors;
     }
-    _errors = errors;
 }
 
 - (id)inflateResourceData:(NSDictionary*)data {
