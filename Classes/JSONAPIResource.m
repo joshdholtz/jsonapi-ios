@@ -50,7 +50,7 @@
     for (NSDictionary *dict in array) {
         NSString *type = dict[@"type"] ?: @"";
         JSONAPIResourceDescriptor *resource = [JSONAPIResourceDescriptor forLinkedType:type];
-        [mutableArray addObject:[[[resource class] alloc] initWithDictionary:dict]];
+        [mutableArray addObject:[[[resource resourceClass] alloc] initWithDictionary:dict]];
     }
     
     return mutableArray;
