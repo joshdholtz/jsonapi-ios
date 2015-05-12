@@ -19,7 +19,7 @@
 
 @interface JSONAPIResource()
 
-/*!
+/**
  * Allocate a resource link instance from a deserialized JSON dictionary. The dictionary argument
  * should describe one resource in JSON API format. This must be a JSON API "links" element.
  * It is not a complete JSON API response block.
@@ -28,7 +28,7 @@
  */
 + (id)jsonAPILink:(NSDictionary*)dictionary;
 
-/*!
+/**
  * Generate a 'links' element for the data dictionary of the owner resource instance.
  *
  * A 'links' element contains the self link, a 'related' link that can be used to
@@ -198,34 +198,34 @@
         id value = [self valueForKey:key];
         if (value) {
             if ([value isKindOfClass:[NSArray class]]) {
-                NSArray *selfArray = value;
-                if (selfArray.count > 0) {
-                    NSMutableArray *valueArray = [[NSMutableArray alloc] initWithCapacity:selfArray.count];
+                NSArray *valueArray = value;
+                if (valueArray.count > 0) {
+                    NSMutableArray *dictionaryArray = [[NSMutableArray alloc] initWithCapacity:valueArray.count];
                     
                     if ([property resourceType]) {
                         if (linkage == nil) {
                             linkage = [[NSMutableDictionary alloc] init];
                         }
                         
-                        for (id valueElement in selfArray) {
+                        for (id valueElement in valueArray) {
                             JSONAPIResource *resource = valueElement;
-                            [valueArray addObject:[resource linkFrom:self withKey:[property jsonName]]];
+                            [dictionaryArray addObject:[resource linkFrom:self withKey:[property jsonName]]];
                         }
                         
-                        [linkage setValue:valueArray forKey:[property jsonName]];
+                        [linkage setValue:dictionaryArray forKey:[property jsonName]];
                         
                     } else {
                         NSFormatter *format = [property formatter];
                         
-                        for (id valueElement in selfArray) {
+                        for (id valueElement in valueArray) {
                             if (format) {
-                                [valueArray addObject:[format stringForObjectValue:valueElement]];
+                                [dictionaryArray addObject:[format stringForObjectValue:valueElement]];
                             } else {
-                                [valueArray addObject:valueElement];
+                                [dictionaryArray addObject:valueElement];
                             }
                         }
                         
-                        [dictionary setValue:valueArray forKey:[property jsonName]];
+                        [dictionary setValue:dictionaryArray forKey:[property jsonName]];
                     }
                 }
             } else {
@@ -288,12 +288,13 @@
     JSONAPIResourceDescriptor *descriptor = [[self class] descriptor];
     NSMutableDictionary *reference = [[NSMutableDictionary alloc] init];
     
-    if (self.self_link) {
-        [reference setValue:self.self_link forKey:@"self"];
-    }
-    
     if (owner.self_link) {
-        NSMutableString *related = [[NSMutableString alloc] initWithString:owner.self_link];
+        NSMutableString *link_to_self = [owner.self_link mutableCopy];
+        [link_to_self appendString:@"/links/"];
+        [link_to_self appendString:key];
+        [reference setValue:link_to_self forKey:@"self"];
+
+        NSMutableString *related = [owner.self_link mutableCopy];
         [related appendString:@"/"];
         [related appendString:key];
         [reference setValue:related forKey:@"related"];

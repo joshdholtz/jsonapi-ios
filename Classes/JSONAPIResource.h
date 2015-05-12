@@ -12,13 +12,13 @@
 @class JSONAPIPropertyDescriptor;
 @class JSONAPIResourceDescriptor;
 
-/*! Base class of an object that is available for JSON API serialization. */
+/** Base class of an object that is available for JSON API serialization. */
 @interface JSONAPIResource : NSObject<NSCopying, NSCoding>
 
 
 #pragma mark - Properties
 
-/*!
+/**
  * The URL that corresponds to this resource. Not required. May be set if returned from a
  * server.
  *
@@ -27,9 +27,9 @@
  */
 @property (nonatomic, copy) NSString *self_link;
 
-/*!
+/**
  * API identifier for a resource instance. Required for resources that come from the
- * server, but the should be nil for new records that have not been saved. Every saved
+ * server, but should be nil for new records that have not been saved. Every saved
  * record should be uniquely identifiable by the combination of type and ID.
  *
  * This is typically a database sequence number associated withe the resource record, 
@@ -37,14 +37,14 @@
  *
  * A JSONAPIPropertyDescriptor for the ID will automatically be included in the default
  * JSONAPIResourceDescriptor for the class. This descriptor does not covert the string 
- * value received, but you can set a formatter on the property descriptor if desired.
+ * value received, but you can set a formatter on the JSONAPIPropertyDescriptor if desired.
  */
 @property (nonatomic, strong) id ID;
 
 
 #pragma mark - Class methods
 
-/*! 
+/** 
  * Allocate a resource object from a JSON dictionary. The dictionary argument should
  * describe one resource in JSON API format. This can be a JSON API "data" element,
  * one of the JSON API "included" elemets, or even a "linkage" element. A valid
@@ -58,7 +58,7 @@
  */
 + (instancetype)jsonAPIResource:(NSDictionary*)dictionary;
 
-/*! 
+/** 
  * Allocate an array of resource objects. The array argument must be an array of dictionary 
  * objects follwing the same rules for a single resource.
  *
@@ -68,7 +68,7 @@
  */
 + (NSArray*)jsonAPIResources:(NSArray*)array;
 
-/*! 
+/** 
  * Get the JSONAPI resource metadata description. This will be different for each resource class. 
  * It must be defined by the subclass.
  *
@@ -79,7 +79,7 @@
 
 #pragma mark - Instance methods
 
-/*! 
+/** 
  * Initialize an object from a deserialized JSON API dictionary.
  *
  * In general, there is enough information in the class JSONAPIResourceDescriptor for the
@@ -91,7 +91,7 @@
  */
 - (instancetype)initWithDictionary:(NSDictionary*)dict;
 
-/*! 
+/** 
  * Update the linked resources from a deserialized set of JSON API "included" elements. 
  * Linked resource instances are replaced with full definition, when type and ID match.
  *
@@ -99,7 +99,7 @@
  */
 - (void)linkWithIncluded:(JSONAPI*)jsonAPI;
 
-/*! 
+/** 
  * Serialize resource to a JSON dictionary. 
  * 
  * @return NSDictionary that fully describes this instance. This is ready to include in 
@@ -107,7 +107,7 @@
  */
 - (NSDictionary*)dictionary;
 
-/*!
+/**
  * Get array of associated resource instances.
  *
  * @return The collection of related JSONAPIResource instances.

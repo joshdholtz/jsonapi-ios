@@ -6,6 +6,20 @@
 	objectVersion = 46;
 	objects = {
 
+/* Begin PBXAggregateTarget section */
+		689B17A11AFFE0EA00D2854E /* Documentation */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 689B17A41AFFE0EA00D2854E /* Build configuration list for PBXAggregateTarget "Documentation" */;
+			buildPhases = (
+				689B17A51AFFE0FD00D2854E /* ShellScript */,
+			);
+			dependencies = (
+			);
+			name = Documentation;
+			productName = Documentation;
+		};
+/* End PBXAggregateTarget section */
+
 /* Begin PBXBuildFile section */
 		033A6C5F18695CD2001CF9FA /* JSONAPIResource.m in Sources */ = {isa = PBXBuildFile; fileRef = 033A6C5E18695CD2001CF9FA /* JSONAPIResource.m */; };
 		03866451186A909200985CEC /* PeopleResource.m in Sources */ = {isa = PBXBuildFile; fileRef = 03866450186A909200985CEC /* PeopleResource.m */; };
@@ -132,13 +146,13 @@
 		03A055AE1868E038004807F0 = {
 			isa = PBXGroup;
 			children = (
+				03A055F51868E08A004807F0 /* JSONAPI.podspec */,
 				03866458186CCE6600985CEC /* CHANGELOG.md */,
 				03A055EF1868E08A004807F0 /* Classes */,
 				03A055C01868E038004807F0 /* JSONAPI */,
 				03A055DF1868E038004807F0 /* JSONAPITests */,
 				03A055B91868E038004807F0 /* Frameworks */,
 				03A055B81868E038004807F0 /* Products */,
-				03A055F51868E08A004807F0 /* JSONAPI.podspec */,
 			);
 			sourceTree = "<group>";
 		};
@@ -286,6 +300,9 @@
 					03A055D71868E038004807F0 = {
 						TestTargetID = 03A055B61868E038004807F0;
 					};
+					689B17A11AFFE0EA00D2854E = {
+						CreatedOnToolsVersion = 6.3.1;
+					};
 				};
 			};
 			buildConfigurationList = 03A055B21868E038004807F0 /* Build configuration list for PBXProject "JSONAPI" */;
@@ -303,6 +320,7 @@
 			targets = (
 				03A055B61868E038004807F0 /* JSONAPI */,
 				03A055D71868E038004807F0 /* JSONAPITests */,
+				689B17A11AFFE0EA00D2854E /* Documentation */,
 			);
 		};
 /* End PBXProject section */
@@ -333,6 +351,22 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		689B17A51AFFE0FD00D2854E /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "#appledoc Xcode script\n# Start constants\ncompany=\"jkarmstr\";\ncompanyID=\"JKA\";\ncompanyURL=\"http://github.com\";\ntarget=\"iphoneos\";\n#target=\"macosx\";\noutputPath=\"~/help\";\n# End constants\n/usr/local/bin/appledoc \\\n--project-name \"${PROJECT_NAME}\" \\\n--project-company \"${company}\" \\\n--company-id \"${companyID}\" \\\n--output \"${outputPath}\" \\\n--install-docset \\\n--keep-undocumented-objects \\\n--keep-undocumented-members \\\n--docset-platform-family \"${target}\" \\\n--logformat xcode \\\n--keep-intermediate-files \\\n--no-repeat-first-par \\\n--no-warn-invalid-crossref \\\n--exit-threshold 2 \\\n\"../Classes\"";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		03A055B31868E038004807F0 /* Sources */ = {
@@ -536,6 +570,20 @@
 			};
 			name = Release;
 		};
+		689B17A21AFFE0EA00D2854E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		689B17A31AFFE0EA00D2854E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -562,6 +610,15 @@
 			buildConfigurations = (
 				03A055ED1868E038004807F0 /* Debug */,
 				03A055EE1868E038004807F0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		689B17A41AFFE0EA00D2854E /* Build configuration list for PBXAggregateTarget "Documentation" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				689B17A21AFFE0EA00D2854E /* Debug */,
+				689B17A31AFFE0EA00D2854E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

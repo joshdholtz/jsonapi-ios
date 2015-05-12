@@ -60,10 +60,24 @@ static NSMutableDictionary *linkedTypeToResource = nil;
                        withResource:jsonApiResource]];
 }
 
+- (void)hasOne:(Class)jsonApiResource withName:(NSString*)name withJsonName:(NSString*)json {
+    [self addProperty:name
+      withDescription:[[JSONAPIPropertyDescriptor alloc]
+                       initWithJsonName:json
+                       withResource:jsonApiResource]];
+}
+
 - (void)hasMany:(Class)jsonApiResource withName:(NSString*)name {
     [self addProperty:name
       withDescription:[[JSONAPIPropertyDescriptor alloc]
                        initWithJsonName:name
+                       withResource:jsonApiResource]];
+}
+
+- (void)hasMany:(Class)jsonApiResource withName:(NSString*)name withJsonName:(NSString*)json {
+    [self addProperty:name
+      withDescription:[[JSONAPIPropertyDescriptor alloc]
+                       initWithJsonName:json
                        withResource:jsonApiResource]];
 }
 
