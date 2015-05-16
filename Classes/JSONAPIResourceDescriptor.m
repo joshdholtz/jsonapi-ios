@@ -12,6 +12,9 @@ static NSMutableDictionary *linkedTypeToResource = nil;
 
 @implementation JSONAPIResourceDescriptor
 
+/**
+ *  Create the 'class' table for all resources.
+ */
 + (void)initialize {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{

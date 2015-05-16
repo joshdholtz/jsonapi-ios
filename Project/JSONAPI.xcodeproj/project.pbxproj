@@ -104,6 +104,7 @@
 		685481EE1AE419CB00D3A633 /* JSONAPIResourceDescriptor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSONAPIResourceDescriptor.m; sourceTree = "<group>"; };
 		68A469921AE47E0000E7BBC8 /* NSDateFormatter+JSONAPIDateFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDateFormatter+JSONAPIDateFormatter.h"; sourceTree = "<group>"; };
 		68A469931AE47E0000E7BBC8 /* NSDateFormatter+JSONAPIDateFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDateFormatter+JSONAPIDateFormatter.m"; sourceTree = "<group>"; };
+		68DF9E951B06B4C500FA6429 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -146,6 +147,7 @@
 		03A055AE1868E038004807F0 = {
 			isa = PBXGroup;
 			children = (
+				68DF9E951B06B4C500FA6429 /* README.md */,
 				03A055F51868E08A004807F0 /* JSONAPI.podspec */,
 				03866458186CCE6600985CEC /* CHANGELOG.md */,
 				03A055EF1868E08A004807F0 /* Classes */,
@@ -364,7 +366,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "#appledoc Xcode script\n# Start constants\ncompany=\"jkarmstr\";\ncompanyID=\"JKA\";\ncompanyURL=\"http://github.com\";\ntarget=\"iphoneos\";\n#target=\"macosx\";\noutputPath=\"~/help\";\n# End constants\n/usr/local/bin/appledoc \\\n--project-name \"${PROJECT_NAME}\" \\\n--project-company \"${company}\" \\\n--company-id \"${companyID}\" \\\n--output \"${outputPath}\" \\\n--install-docset \\\n--keep-undocumented-objects \\\n--keep-undocumented-members \\\n--docset-platform-family \"${target}\" \\\n--logformat xcode \\\n--keep-intermediate-files \\\n--no-repeat-first-par \\\n--no-warn-invalid-crossref \\\n--exit-threshold 2 \\\n\"../Classes\"";
+			shellScript = "#appledoc Xcode script\n# Start constants\ncompany=\"jkarmstr\";\ncompanyID=\"JKA\";\ncompanyURL=\"http://github.com\";\ntarget=\"iphoneos\";\n#target=\"macosx\";\noutputPath=\"~/help\";\n# End constants\n/usr/local/bin/appledoc \\\n--project-name \"${PROJECT_NAME}\" \\\n--project-company \"${company}\" \\\n--company-id \"${companyID}\" \\\n--output \"${outputPath}\" \\\n--install-docset \\\n--explicit-crossref \\\n--docset-platform-family \"${target}\" \\\n--logformat xcode \\\n--no-repeat-first-par \\\n--exit-threshold 2 \\\n--index-desc ../README.md \\\n\"../Classes\"";
 		};
 /* End PBXShellScriptBuildPhase section */
 

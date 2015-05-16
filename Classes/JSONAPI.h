@@ -1,4 +1,6 @@
-//
+^{
+    <#code#>
+}//
 //  JSONAPI.h
 //  JSONAPI
 //
@@ -10,9 +12,16 @@
 
 @class JSONAPIResource;
 
+/**
+ *  Represents a complete JSON-API formatted message body.
+ */
 @interface JSONAPI : NSObject
 
-// Class variables
+/**
+ *  Returns Content-Type string for JSON-API
+ *
+ *  @return Content-Type string for JSON-API
+ */
 + (NSString*)MEDIA_TYPE;
 
 @property (nonatomic, strong, readonly) NSDictionary *meta;

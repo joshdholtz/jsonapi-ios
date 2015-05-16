@@ -8,6 +8,9 @@
 
 #import "JSONAPIResource.h"
 
+/**
+ *  Class respresentation of a JSON-API error structure.
+ */
 @interface JSONAPIErrorResource : JSONAPIResource
 
 @property (nonatomic, strong) NSString *status;

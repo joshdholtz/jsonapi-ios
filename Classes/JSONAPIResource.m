@@ -24,9 +24,14 @@
  * should describe one resource in JSON API format. This must be a JSON API "links" element.
  * It is not a complete JSON API response block.
  *
- * This will return either a JSONAPIResource instance, or an NSArray of JSONAPIResource instances.
+ * This will return either a <JSONAPIResource> instance, or an NSArray of <JSONAPIResource> instances.
+ *
+ * @param dictionary deserialized JSON data object
+ *
+ * @return initialized resource instance.
  */
 + (id)jsonAPILink:(NSDictionary*)dictionary;
+
 
 /**
  * Generate a 'links' element for the data dictionary of the owner resource instance.
@@ -34,6 +39,11 @@
  * A 'links' element contains the self link, a 'related' link that can be used to
  * retrieve this instance given the container data, and a 'linkage' element that
  * describes the minimum respresentation of this instance (type and ID).
+ *
+ * @param owner the resource instance that contains this instance
+ * @param key label used in JSON for **owner** property linked to this instance
+ *
+ * @return newly allocated JSON dictionary for linkage
  */
 - (NSDictionary*)linkFrom:(JSONAPIResource*)owner withKey:(NSString*)key;
 
@@ -94,6 +104,11 @@
     return self;
 }
 
+/**
+ *  Initialize the instance properties from the JSON dictionary.
+ *
+ *  @param dict JSON-API data dictionary
+ */
 - (void)setWithDictionary:(NSDictionary*)dict {
     JSONAPIResourceDescriptor *descriptor = [[self class] descriptor];
     
