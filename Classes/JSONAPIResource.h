@@ -2,9 +2,6 @@
 //  JSONAPIResource.h
 //  JSONAPI
 //
-//  Created by Josh Holtz on 12/24/13.
-//  Copyright (c) 2013 Josh Holtz. All rights reserved.
-//
 
 #import <Foundation/Foundation.h>
 
@@ -12,24 +9,63 @@
 @class JSONAPIPropertyDescriptor;
 @class JSONAPIResourceDescriptor;
 
-/** Base class of an object that is available for JSON API serialization. */
-@interface JSONAPIResource : NSObject<NSCopying, NSCoding>
+/** 
+ * Protocol of an object that is available for JSON API serialization. 
+ * 
+ * When developing model classes for use with JSON-API, it is reccomended that classes 
+ * are derived from <JSONAPIResourceBase>, but that is not required. An existing model
+ * class can be adapted for JSON-API by implementing this protocol.
+ */
+@protocol JSONAPIResource <NSObject>
+
+#pragma mark - Class Methods
+
+/**
+ * Get the JSON API resource metadata description. This will be different for each resource 
+ * model class. It must be defined by the subclass.
+ *
+ * @return Resource description for the target model class.
+ */
++ (JSONAPIResourceDescriptor*)descriptor;
+
 
 #pragma mark - Properties
 
 /**
- * The URL that corresponds to this resource. Not required. May be set if returned from a
- * server.
+ * Get the URL that corresponds to this resource. May be nil. Should be set if returned from a
+ * server. A GET request on the JSON-API endpoint should return the same resource.
  *
- * There is no <JSONAPIPropertyDescriptor> for this property. It is set from the 'links'
+ * There should be no <JSONAPIPropertyDescriptor> for this property. It is set from the 'links'
  * property in the JSON body, and the JSON value is always a string URL.
+ *
+ * In general, this should be implemented by a @property selfLink in the realized class. The 
+ * @property declaration will automatically synthesize the get/set members declared in this
+ * protocol. The property storage is an implementation detail, which is why the protocol does  
+ * not use a @property declaration.
+ *
+ * @return The URL that corresponds to this resource. 
  */
-@property (nonatomic, copy) NSString *self_link;
+- (NSString *)selfLink;
 
 /**
- * API identifier for a resource instance. Required for resources that come from the
- * server, but may be nil for new records that have not been saved. Every saved
- * record should be uniquely identifiable by the combination of type and ID.
+ * Set the URL that corresponds to this resource. This attribute is set from the 'links'
+ * property in the JSON body, and the JSON value is always a string URL. A GET request on the 
+ * JSON-API endpoint should return the same resource.
+ *
+ * In general, this should be implemented by a @property selfLink in the realized class. The
+ * @property declaration will automatically synthesize the get/set members declared in this
+ * protocol. The property storage is an implementation detail, which is why the protocol does
+ * not use a @property declaration.
+ *
+ * @param path The URL that corresponds to this resource.
+ */
+- (void)setSelfLink:(NSString*)path;
+
+/**
+ * Get the API record identifier for a resource instance. Required for resources that come
+ * from persistance storage (i.e. the server), but may be nil for new records that have not
+ * been saved. Every saved resource record should be uniquely identifiable by the combination
+ * of type and ID.
  *
  * This is typically a database sequence number associated withe the resource record, 
  * but that is not required. The JSON API requires ID to be serialized as a string.
@@ -37,79 +73,37 @@
  * A <JSONAPIPropertyDescriptor> for the ID will automatically be included in the default
  * <JSONAPIResourceDescriptor> for the class. This descriptor does not covert the string
  * value received, but you can set a formatter on the <JSONAPIPropertyDescriptor> if desired.
+ *
+ * In general, this should be implemented by a @property ID in the realized class. The
+ * @property declaration will automatically synthesize the get/set members declared in this
+ * protocol. The property storage is an implementation detail, which is why the protocol does
+ * not use a @property declaration.
+ *
+ * @return The record identifier for a resource instance.
  */
-@property (nonatomic, strong) id ID;
-
-#pragma mark - Class methods
-
-/** 
- * Allocate a resource object from a JSON dictionary. The dictionary argument should
- * describe one resource in JSON API format. This can be a JSON API "data" element,
- * one of the JSON API "included" elemets, or even a "linkage" element. A valid
- * dictionary contains at least "type" and "id" fields.
- *
- * TODO: spec allows a resource to be specified by a 'related resource URL'.
- *
- * @param dictionary JSON instance definition as NSDictionary
- *
- * @return newly allocated <JSONAPIResource> subclass instance.
- */
-+ (instancetype)jsonAPIResource:(NSDictionary*)dictionary;
-
-/** 
- * Allocate an array of resource objects. The array argument must be an array of dictionary
- * objects follwing the same rules for a single resource.
- *
- * @param array array of dictionary JSON instance definition as NSDictionary.
- * 
- * @return Array of newly allocated <JSONAPIResource> subclass instances.
- */
-+ (NSArray*)jsonAPIResources:(NSArray*)array;
-
-/** 
- * Get the JSON API resource metadata description. This will be different for each resource class.
- * It must be defined by the subclass.
- *
- * @return Resource description for the target class.
- */
-+ (JSONAPIResourceDescriptor*)descriptor;
-
-
-#pragma mark - Instance methods
-
-/** 
- * Initialize an object from a deserialized JSON API dictionary.
- *
- * In general, there is enough information in the class <JSONAPIResourceDescriptor> for the
- * base method to construct any subclass, so you do not need to override this method.
- *
- * @param dict JSON instance definition as NSDictionary
- *
- * @return initialized <JSONAPIResource> subclass instance.
- */
-- (instancetype)initWithDictionary:(NSDictionary*)dict;
-
-/** 
- * Update the linked resources from a deserialized set of JSON API "included" elements. 
- * Linked resource instances are replaced with full definition, when type and ID match.
- *
- * @param jsonAPI JSON-API message object
- */
-- (void)linkWithIncluded:(JSONAPI*)jsonAPI;
-
-/** 
- * Serialize resource to a JSON dictionary. 
- * 
- * @return NSDictionary that fully describes this instance. This is ready to include in 
- * a JSON-API message 'data' set or 'included' set.
- */
-- (NSDictionary*)dictionary;
+- (id)ID;
 
 /**
- * Get array of associated resource instances.
+ * Set the API record identifier for a resource instance. Required for resources that come
+ * from persistance storage (i.e. the server), but may be nil for new records that have not
+ * been saved. Every saved resource record should be uniquely identifiable by the combination
+ * of type and ID.
  *
- * @return The collection of related <JSONAPIResource> instances.
+ * This is typically a database sequence number associated withe the resource record,
+ * but that is not required. The JSON API requires ID to be serialized as a string.
+ *
+ * A <JSONAPIPropertyDescriptor> for the ID will automatically be included in the default
+ * <JSONAPIResourceDescriptor> for the class. This descriptor does not covert the string
+ * value received, but you can set a formatter on the <JSONAPIPropertyDescriptor> if desired.
+ *
+ * In general, this should be implemented by a @property ID in the realized class. The
+ * @property declaration will automatically synthesize the get/set members declared in this
+ * protocol. The property storage is an implementation detail, which is why the protocol does
+ * not use a @property declaration.
+ *
+ * @param identifier The record identifier for a resource instance.
  */
-- (NSArray*)relatedResources;
+- (void)setID:(id)identifier;
+
 
 @end

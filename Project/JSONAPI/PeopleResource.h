@@ -6,9 +6,9 @@
 //  Copyright (c) 2013 Josh Holtz. All rights reserved.
 //
 
-#import "JSONAPIResource.h"
+#import "JSONAPIResourceBase.h"
 
-@interface PeopleResource : JSONAPIResource
+@interface PeopleResource : JSONAPIResourceBase
 
 @property (nonatomic, strong) NSString *firstName;
 @property (nonatomic, strong) NSString *lastName;

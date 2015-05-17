@@ -39,8 +39,6 @@ static NSMutableDictionary *linkedTypeToResource = nil;
         _type = linkedType;
         _resourceClass = resource;
         _properties = [[NSMutableDictionary alloc] init];
-
-        [self addProperty:@"ID" withDescription:[[JSONAPIPropertyDescriptor alloc] initWithJsonName:@"id"]];
     }
     
     return self;

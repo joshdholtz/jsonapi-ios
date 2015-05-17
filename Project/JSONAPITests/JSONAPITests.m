@@ -11,6 +11,7 @@
 #import "JSONAPI.h"
 #import "JSONAPIResourceDescriptor.h"
 #import "JSONAPIErrorResource.h"
+#import "JSONAPIResourceParser.h"
 
 #import "CommentResource.h"
 #import "PeopleResource.h"
@@ -107,7 +108,7 @@
     newAuthor.firstName = @"Karl";
     newAuthor.lastName = @"Armstrong";
     
-    NSDictionary *json = [newAuthor dictionary];
+    NSDictionary *json = [JSONAPIResourceParser dictionaryFor:newAuthor];
     XCTAssertEqualObjects(json[@"type"], @"people", @"Did not create person!");
     XCTAssertEqualObjects(json[@"first-name"], @"Karl", @"Wrong first name!");
     XCTAssertNil(json[@"twitter"], @"Wrong Twitter!.");
@@ -118,7 +119,7 @@
     newPost.title = @"Title";
     newPost.date = [NSDate date];
     
-    NSDictionary *json = [newPost dictionary];
+    NSDictionary *json = [JSONAPIResourceParser dictionaryFor:newPost];
     XCTAssertEqualObjects(json[@"type"], @"posts", @"Did not create post!");
     XCTAssertNotNil(json[@"date"], @"Wrong date!");
     XCTAssertTrue([json[@"date"] isKindOfClass:[NSString class]], @"Date should be string!.");
@@ -142,7 +143,7 @@
     newPost.date = [NSDate date];
     newPost.comments = [[NSArray alloc] initWithObjects:newComment, nil];
     
-    NSDictionary *json = [newPost dictionary];
+    NSDictionary *json = [JSONAPIResourceParser dictionaryFor:newPost];
     XCTAssertEqualObjects(json[@"type"], @"posts", @"Did not create Post!");
     XCTAssertNotNil(json[@"links"], @"Did not create links!");
     XCTAssertNotNil(json[@"links"][@"author"], @"Did not create links!");

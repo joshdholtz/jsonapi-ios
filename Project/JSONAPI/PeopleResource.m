@@ -13,19 +13,21 @@
 
 @implementation PeopleResource
 
-static JSONAPIResourceDescriptor *_descriptor = nil;
+static JSONAPIResourceDescriptor *__descriptor = nil;
 
 + (JSONAPIResourceDescriptor*)descriptor {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        _descriptor = [[JSONAPIResourceDescriptor alloc] initWithClass:[self class] forLinkedType:@"people"];
+        __descriptor = [[JSONAPIResourceDescriptor alloc] initWithClass:[self class] forLinkedType:@"people"];
+        
+        [__descriptor addProperty:@"ID" withDescription:[[JSONAPIPropertyDescriptor alloc] initWithJsonName:@"id"]];
 
-        [_descriptor addProperty:@"firstName" withDescription:[[JSONAPIPropertyDescriptor alloc] initWithJsonName:@"first-name"]];
-        [_descriptor addProperty:@"lastName" withDescription:[[JSONAPIPropertyDescriptor alloc] initWithJsonName:@"last-name"]];
-        [_descriptor addProperty:@"twitter"];
+        [__descriptor addProperty:@"firstName" withDescription:[[JSONAPIPropertyDescriptor alloc] initWithJsonName:@"first-name"]];
+        [__descriptor addProperty:@"lastName" withDescription:[[JSONAPIPropertyDescriptor alloc] initWithJsonName:@"last-name"]];
+        [__descriptor addProperty:@"twitter"];
     });
 
-    return _descriptor;
+    return __descriptor;
 }
 
 @end

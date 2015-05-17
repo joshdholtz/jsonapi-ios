@@ -40,10 +40,6 @@
 /**
  * Initialize a new instance.
  *
- * Starts automatically with an "ID" property. This resolves the "ID" property for the
- * base class <JSONAPIResource>. Subclasses must use the instance methods to add their
- * properties.
- *
  * @param resource A <JSONAPIResource> class
  * @param linkedType Label used in JSON for type
  */

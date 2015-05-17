@@ -9,6 +9,7 @@
 #import "JSONAPI.h"
 
 #import "JSONAPIErrorResource.h"
+#import "JSONAPIResourceParser.h"
 #import "JSONAPIResourceDescriptor.h"
 
 
@@ -36,11 +37,15 @@ static NSString *gMEDIA_TYPE = @"application/vnd.api+json";
     return [[JSONAPI alloc] initWithString:string];
 }
 
-+ (instancetype)jsonAPIWithResource:(JSONAPIResource *)resource {
++ (instancetype)jsonAPIWithResource:(NSObject <JSONAPIResource> *)resource {
     return [[JSONAPI alloc] initWithResource:resource];
 }
 
 #pragma mark - Instance
+
+- (NSDictionary*)meta {
+    return self.dictionary[@"meta"];
+}
 
 - (instancetype)initWithDictionary:(NSDictionary*)dictionary {
     self = [super init];
@@ -58,7 +63,7 @@ static NSString *gMEDIA_TYPE = @"application/vnd.api+json";
     return self;
 }
 
--(instancetype)initWithResource:(JSONAPIResource*)resource {
+-(instancetype)initWithResource:(NSObject <JSONAPIResource> *)resource {
     self = [super init];
     if (self) {
         [self inflateWithResource:resource];
@@ -99,36 +104,34 @@ static NSString *gMEDIA_TYPE = @"application/vnd.api+json";
     // Sets internal dictionary
     _dictionary = dictionary;
     
-    // Sets meta
-    _meta = dictionary[@"meta"];
-    if ([_meta isKindOfClass:[NSDictionary class]] == NO) {
-        _meta = nil;
-    }
-    
     // Parse resources
-    _data = _dictionary[@"data"];
-    
-    NSMutableArray *resources = @[].mutableCopy;
-    if ([_data isKindOfClass:[NSArray class]] == YES) {
+    id data = dictionary[@"data"];
+    if ([data isKindOfClass:[NSArray class]] == YES) {
+        _resources = [JSONAPIResourceParser parseResources:data];
         
-        NSArray *dataArray = (NSArray*) _data;
-        for (NSDictionary *data in dataArray) {
-            id resource = [self inflateResourceData:data];
-            if (resource) [resources addObject:resource];
-        }
-        
-    } else if ([_data isKindOfClass:[NSDictionary class]] == YES) {
-        id resource = [self inflateResourceData:_data];
-        if (resource) [resources addObject:resource];
+    } else if ([data isKindOfClass:[NSDictionary class]] == YES) {
+        id resource = [JSONAPIResourceParser parseResource:data];
+        _resources = [[NSArray alloc] initWithObjects:resource, nil];
     }
-    _resources = resources;
     
     // Parses included resources
-    NSArray *included = _dictionary[@"included"];
-    NSMutableDictionary *includedResources = @{}.mutableCopy;
-    for (NSDictionary *data in included) {
-        
-        JSONAPIResource *resource = [self inflateResourceData:data];
+    id included = dictionary[@"included"];
+    NSMutableDictionary *includedResources = [[NSMutableDictionary alloc] init];
+    if ([included isKindOfClass:[NSArray class]] == YES) {
+        for (NSDictionary *data in included) {
+            
+            NSObject <JSONAPIResource> *resource = [JSONAPIResourceParser parseResource:data];
+            if (resource) {
+                JSONAPIResourceDescriptor *desc = [JSONAPIResourceDescriptor forLinkedType:data[@"type"]];
+                
+                NSMutableDictionary *typeDict = includedResources[desc.type] ?: @{}.mutableCopy;
+                typeDict[resource.ID] = resource;
+                
+                includedResources[desc.type] = typeDict;
+            }
+        }
+    } else if ([included isKindOfClass:[NSDictionary class]] == YES) {
+        NSObject <JSONAPIResource> *resource = [JSONAPIResourceParser parseResource:included];
         if (resource) {
             JSONAPIResourceDescriptor *desc = [JSONAPIResourceDescriptor forLinkedType:data[@"type"]];
             
@@ -143,23 +146,23 @@ static NSString *gMEDIA_TYPE = @"application/vnd.api+json";
     // Link included with included
     // TODO: Need to look into / stop circular references
     for (NSDictionary *typeIncluded in _includedResources.allValues) {
-        for (JSONAPIResource *resource in typeIncluded.allValues) {
-            [resource linkWithIncluded:self];
+        for (NSObject <JSONAPIResource> *resource in typeIncluded.allValues) {
+            [JSONAPIResourceParser link:resource withIncluded:self];
         }
     }
     
     // Link data with included
-    for (JSONAPIResource *resource in _resources) {
-        [resource linkWithIncluded:self];
+    for (NSObject <JSONAPIResource> *resource in _resources) {
+        [JSONAPIResourceParser link:resource withIncluded:self];
     }
     
     // Parse errors
-    NSMutableArray *errors = @[].mutableCopy;
-    if (errors) {
-        NSLog(@"ERRORS - %@", _dictionary[@"errors"]);
-        for (NSDictionary *data in _dictionary[@"errors"]) {
+    if (dictionary[@"errors"]) {
+        NSMutableArray *errors = [[NSMutableArray alloc] init];
+        NSLog(@"ERRORS - %@", dictionary[@"errors"]);
+        for (NSDictionary *data in dictionary[@"errors"]) {
             
-            JSONAPIErrorResource *resource = [[JSONAPIErrorResource alloc] initWithDictionary:data];
+            JSONAPIErrorResource *resource = [[JSONAPIErrorResource alloc] initWithDictionary: data];
             NSLog(@"Error resource - %@", resource);
             if (resource) [errors addObject:resource];
         }
@@ -167,11 +170,7 @@ static NSString *gMEDIA_TYPE = @"application/vnd.api+json";
     }
 }
 
-- (id)inflateResourceData:(NSDictionary*)data {
-    return [JSONAPIResource jsonAPIResource:data];
-}
-
-- (void)inflateWithResource:(JSONAPIResource*)resource
+- (void)inflateWithResource:(NSObject <JSONAPIResource> *)resource
 {
     NSMutableArray *resourceArray = [[NSMutableArray alloc] init];
     [resourceArray addObject:resource];
@@ -179,20 +178,19 @@ static NSString *gMEDIA_TYPE = @"application/vnd.api+json";
     
     NSMutableDictionary *newDictionary = [[NSMutableDictionary alloc] init];
     
-    _data = [resource dictionary];
-    newDictionary[@"data"] = _data;
+    newDictionary[@"data"] = [JSONAPIResourceParser dictionaryFor:resource];
     
-    NSArray *included = [resource relatedResources];
+    NSArray *included = [JSONAPIResourceParser relatedResourcesFor:resource];
     if (included.count) {
         newDictionary[@"included"] = included;
         
-        NSMutableDictionary *includedResources = @{}.mutableCopy;
-        for (JSONAPIResource *resource in included) {
+        NSMutableDictionary *includedResources = [[NSMutableDictionary alloc] init];
+        for (NSObject <JSONAPIResource> *linked in included) {
             
-            JSONAPIResourceDescriptor *desc = [[resource class] descriptor];
+            JSONAPIResourceDescriptor *desc = [[linked class] descriptor];
             
             NSMutableDictionary *typeDict = includedResources[desc.type] ?: @{}.mutableCopy;
-            typeDict[resource.ID] = resource;
+            typeDict[linked.ID] = resource;
             
             includedResources[desc.type] = typeDict;
         }

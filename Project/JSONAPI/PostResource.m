@@ -18,22 +18,24 @@
 
 @implementation PostResource
 
-static JSONAPIResourceDescriptor *_descriptor = nil;
+static JSONAPIResourceDescriptor *__descriptor = nil;
 
 + (JSONAPIResourceDescriptor*)descriptor {
-  static dispatch_once_t onceToken;
-  dispatch_once(&onceToken, ^{
-    _descriptor = [[JSONAPIResourceDescriptor alloc] initWithClass:[self class] forLinkedType:@"posts"];
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        __descriptor = [[JSONAPIResourceDescriptor alloc] initWithClass:[self class] forLinkedType:@"posts"];
+        
+        [__descriptor addProperty:@"ID" withDescription:[[JSONAPIPropertyDescriptor alloc] initWithJsonName:@"id"]];
+        
+        [__descriptor addProperty:@"title"];
+        [__descriptor addProperty:@"date"
+                 withDescription:[[JSONAPIPropertyDescriptor alloc] initWithJsonName:@"date" withFormat:[NSDateFormatter RFC3339DateFormatter]]];
+        
+        [__descriptor hasOne:[PeopleResource class] withName:@"author"];
+        [__descriptor hasMany:[CommentResource class] withName:@"comments"];
+    });
     
-    [_descriptor addProperty:@"title"];
-    [_descriptor addProperty:@"date"
-             withDescription:[[JSONAPIPropertyDescriptor alloc] initWithJsonName:@"date" withFormat:[NSDateFormatter RFC3339DateFormatter]]];
-    
-    [_descriptor hasOne:[PeopleResource class] withName:@"author"];
-    [_descriptor hasMany:[CommentResource class] withName:@"comments"];
-  });
-  
-  return _descriptor;
+    return __descriptor;
 }
 
 @end

@@ -1,6 +1,4 @@
-^{
-    <#code#>
-}//
+//
 //  JSONAPI.h
 //  JSONAPI
 //
@@ -10,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@class JSONAPIResource;
+#import "JSONAPIResource.h"
 
 /**
  *  Represents a complete JSON-API formatted message body.
@@ -24,8 +22,7 @@
  */
 + (NSString*)MEDIA_TYPE;
 
-@property (nonatomic, strong, readonly) NSDictionary *meta;
-@property (nonatomic, strong, readonly) id data;
+@property (readonly) NSDictionary *meta;
 @property (nonatomic, strong, readonly) NSArray *errors;
 
 @property (readonly) id resource;
@@ -37,7 +34,7 @@
 // Initializers
 + (instancetype)jsonAPIWithDictionary:(NSDictionary *)dictionary;
 + (instancetype)jsonAPIWithString:(NSString *)string;
-+ (instancetype)jsonAPIWithResource:(JSONAPIResource*)resource;
++ (instancetype)jsonAPIWithResource:(NSObject <JSONAPIResource> *)resource;
 
 - (instancetype)initWithDictionary:(NSDictionary*)dictionary;
 - (instancetype)initWithString:(NSString*)string;

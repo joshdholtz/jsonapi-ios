@@ -16,19 +16,21 @@
 
 @implementation CommentResource
 
-static JSONAPIResourceDescriptor *_descriptor = nil;
+static JSONAPIResourceDescriptor *__descriptor = nil;
 
 + (JSONAPIResourceDescriptor*)descriptor {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        _descriptor = [[JSONAPIResourceDescriptor alloc] initWithClass:[self class] forLinkedType:@"comments"];
-
-        [_descriptor addProperty:@"text" withDescription:[[JSONAPIPropertyDescriptor alloc] initWithJsonName:@"body"]];
+        __descriptor = [[JSONAPIResourceDescriptor alloc] initWithClass:[self class] forLinkedType:@"comments"];
         
-        [_descriptor hasOne:[PeopleResource class] withName:@"author"];
+        [__descriptor addProperty:@"ID" withDescription:[[JSONAPIPropertyDescriptor alloc] initWithJsonName:@"id"]];
+
+        [__descriptor addProperty:@"text" withDescription:[[JSONAPIPropertyDescriptor alloc] initWithJsonName:@"body"]];
+        
+        [__descriptor hasOne:[PeopleResource class] withName:@"author"];
     });
 
-    return _descriptor;
+    return __descriptor;
 }
 
 @end

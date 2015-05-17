@@ -6,12 +6,11 @@
 //  Copyright (c) 2013 Josh Holtz. All rights reserved.
 //
 
-#import "JSONAPIResource.h"
+#import "JSONAPIResourceBase.h"
 
-@class CommentResource;
 @class PeopleResource;
 
-@interface PostResource : JSONAPIResource
+@interface PostResource : JSONAPIResourceBase
 
 @property (nonatomic, strong) NSString *title;
 @property (nonatomic, strong) PeopleResource *author;

@@ -12,21 +12,21 @@
 
 @implementation JSONAPIErrorResource
 
-+ (JSONAPIResourceDescriptor*)descriptor {
-    static JSONAPIResourceDescriptor *_descriptor = nil;
+- (instancetype) initWithDictionary:(NSDictionary*)dictionary {
+    self =  [self init];
     
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        _descriptor = [[JSONAPIResourceDescriptor alloc] initWithClass:[self class] forLinkedType:@"errors"];
-        
-        [_descriptor addProperty:@"status"];
-        [_descriptor addProperty:@"code"];
-        [_descriptor addProperty:@"title"];
-        [_descriptor addProperty:@"detail"];
-        [_descriptor addProperty:@"paths"];
-        [_descriptor addProperty:@"links"];
-    });
+    if (self) {
+        _ID = dictionary[@"id"];
+        _href = dictionary[@"href"];
+        _status = dictionary[@"status"];
+        _code = dictionary[@"code"];
+        _title = dictionary[@"title"];
+        _detail = dictionary[@"detail"];
+        _links = dictionary[@"links"];
+        _paths = dictionary[@"paths"];
+    }
     
-    return _descriptor;
+    return self;
 }
+
 @end
