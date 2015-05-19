@@ -30,23 +30,14 @@
 + (id <JSONAPIResource>)parseResource:(NSDictionary*)dictionary;
 
 /**
- * Allocate an array of resource objects. The array argument must be an array of dictionary
- * objects follwing the same rules for a single resource.
+ * Allocate an array of resource objects. The array argument must be an array of
+ * dictionary objects follwing the same rules for a single resource.
  *
  * @param array array of dictionary JSON instance definition as NSDictionary.
  *
  * @return Array of newly allocated <JSONAPIResource> subclass instances.
  */
 + (NSArray*)parseResources:(NSArray*)array;
-
-/**
- * Update the linked resources from a deserialized set of JSON API "included" elements.
- * Linked resource instances are replaced with full definition, when type and ID match.
- *
- * @param resource model object
- * @param jsonAPI JSON-API message object
- */
-+ (void)link:(NSObject <JSONAPIResource>*)resource withIncluded:(JSONAPI*)jsonAPI;
 
 /**
  * Serialize resource to a JSON dictionary.
@@ -57,6 +48,27 @@
  * @param resource model object
  */
 + (NSDictionary*)dictionaryFor:(NSObject <JSONAPIResource>*)resource;
+
+/**
+ * Initialize the instance properties in the model object instance from the JSON 
+ * dictionary.
+ * 
+ * @warning The caller is responsible for insuring the resource class matches the
+ * dictionary type. Results of mismatched types are unpredictable.
+ *
+ * @param resource model object
+ * @param dictionary JSON-API data dictionary
+ */
++ (void)set:(NSObject <JSONAPIResource> *)resource withDictionary:dictionary;
+
+/**
+ * Update the linked resources from a deserialized set of JSON API "included" elements.
+ * Linked resource instances are replaced with full definition, when type and ID match.
+ *
+ * @param resource model object
+ * @param jsonAPI JSON-API message object
+ */
++ (void)link:(NSObject <JSONAPIResource>*)resource withIncluded:(JSONAPI*)jsonAPI;
 
 /**
  * Get array of associated resource instances.

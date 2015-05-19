@@ -24,6 +24,9 @@ static NSMutableDictionary *linkedTypeToResource = nil;
 
 + (void)addResource:(Class)resourceClass {
     JSONAPIResourceDescriptor *descriptor = [resourceClass descriptor];
+    NSAssert(descriptor.type, @"A JSONAPIResourceDescriptor must have a type attribute.");
+    NSAssert(descriptor.idProperty, @"A JSONAPIResourceDescriptor must have an id attribute.");
+    
     NSString *type = descriptor.type;
     [linkedTypeToResource setObject:descriptor forKey:type];
 }

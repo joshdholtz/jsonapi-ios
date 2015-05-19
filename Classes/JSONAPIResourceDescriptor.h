@@ -13,7 +13,23 @@
 @interface JSONAPIResourceDescriptor : NSObject
 
 /** JSON-API "type" name */
-@property (readonly) NSString *type;
+@property (strong, readonly) NSString *type;
+
+/**
+ * JSON-API "id" property description.
+ *
+ * This is required for any model resource.
+ */
+@property (strong) NSString *idProperty;
+
+/** 
+ * JSON-API "id" optional format. 
+ *
+ * JSON-API requires the 'id' property to be serialized as a string. The formatter
+ * allows you to specify any convertable object. If the property is nil, the 'id' 
+ * will use the default JSON serialization.
+ */
+@property (strong) NSFormatter *idFormatter;
 
 /** The resource class that is described */
 @property (readonly) Class resourceClass;

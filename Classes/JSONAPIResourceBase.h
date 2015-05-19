@@ -37,9 +37,9 @@
  *
  * @warning Each subclass must add this property to its <JSONAPIResourceDescriptor> with the line:
  *
- *      \[descriptor addProperty:@"ID" withDescription:\[\[JSONAPIPropertyDescriptor alloc\] initWithJsonName:@"id"\]\];
+ *      \[descriptor setIdProperty:@"ID"\];
  *
- * where 'descriptor' is the name of your class <JSONAPIResourceDescriptor>.
+ * where 'descriptor' is the name of your classes' static <JSONAPIResourceDescriptor>.
  */
 @property (strong, atomic) id ID;
 

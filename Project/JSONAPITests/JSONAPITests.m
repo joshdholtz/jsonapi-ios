@@ -110,8 +110,8 @@
     
     NSDictionary *json = [JSONAPIResourceParser dictionaryFor:newAuthor];
     XCTAssertEqualObjects(json[@"type"], @"people", @"Did not create person!");
-    XCTAssertEqualObjects(json[@"first-name"], @"Karl", @"Wrong first name!");
-    XCTAssertNil(json[@"twitter"], @"Wrong Twitter!.");
+    XCTAssertEqualObjects(json[@"attributes"][@"first-name"], @"Karl", @"Wrong first name!");
+    XCTAssertNil(json[@"attributes"][@"twitter"], @"Wrong Twitter!.");
 }
 
 - (void)testSerializeWithFormat {
@@ -121,8 +121,8 @@
     
     NSDictionary *json = [JSONAPIResourceParser dictionaryFor:newPost];
     XCTAssertEqualObjects(json[@"type"], @"posts", @"Did not create post!");
-    XCTAssertNotNil(json[@"date"], @"Wrong date!");
-    XCTAssertTrue([json[@"date"] isKindOfClass:[NSString class]], @"Date should be string!.");
+    XCTAssertNotNil(json[@"attributes"][@"date"], @"Wrong date!");
+    XCTAssertTrue([json[@"attributes"][@"date"] isKindOfClass:[NSString class]], @"Date should be string!.");
 }
 
 - (void)testSerializeComplex {
