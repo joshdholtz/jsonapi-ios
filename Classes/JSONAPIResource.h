@@ -72,10 +72,6 @@
  * This is typically a database sequence number associated withe the resource record, 
  * but that is not required. The JSON API requires ID to be serialized as a string.
  *
- * A <JSONAPIPropertyDescriptor> for the ID will automatically be included in the default
- * <JSONAPIResourceDescriptor> for the class. This descriptor does not covert the string
- * value received, but you can set a formatter on the <JSONAPIPropertyDescriptor> if desired.
- *
  * In general, this should be implemented by a @property ID in the realized class. The
  * @property declaration will automatically synthesize the get/set members declared in this
  * protocol. The property storage is an implementation detail, which is why the protocol does
@@ -93,10 +89,6 @@
  *
  * This is typically a database sequence number associated withe the resource record,
  * but that is not required. The JSON API requires ID to be serialized as a string.
- *
- * A <JSONAPIPropertyDescriptor> for the ID will automatically be included in the default
- * <JSONAPIResourceDescriptor> for the class. This descriptor does not covert the string
- * value received, but you can set a formatter on the <JSONAPIPropertyDescriptor> if desired.
  *
  * In general, this should be implemented by a @property ID in the realized class. The
  * @property declaration will automatically synthesize the get/set members declared in this
