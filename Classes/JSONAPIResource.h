@@ -14,8 +14,8 @@
 /** 
  * Protocol of an object that is available for JSON API serialization. 
  * 
- * When developing model classes for use with JSON-API, it is reccomended that classes 
- * are derived from <JSONAPIResourceBase>, but that is not required. An existing model
+ * When developing model classes for use with JSON-API, it is suggested that classes
+ * be derived from <JSONAPIResourceBase>, but that is not required. An existing model
  * class can be adapted for JSON-API by implementing this protocol.
  */
 @protocol JSONAPIResource <NSObject>
@@ -23,10 +23,46 @@
 #pragma mark - Class Methods
 
 /**
- * Get the JSON API resource metadata description. This will be different for each resource 
- * model class. It must be defined by the subclass.
- *
- * @return Resource description for the target model class.
+ Get the JSON API resource metadata description. This will be different for each resource
+ model class. It must be defined by the subclass.
+
+ The definition should look something like:
+ 
+ <pre><code>
+      #import &lt;JSONAPI/JSONAPIPropertyDescriptor.h&gt;
+      #import &lt;JSONAPI/JSONAPIResourceDescriptor.h&gt;
+ 
+      @implementation PeopleResource
+
+      static JSONAPIResourceDescriptor *__descriptor = nil;
+
+      + (JSONAPIResourceDescriptor*)descriptor {
+         static dispatch_once_t onceToken;
+         dispatch_once(&onceToken, ^{
+           __descriptor = [[JSONAPIResourceDescriptor alloc] initWithClass:[self class] forLinkedType:@"people"];
+
+           [__descriptor setIdProperty:@"ID"];
+
+           [__descriptor addProperty:@"telephone"];
+           [__descriptor addProperty:@"birthday" withDescription:[[JSONAPIPropertyDescriptor alloc] initWithJsonName:@"birthday" withFormat:[NSDateFormatter RFC3339DateFormatter]]];
+           [__descriptor addProperty:@"firstName" withDescription:[[JSONAPIPropertyDescriptor alloc] initWithJsonName:@"first"]];
+           [__descriptor addProperty:@"lastName" withDescription:[[JSONAPIPropertyDescriptor alloc] initWithJsonName:@"last"]];
+         });
+
+         return __descriptor;
+       }
+ </code></pre>
+
+ In this example, People resource is a class that inherits from <JSONAPIResourceBase>
+ (defines property 'ID'), and defines properties `NSString *telephone`, `NSDate *birthday`,
+ `NSString *firstName` and `NSString *lastName`. 
+ 
+ * The `telephone` property needs no special transform rules. 
+ * The `birthday` property must be transformed into a string for JSON. 
+ * The API you are targeting uses the labels `first` and `last` for the last two properties,
+ which you prefer to relabel internally.
+
+ @return Resource description for the target model class.
  */
 + (JSONAPIResourceDescriptor*)descriptor;
 

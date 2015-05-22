@@ -14,7 +14,13 @@
  */
 @interface JSONAPIResourceDescriptor : NSObject
 
-/** JSON-API "type" name */
+#pragma mark - Properties
+
+/** 
+ * JSON-API "type" name 
+ *
+ * This is required for any model resource.
+ */
 @property (strong, readonly) NSString *type;
 
 /**
@@ -33,27 +39,43 @@
  */
 @property (strong) NSFormatter *idFormatter;
 
-/** The resource class that is described */
+/** The resource class that is described. */
 @property (readonly) Class resourceClass;
 
-/** Maps property names to <JSONAPIPropertyDescriptor> */
+/** Maps model property names to <JSONAPIPropertyDescriptor>. */
 @property (readonly) NSDictionary *properties;
+
+
+#pragma mark - Class Methods
 
 /**
  * Register a resouce type.
+ * 
+ * This must be called before any serious parsing can be done. You must add a line
+ * for each resource class like:
  *
- * @param resourceClass The class represented. Must be a subclass of<JSONAPIResource>.
+ *          \[JSONAPIResourceDescriptor addResource:\[PeopleResource class\]\];
+ *
+ * somewhere in your test/application setup. This is all you have to do to configure this 
+ * module.
+ *
+ * @param resourceClass The class represented. Must implement the <JSONAPIResource> protocol.
  */
 + (void)addResource:(Class)resourceClass;
 
 /**
  * Get the resource descriptor for the JSON "type" label.
  *
+ * This only works if the <JSONAPIResource> class has been registered first.
+ *
  * @param linkedType The label associated with the resource class in JSON
  *
  * @return The resource class descriptor.
  */
 + (instancetype)forLinkedType:(NSString *)linkedType;
+
+
+#pragma mark - Instance Methods
 
 /**
  * Initialize a new instance.
@@ -64,17 +86,17 @@
 - (instancetype)initWithClass:(Class)resource forLinkedType:(NSString*)linkedType;
 
 /**
- * Add a <JSONAPIPropertyDescriptor> for a simple property.
+ * Add a simple property.
  *
- * The default property description assumes the property name matches the JSON name,
- * and no string format is used.
+ * Creates a default <JSONAPIPropertyDescriptor> based on the name. The default property 
+ * description assumes the JSON name matches the property name, and no string format is used.
  *
- * @param name The name of the property in the class.
+ * @param name The name of the property in the model class.
  */
 - (void)addProperty:(NSString*)name;
 
 /**
- * Add a <JSONAPIPropertyDescriptor> for a simple property with custom transform object.
+ * Add a simple property with custom transform object.
  *
  * @param name The name of the property in the class.
  * @param description Describes how the property is transformed to JSON
@@ -82,9 +104,10 @@
 - (void)addProperty:(NSString*)name withDescription:(JSONAPIPropertyDescriptor*)description;
 
 /**
- * Add a <JSONAPIPropertyDescriptor> for a has-one related resource property.
+ * Add a has-one related resource property.
  *
- * The default property description assumes the property name matches the JSON label.
+ * Creates a default <JSONAPIPropertyDescriptor> based on the name. The default property
+ * description assumes the JSON name matches the property name.
  *
  * @param jsonApiResource The related property class.
  * @param name The name of the property in the class.
@@ -92,8 +115,10 @@
 - (void)hasOne:(Class)jsonApiResource withName:(NSString*)name;
 
 /**
- * Add a <JSONAPIPropertyDescriptor> for a has-one related resource property with a 
- * JSON property label different from the property name.
+ * Add a has-one related resource property with a JSON property label different from 
+ * the property name.
+ *
+ * Creates a <JSONAPIPropertyDescriptor> based on the arguments.
  *
  * @param jsonApiResource The related property class.
  * @param name The name of the property in the class.
@@ -102,9 +127,13 @@
 - (void)hasOne:(Class)jsonApiResource withName:(NSString*)name withJsonName:(NSString*)json;
 
 /**
- * Add a <JSONAPIPropertyDescriptor> for a has-many related resource property.
+ * Add a has-many related resource property.
  *
- * The default property description assumes the property name matches the JSON label.
+ * Note that the Class argmuent refers to the collection element type. It assumes the
+ * property is instantiated in an NSArray.
+ *
+ * Creates a default <JSONAPIPropertyDescriptor> based on the name. The default property
+ * description assumes the JSON name matches the property name.
  *
  * @param jsonApiResource The related property class.
  * @param name The name of the property in the class.
@@ -112,8 +141,13 @@
 - (void)hasMany:(Class)jsonApiResource withName:(NSString*)name;
 
 /**
- * Add a <JSONAPIPropertyDescriptor> for a has-many related resource property with a 
- * JSON property label different from the property name.
+ * Add a has-many related resource property with a JSON property label different from 
+ * the property name.
+ *
+ * Note that the Class argmuent refers to the collection element type. It assumes the
+ * property is instantiated in an NSArray.
+ *
+ * Creates a <JSONAPIPropertyDescriptor> based on the arguments.
  *
  * @param jsonApiResource The related property class.
  * @param name The name of the property in the class.

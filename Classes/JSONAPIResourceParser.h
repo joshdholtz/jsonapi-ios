@@ -27,7 +27,7 @@
  *
  * @param dictionary JSON instance definition as NSDictionary
  *
- * @return newly allocated <JSONAPIResource> subclass instance.
+ * @return newly allocated <JSONAPIResource> model instance.
  */
 + (id <JSONAPIResource>)parseResource:(NSDictionary*)dictionary;
 
@@ -37,7 +37,7 @@
  *
  * @param array array of dictionary JSON instance definition as NSDictionary.
  *
- * @return Array of newly allocated <JSONAPIResource> subclass instances.
+ * @return Array of newly allocated <JSONAPIResource> model instances.
  */
 + (NSArray*)parseResources:(NSArray*)array;
 
@@ -77,7 +77,7 @@
  *
  * @param resource model object
  *
- * @return The collection of related <JSONAPIResource> instances.
+ * @return The collection of related <JSONAPIResource> model instances.
  */
 + (NSArray*)relatedResourcesFor:(NSObject <JSONAPIResource>*)resource;
 
