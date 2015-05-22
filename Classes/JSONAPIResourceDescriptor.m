@@ -2,6 +2,8 @@
 //  JSONAPIResourceDescriptor.m
 //  JSONAPI
 //
+//  Created by Jonathan Karl Armstrong, 2015.
+//
 
 #import "JSONAPIResourceDescriptor.h"
 #import "JSONAPIPropertyDescriptor.h"

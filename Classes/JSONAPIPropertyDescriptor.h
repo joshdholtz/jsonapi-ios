@@ -2,27 +2,53 @@
 //  JSONAPIProperty.h
 //  JSONAPI
 //
+//  Created by Jonathan Karl Armstrong, 2015.
+//
 
 #import <Foundation/Foundation.h>
 
 @class JSONAPIResourceDescriptor;
 
 /**
- * JSON API metadata for a <JSONAPIResource> property
+ * JSON API metadata for a <JSONAPIResource> property. This is intended to be used in 
+ * dictionary contained in <JSONAPIResourceDescriptor>. The dictionary key is the model 
+ * class property name, and the <JSONAPIResourceDescriptor> contains the rest of the 
+ * model class metadata.
+ *
+ * This class is used primarily to transform an individual model property to and from JSON.
+ *
+ * There are two basic resouce model property types; simple values and related resource 
+ * references. This class handles both, although some internal properties may only apply 
+ * to one or the other.
+ * 
+ * A simple value property includes anything that can be expressed or transformed into 
+ * a single key-value pair in JSON. This includes types like NSNumber and NSString that 
+ * have native JSON serialization support, as well as types like NSDate that can be 
+ * transformed into an NSString representation using an NSFormatter.
+ *
+ * Related resources are objects that must also conform to the <JSONAPIResource> protocol. 
+ * Classes that do not conform to the protocol, or do not have a <JSONAPIResourceDescriptor>
+ * registered at runtime, are not supported, even if they theoretically have a valid JSON 
+ * serialization. Since it is easy to implement the protocol on existing classes, this 
+ * should not be a great limitation.
  */
 @interface JSONAPIPropertyDescriptor : NSObject
 
-/** Name used for property in JSON serialization */
+/** 
+ * Name used for property in JSON serialization 
+ */
 @property (nonatomic, readonly) NSString *jsonName;
 
 /** 
- * Optional reference used to serialize/deserialize property. For example, NSDate instances must be
- * serialized to a string representation. Any type that can be reversibly serialized to a String can
- * be used as a property by setting an appropriate serializer.
+ * Optional formatter instance used to serialize/deserialize property. For example,
+ * NSDate instances must be serialized to a string representation. Any type that can be
+ * reversibly serialized to a String can be used as a property by setting an appropriate 
+ * serializer.
  *
  * For array properties, this is applied to each element of an array if set.
  *
- * Formatters are only for simple property types. A _linked_ <JSONAPIResource> may not have a formatter.
+ * Formatters are only for simple property types. A _linked_ <JSONAPIResource> may not have 
+ * a formatter.
  */
 @property (nonatomic) NSFormatter *formatter;
 

@@ -2,6 +2,8 @@
 //  JSONAPIResourceParser.h
 //  JSONAPI
 //
+//  Created by Jonathan Karl Armstrong, 2015.
+//
 
 #import <Foundation/Foundation.h>
 
