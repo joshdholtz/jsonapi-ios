@@ -53,7 +53,7 @@
        }
  </code></pre>
 
- In this example, People resource is a class that inherits from <JSONAPIResourceBase>
+ In this example, `PeopleResource` is a class that inherits from <JSONAPIResourceBase>
  (defines property 'ID'), and defines properties `NSString *telephone`, `NSDate *birthday`,
  `NSString *firstName` and `NSString *lastName`. 
  
