@@ -10,6 +10,8 @@
 	<string>JSONAPI</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
+		<key>316D8028CBF982160D8D1C5442A0AAF09059D0E3</key>
+		<string>github.com:joshdholtz/jsonapi-ios.git</string>
 		<key>7EE6692C-FAB2-484E-B1C6-2C33369BAE38</key>
 		<string>ssh://github.com/joshdholtz/jsonapi-ios.git</string>
 	</dict>
@@ -17,15 +19,17 @@
 	<string>Project/JSONAPI.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>7EE6692C-FAB2-484E-B1C6-2C33369BAE38</key>
+		<key>316D8028CBF982160D8D1C5442A0AAF09059D0E3</key>
 		<string>../..</string>
+		<key>7EE6692C-FAB2-484E-B1C6-2C33369BAE38</key>
+		<string>../../../JSONAPI</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>ssh://github.com/joshdholtz/jsonapi-ios.git</string>
+	<string>github.com:joshdholtz/jsonapi-ios.git</string>
 	<key>IDESourceControlProjectVersion</key>
-	<integer>110</integer>
+	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>7EE6692C-FAB2-484E-B1C6-2C33369BAE38</string>
+	<string>316D8028CBF982160D8D1C5442A0AAF09059D0E3</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
@@ -35,6 +39,14 @@
 			<string>7EE6692C-FAB2-484E-B1C6-2C33369BAE38</string>
 			<key>IDESourceControlWCCName</key>
 			<string>JSONAPI</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>316D8028CBF982160D8D1C5442A0AAF09059D0E3</string>
+			<key>IDESourceControlWCCName</key>
+			<string>jsonapi-ios</string>
 		</dict>
 	</array>
 </dict>

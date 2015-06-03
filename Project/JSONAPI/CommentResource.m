@@ -12,7 +12,8 @@
 
 - (NSDictionary *)mapKeysToProperties {
     return @{
-             @"text" : @"text"
+             @"text" : @"text",
+             @"links.author" : @"author",
              };
 }
 

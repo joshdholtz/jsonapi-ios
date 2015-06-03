@@ -8,8 +8,9 @@
 
 #import "JSONAPIResource.h"
 
+#import "JSONAPI.h"
 #import "JSONAPIResourceFormatter.h"
-#import "JSONAPIResourceLinker.h"
+#import "JSONAPIResourceModeler.h"
 
 #import <objc/runtime.h>
 #import <objc/message.h>
@@ -28,33 +29,23 @@
 #pragma mark -
 #pragma mark - Class Methods
 
-+ (NSArray*)jsonAPIResources:(NSArray*)array withLinked:(NSDictionary*)linked {
-    return [JSONAPIResource jsonAPIResources:array withLinked:linked withClass:[self class]];
-}
-
-+ (NSArray*)jsonAPIResources:(NSArray*)array withLinked:(NSDictionary*)linked withClass:(Class)resourceObjectClass {
-    if (resourceObjectClass == nil) {
-        resourceObjectClass = [self class];
-    }
++ (NSArray*)jsonAPIResources:(NSArray*)array {
     
-    NSMutableArray *mutableArray = [[NSMutableArray alloc] init];
+    NSMutableArray *mutableArray = @[].mutableCopy;
     for (NSDictionary *dict in array) {
-        [mutableArray addObject:[[resourceObjectClass alloc] initWithDictionary:dict withLinked:linked]];
+        NSString *type = dict[@"type"] ?: @"";
+        Class resourceObjectClass = [JSONAPIResourceModeler resourceForLinkedType:type];
+        [mutableArray addObject:[[resourceObjectClass alloc] initWithDictionary:dict]];
     }
     
     return mutableArray;
 }
 
-+ (id)jsonAPIResource:(NSDictionary*)dictionary withLinked:(NSDictionary*)linked {
-    return [JSONAPIResource jsonAPIResource:dictionary withLinked:linked withClass:[self class]];
-}
-
-+ (id)jsonAPIResource:(NSDictionary*)dictionary withLinked:(NSDictionary*)linked withClass:(Class)resourceObjectClass {
-    if (resourceObjectClass == nil) {
-        resourceObjectClass = [self class];
-    }
++ (id)jsonAPIResource:(NSDictionary*)dictionary {
+    NSString *type = dictionary[@"type"] ?: @"";
+    Class resourceObjectClass = [JSONAPIResourceModeler resourceForLinkedType:type];
     
-    return [[resourceObjectClass alloc] initWithDictionary:dictionary withLinked:linked];
+    return [[resourceObjectClass alloc] initWithDictionary:dictionary];
 }
 
 #pragma mark -
@@ -68,12 +59,10 @@
     return self;
 }
 
-- (id)initWithDictionary:(NSDictionary*)dict withLinked:(NSDictionary*)linked {
+- (id)initWithDictionary:(NSDictionary*)dict {
     self = [self init];
     if (self) {
         [self setWithDictionary:dict];
-        [self linkLinks:linked];
-        
     }
     return self;
 }
@@ -109,6 +98,7 @@
     [map addEntriesFromDictionary:@{
                                          @"id" : @"ID",
                                          @"href" : @"href",
+                                         @"type" : @"type",
                                          @"links" : @"links"
                                          }];
     
@@ -145,33 +135,50 @@
     }
 }
 
-- (void)linkLinks:(NSDictionary*)linked {
+- (void)linkWithIncluded:(JSONAPI*)jsonAPI {
+    
+    NSDictionary *included = jsonAPI.includedResources;
+    
     // Loops through links of resources
-    for (NSString *linkTypeUnmapped in self.links.allKeys) {
-        
-        NSString *linkType = [JSONAPIResourceLinker linkedType:linkTypeUnmapped];
-        if (linkType == nil) {
-            linkType = linkTypeUnmapped;
-        }
+    NSDictionary *links = self.links;
+    for (NSString *linkKey in links.allKeys) {
         
         // Gets linked objects for the resource
-        id linksTo = [self.links objectForKey:linkTypeUnmapped];
-        if ([linksTo isKindOfClass:[NSNumber class]] == YES || [linksTo isKindOfClass:[NSString class]] == YES) {
-            JSONAPIResource *linkedResource = [[linked objectForKey:linkType] objectForKey:linksTo];
-            if (linkedResource != nil) {
-                [self.__resourceLinks setObject:linkedResource forKey:linkTypeUnmapped];
-            }
+        id linksTo = self.links[linkKey];
+        if ([linksTo isKindOfClass:[NSDictionary class]] == YES) {
             
-        } else if ([linksTo isKindOfClass:[NSArray class]] == YES) {
-            NSMutableArray *linkedResources = [NSMutableArray array];
-            [self.__resourceLinks setObject:linkedResources forKey:linkTypeUnmapped];
-            for (id linkedId in linksTo) {
-                JSONAPIResource *linkedResource = [[linked objectForKey:linkType] objectForKey:linkedId];
-                if (linkedResource != nil) {
-                    [linkedResources addObject:linkedResource];
+            id linkage = linksTo[@"linkage"];
+            if ([linkage isKindOfClass:[NSDictionary class]] == YES) {
+
+                NSString *linkType = linkage[@"type"];
+                
+                if (linkage[@"id"] != nil) {
+                    id linksToId = linkage[@"id"];
+                    
+                    JSONAPIResource *linkedResource = included[linkType][linksToId];
+                    if (linkedResource != nil) {
+                        [self.__resourceLinks setObject:linkedResource forKey:linkKey];
+                    }
                 }
+
+            } else if ([linkage isKindOfClass:[NSArray class]] == YES) {
+                
+                NSMutableArray *linkedResources = @[].mutableCopy;
+                for (NSDictionary *linkageData in linkage) {
+                    NSString *linkType = linkageData[@"type"];
+                    
+                    if (linkageData[@"id"] != nil) {
+                        id linksToId = linkageData[@"id"];
+                        
+                        JSONAPIResource *linkedResource = included[linkType][linksToId];
+                        if (linkedResource != nil) {
+                            [linkedResources addObject:linkedResources];
+                        }
+                    }
+                }
+                [self.__resourceLinks setObject:linkedResources forKey:linkKey];
+                
             }
-            
         }
     }
     
@@ -200,7 +207,7 @@
 #pragma mark - NSCopying
 
 - (id)copyWithZone:(NSZone *)zone {
-    id copy = [[[self class] alloc] initWithDictionary:[self.__dictionary copyWithZone:zone] withLinked:nil];
+    id copy = [[[self class] alloc] initWithDictionary:[self.__dictionary copyWithZone:zone]];
     
     if (copy) {
         // Copy NSObject subclasses
