@@ -72,20 +72,6 @@
     return _errors.count > 0;
 }
 
-- (NSMutableArray *)arrayFromDictionary:(NSDictionary *)dictionary withKey:(NSString *)key
-{
-    NSMutableArray *array = [[NSMutableArray alloc]init];
-    
-    if([[dictionary objectForKey:key] isKindOfClass:[NSDictionary class]]) {
-        [array addObject:[dictionary objectForKey:key]];
-    }
-    else {
-        array = [dictionary objectForKey:key];
-    }
-    
-    return array;
-}
-
 #pragma mark - Private
 
 - (void)inflateWithDictionary:(NSDictionary*)dictionary {
