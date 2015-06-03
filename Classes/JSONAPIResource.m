@@ -172,7 +172,7 @@
                         
                         JSONAPIResource *linkedResource = included[linkType][linksToId];
                         if (linkedResource != nil) {
-                            [linkedResources addObject:linkedResources];
+                            [linkedResources addObject:linkedResource];
                         }
                     }
                 }
