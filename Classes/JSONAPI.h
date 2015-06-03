@@ -10,23 +10,28 @@
 
 #import "JSONAPIResource.h"
 #import "JSONAPIResourceFormatter.h"
-#import "JSONAPIResourceLinker.h"
 #import "JSONAPIResourceModeler.h"
+#import "JSONAPIErrorResource.h"
 
 @interface JSONAPI : NSObject
 
-@property (nonatomic, strong) NSDictionary *meta;
-@property (nonatomic, strong) NSDictionary *linked;
-@property (nonatomic, strong) NSError *error;
+@property (nonatomic, strong, readonly) NSDictionary *meta;
+@property (nonatomic, strong, readonly) id data;
+@property (nonatomic, strong, readonly) NSArray *errors;
 
-+ (id)JSONAPIWithString:(NSString*)string;
-+ (id)JSONAPIWithDictionary:(NSDictionary*)dictionary;
+@property (readonly) id resource;
+@property (nonatomic, strong, readonly) NSArray *resources;
+@property (nonatomic, strong, readonly) NSDictionary *includedResources;
 
-- (id)initWithString:(NSString*)string;
-- (id)initWithDictionary:(NSDictionary*)dictionary;
+@property (nonatomic, strong, readonly) NSError *internalError;
 
-- (id)objectForKey:(NSString*)key;
-- (id)resourceForKey:(NSString*)key;
-- (NSArray*)resourcesForKey:(NSString*)key;
+// Initializers
++ (instancetype)jsonAPIWithDictionary:(NSDictionary *)dictionary;
++ (instancetype)jsonAPIWithString:(NSString *)string;
+- (instancetype)initWithDictionary:(NSDictionary*)dictionary;
+- (instancetype)initWithString:(NSString*)string;
+
+- (id)includedResource:(id)ID withType:(NSString*)type;
+- (BOOL)hasErrors;
 
 @end
