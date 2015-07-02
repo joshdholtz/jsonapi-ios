@@ -111,19 +111,94 @@
         }
     }
     
-    NSDictionary *resourceObjectAttributes = [dict objectForKey:@"attributes"];
-    if(resourceObjectAttributes != nil && [dict objectForKey:@"attributes"] != [NSNull null]){
-        
+    NSDictionary *resourceObjectAttributes = (dict[@"attributes"] && (dict[@"attributes"] != [NSNull null])) ? dict[@"attributes"] : nil;
+    if(resourceObjectAttributes){
         self.attributes = resourceObjectAttributes;
+    }
+    else
+        self.attributes = @{};
+    
+    NSDictionary *resourceObjectRelationships = (dict[@"relationships"] && (dict[@"relationships"] != [NSNull null])) ? dict[@"relationships"] : nil;
+    if(resourceObjectRelationships){
+        self.relationships = resourceObjectRelationships;
+    }
+    else
+        resourceObjectRelationships = @{};
+    
+    NSDictionary *userMap = [self mapKeysToProperties];
+    if([userMap count]>0){
         
-        // Loops through all keys to map JSONAPI Resource Object attributes to Objective-C Properties
-        
-        NSDictionary *userMap = [self mapKeysToProperties];
-        if(userMap){
+        for (NSString *key in [userMap allKeys]) {
             
-            for (NSString *key in [userMap allKeys]) {
+            NSRange relationshipRange = [key rangeOfString:@"relationships."];
+            BOOL isRelationship = relationshipRange.location != NSNotFound;
+            
+            if(isRelationship){
                 
-                // Checks if the key to map is in the dictionary to map
+                NSString *relationshipKey = [key substringFromIndex: relationshipRange.location+1];
+                NSDictionary *relation = (resourceObjectRelationships[relationshipKey] && resourceObjectRelationships[relationshipKey] != [NSNull null]) ? resourceObjectRelationships[relationshipKey] : nil;
+                
+                if (relation) {
+                    
+                    NSMutableArray *relatedJSONAPIResources = [NSMutableArray new];
+                    id relationData = (relation[@"data"] && relation[@"data"] != [NSNull null]) ? relation[@"data"] : nil;
+                    
+                    if(relationData){
+                        
+                        if([relationData isKindOfClass:[NSArray class]]){
+                            
+                            for (NSDictionary *resourceObjectIdentifier in (NSArray *)relationData) {
+                                NSString *type = resourceObjectIdentifier[@"type"];
+                                NSString *ID = resourceObjectIdentifier[@"id"];
+                                
+                                for(JSONAPIResource *relatedResource in self.includedResources){
+                                    if([relatedResource.ID isEqualToString: ID] && [relatedResource.type isEqualToString:type])
+                                        [relatedJSONAPIResources addObject: relatedResource];
+                                }
+                            }
+                        }
+                        else{
+                            NSString *type = relationData[@"type"];
+                            NSString *ID = relationData[@"id"];
+                            
+                            for(JSONAPIResource *relatedResource in self.includedResources){
+                                if([relatedResource.ID isEqualToString: ID] && [relatedResource.type isEqualToString:type]){
+                                    [relatedJSONAPIResources addObject: relatedResource];
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    else{
+                        NSLog(@"JSONAPIResource Warning : relation for key %@ has no data", relationshipKey);
+                    }
+                    
+                    
+                    if([relatedJSONAPIResources count] > 0){
+                        
+                        NSString *property = [userMap objectForKey:relationshipKey];
+                        if([self objectForKey: property]){
+                            
+                            if([[self objectForKey: property] isKindOfClass:[NSArray class]]){
+                                [self setValue: relatedJSONAPIResources forKey: property];
+                            }
+                            else{
+                                [self setValue: relatedJSONAPIResources[0] forKey: property];
+                            }
+                        }
+                        else{
+                            NSLog(@"JSONAPIResource Warning : object does not define a property of key: %@\n bailing out.", property);
+                        }
+                    }
+                    else{
+                        NSLog(@"JSONAPIResource Warning : objects not found for resource of key: %@\n bailing out.", relationshipKey);
+                    }
+                }
+                else {
+                    NSLog(@"JSONAPIResource Warning : relation for key %@ not found in json data.", key);
+                }
+            }
+            else{
                 if ([resourceObjectAttributes objectForKey:key] != nil && [resourceObjectAttributes objectForKey:key] != [NSNull null]) {
                     
                     NSString *property = [userMap objectForKey:key];
@@ -152,11 +227,12 @@
         }
     }
     
+    
 }
 
 - (void)linkWithIncluded:(JSONAPI*)jsonAPI {
     
-    NSDictionary *included = jsonAPI.includedResources;
+    NSDictionary *included = jsonAPI.included;
     
     // Loops through links of resources
     NSDictionary *links = self.links;

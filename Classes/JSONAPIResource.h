@@ -18,6 +18,8 @@
 @property (nonatomic, strong) NSDictionary *links;
 @property (nonatomic, strong) NSDictionary *relationships;
 
+@property (nonatomic, strong) NSArray *includedResources;
+
 + (id)jsonAPIResource:(NSDictionary*)dictionary;
 + (NSArray*)jsonAPIResources:(NSArray*)array;
 

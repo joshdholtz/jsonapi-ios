@@ -14,8 +14,8 @@
     return @{
              @"title" : @"title",
              @"date" : @"Date:date",
-             @"links.author" : @"author",
-             @"links.comments" : @"comments"
+             @"relationships.author" : @"author",
+             @"relationships.comments" : @"comments"
              };
 }
 

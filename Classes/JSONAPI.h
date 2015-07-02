@@ -35,6 +35,7 @@
 - (instancetype)initWithDictionary:(NSDictionary*)dictionary;
 - (instancetype)initWithString:(NSString*)string;
 
+- (NSArray *) includedResourcesForJSONAPIResource: (JSONAPIResource *) resource;
 - (id)includedResource:(id)ID withType:(NSString*)type;
 - (BOOL)hasErrors;
 
