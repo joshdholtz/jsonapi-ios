@@ -122,7 +122,7 @@
             for (NSString *key in [userMap allKeys]) {
                 
                 // Checks if the key to map is in the dictionary to map
-                if ([dict objectForKey:key] != nil && [dict objectForKey:key] != [NSNull null]) {
+                if ([resourceObjectAttributes objectForKey:key] != nil && [resourceObjectAttributes objectForKey:key] != [NSNull null]) {
                     
                     NSString *property = [userMap objectForKey:key];
                     
@@ -135,7 +135,7 @@
                             
                             [self setValue:[JSONAPIResourceFormatter performFormatBlock:[dict objectForKey:key] withName:formatFunction] forKey:property ];
                         } else {
-                            [self setValue:[dict objectForKey:key] forKey:property ];
+                            [self setValue:[resourceObjectAttributes objectForKey:key] forKey:property ];
                         }
                     }
                     @catch (NSException *exception) {
