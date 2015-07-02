@@ -89,50 +89,67 @@
 }
 
 - (void)setWithDictionary:(NSDictionary*)dict {
+    
     self.__dictionary = dict;
     
-    // Loops through all keys to map to propertiess
-    NSDictionary *userMap = [self mapKeysToProperties];
+    //maps top level mandatory members of a JSONAPI Resource object
+    NSDictionary *topLevelMembers = @{
+                                      @"id" : @"ID",
+                                      @"type" : @"type",
+                                      };
     
-    NSMutableDictionary *map = [NSMutableDictionary dictionaryWithDictionary:userMap];
-    [map addEntriesFromDictionary:@{
-                                         @"id" : @"ID",
-                                         @"href" : @"href",
-                                         @"type" : @"type",
-                                         @"links" : @"links"
-                                         }];
-    
-    for (NSString *key in [map allKeys]) {
+    for(NSString *key in [topLevelMembers allKeys]){
         
-        // Checks if the key to map is in the dictionary to map
         if ([dict objectForKey:key] != nil && [dict objectForKey:key] != [NSNull null]) {
-            
-            NSString *property = [map objectForKey:key];
-            
-            NSRange inflateRange = [property rangeOfString:@"."];
-            NSRange formatRange = [property rangeOfString:@":"];
-            
-            @try {
-                if (inflateRange.location != NSNotFound) {
-
-                } else if (formatRange.location != NSNotFound) {
-                    NSString *formatFunction = [property substringToIndex:formatRange.location];
-                    property = [property substringFromIndex:(formatRange.location+1)];
-                    
-                    [self setValue:[JSONAPIResourceFormatter performFormatBlock:[dict objectForKey:key] withName:formatFunction] forKey:property ];
-                } else {
-                    [self setValue:[dict objectForKey:key] forKey:property ];
-                }
-            }
-            @catch (NSException *exception) {
-                NSLog(@"JSONAPIResource Warning - %@", [exception description]);
-            }
-            
-        } else {
-            
+            NSString *property = [topLevelMembers objectForKey:key];
+            [self setValue:[dict objectForKey:key] forKey:property];
         }
-        
+        else{
+            NSLog(@"JSONAPIResource Warning : key %@ not found in json data.\nyour JSONAPI Resource Object is not compliant to JSONAPI format, for further reading please refer to: http://jsonapi.org/format/#document-resource-objects", key);
+        }
     }
+    
+    NSDictionary *resourceObjectAttributes = [dict objectForKey:@"attributes"];
+    if(resourceObjectAttributes != nil && [dict objectForKey:@"attributes"] != [NSNull null]){
+        
+        self.attributes = resourceObjectAttributes;
+        
+        // Loops through all keys to map JSONAPI Resource Object attributes to Objective-C Properties
+        
+        NSDictionary *userMap = [self mapKeysToProperties];
+        if(userMap){
+            
+            for (NSString *key in [userMap allKeys]) {
+                
+                // Checks if the key to map is in the dictionary to map
+                if ([dict objectForKey:key] != nil && [dict objectForKey:key] != [NSNull null]) {
+                    
+                    NSString *property = [userMap objectForKey:key];
+                    
+                    NSRange formatRange = [property rangeOfString:@":"];
+                    
+                    @try {
+                        if (formatRange.location != NSNotFound) {
+                            NSString *formatFunction = [property substringToIndex:formatRange.location];
+                            property = [property substringFromIndex:(formatRange.location+1)];
+                            
+                            [self setValue:[JSONAPIResourceFormatter performFormatBlock:[dict objectForKey:key] withName:formatFunction] forKey:property ];
+                        } else {
+                            [self setValue:[dict objectForKey:key] forKey:property ];
+                        }
+                    }
+                    @catch (NSException *exception) {
+                        NSLog(@"JSONAPIResource Warning - %@", [exception description]);
+                    }
+                    
+                } else {
+                    NSLog(@"JSONAPIResource Warning : key %@ not found in json data.", key);
+                }
+                
+            }
+        }
+    }
+    
 }
 
 - (void)linkWithIncluded:(JSONAPI*)jsonAPI {
