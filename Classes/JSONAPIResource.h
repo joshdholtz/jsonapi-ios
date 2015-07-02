@@ -12,8 +12,9 @@
 
 @interface JSONAPIResource : NSObject<NSCopying, NSCoding>
 
-@property (nonatomic, strong) id ID;
+@property (nonatomic, strong) NSString *ID;
 @property (nonatomic, strong) NSString *type;
+@property (nonatomic, strong) NSDictionary *attributes;
 @property (nonatomic, strong) id links;
 
 + (id)jsonAPIResource:(NSDictionary*)dictionary;
