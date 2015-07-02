@@ -10,12 +10,13 @@
 
 @class JSONAPI;
 
-@interface JSONAPIResource : NSObject<NSCopying, NSCoding>
+@interface JSONAPIResource : NSObject
 
 @property (nonatomic, strong) NSString *ID;
 @property (nonatomic, strong) NSString *type;
 @property (nonatomic, strong) NSDictionary *attributes;
-@property (nonatomic, strong) id links;
+@property (nonatomic, strong) NSDictionary *links;
+@property (nonatomic, strong) NSDictionary *relationships;
 
 + (id)jsonAPIResource:(NSDictionary*)dictionary;
 + (NSArray*)jsonAPIResources:(NSArray*)array;
