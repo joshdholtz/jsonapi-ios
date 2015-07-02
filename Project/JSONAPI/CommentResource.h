@@ -12,7 +12,7 @@
 
 @interface CommentResource : JSONAPIResource
 
-@property (nonatomic, strong) NSString *text;
+@property (nonatomic, strong) NSString *body;
 @property (nonatomic, strong) PeopleResource *author;
 
 @end
