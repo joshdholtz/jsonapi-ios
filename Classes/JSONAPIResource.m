@@ -17,10 +17,11 @@
 
 #pragma mark - JSONAPIResource
 
-@interface JSONAPIResource()
+@interface JSONAPIResource(){
+    
+    NSDictionary *_dictionary;
+}
 
-@property (nonatomic, strong) NSDictionary *__dictionary;
-@property (nonatomic, strong) NSMutableDictionary *__resourceLinks;
 
 @end
 
@@ -51,16 +52,9 @@
 #pragma mark -
 #pragma mark - Instance Methods
 
-- (id)init {
-    self = [super init];
-    if (self) {
-        self.__resourceLinks = [NSMutableDictionary dictionary];
-    }
-    return self;
-}
 
 - (id)initWithDictionary:(NSDictionary*)dict {
-    self = [self init];
+    self = [super init];
     if (self) {
         [self setWithDictionary:dict];
     }
@@ -68,14 +62,15 @@
 }
 
 - (id)objectForKey:(NSString*)key {
-    return [self.__dictionary objectForKey:key];
+    return [_dictionary objectForKey:key];
 }
 
-- (id)linkedResourceForKey:(NSString *)key {
-    return [self.__resourceLinks objectForKey:key];
+- (NSDictionary *)mapMembersToProperties {
+    return [[NSDictionary alloc] init];
 }
 
-- (NSDictionary *)mapKeysToProperties {
+- (NSDictionary *) mapRelationshipsToProperties{
+
     return [[NSDictionary alloc] init];
 }
 
@@ -90,7 +85,7 @@
 
 - (void)setWithDictionary:(NSDictionary*)dict {
     
-    self.__dictionary = dict;
+    _dictionary = dict;
     
     //maps top level mandatory members of a JSONAPI Resource object
     NSDictionary *topLevelMembers = @{
@@ -109,19 +104,24 @@
         }
     }
     
-    NSDictionary *resourceObjectAttributes = [dict objectForKey:@"attributes"];
-    if(resourceObjectAttributes != nil && [dict objectForKey:@"attributes"] != [NSNull null]){
-        
+    NSDictionary *resourceObjectAttributes = (dict[@"attributes"] && (dict[@"attributes"] != [NSNull null])) ? dict[@"attributes"] : nil;
+    if(resourceObjectAttributes){
         self.attributes = resourceObjectAttributes;
+    }
+    else
+        self.attributes = @{};
+    
+    NSDictionary *resourceObjectRelationships = (dict[@"relationships"] && (dict[@"relationships"] != [NSNull null])) ? dict[@"relationships"] : nil;
+    if(resourceObjectRelationships){
+        self.relationships = resourceObjectRelationships;
+    }
+    else
+        resourceObjectRelationships = @{};
+    
+    NSDictionary *userMap = [self mapMembersToProperties];
+    if([userMap count]>0){
         
-        // Loops through all keys to map JSONAPI Resource Object attributes to Objective-C Properties
-        
-        NSDictionary *userMap = [self mapKeysToProperties];
-        if(userMap){
-            
-            for (NSString *key in [userMap allKeys]) {
-                
-                // Checks if the key to map is in the dictionary to map
+        for (NSString *key in [userMap allKeys]) {
                 if ([resourceObjectAttributes objectForKey:key] != nil && [resourceObjectAttributes objectForKey:key] != [NSNull null]) {
                     
                     NSString *property = [userMap objectForKey:key];
@@ -148,175 +148,89 @@
                 
             }
         }
-    }
-    
 }
 
-- (void)linkWithIncluded:(JSONAPI*)jsonAPI {
+- (void) setIncludedResources:(NSArray *)includedResources{
     
-    NSDictionary *included = jsonAPI.includedResources;
-    
-    // Loops through links of resources
-    NSDictionary *links = self.links;
-    for (NSString *linkKey in links.allKeys) {
+    if(_includedResources != includedResources){
+        _includedResources = includedResources;
         
-        // Gets linked objects for the resource
-        id linksTo = self.links[linkKey];
-        if ([linksTo isKindOfClass:[NSDictionary class]] == YES) {
+        if([[self mapRelationshipsToProperties] count] > 0)
+        [self linkPropertiesWithIncludedResources];
+    }
+
+}
+
+- (void) linkPropertiesWithIncludedResources{
+    
+    NSDictionary *relationshipKeys = [self mapRelationshipsToProperties];
+    
+    for(NSString *relationshipKey in [relationshipKeys allKeys]){
+
+        NSDictionary *relation = (_relationships[relationshipKey] && _relationships[relationshipKey] != [NSNull null]) ? _relationships[relationshipKey] : nil;
+        
+        if (relation) {
             
-            id linkage = linksTo[@"linkage"];
-            if ([linkage isKindOfClass:[NSDictionary class]] == YES) {
-
-                NSString *linkType = linkage[@"type"];
+            NSMutableArray *relatedJSONAPIResources = [NSMutableArray new];
+            id relationData = (relation[@"data"] && relation[@"data"] != [NSNull null]) ? relation[@"data"] : nil;
+            
+            if(relationData){
                 
-                if (linkage[@"id"] != nil) {
-                    id linksToId = linkage[@"id"];
+                if([relationData isKindOfClass:[NSArray class]]){
                     
-                    JSONAPIResource *linkedResource = included[linkType][linksToId];
-                    if (linkedResource != nil) {
-                        [self.__resourceLinks setObject:linkedResource forKey:linkKey];
-                    }
-                }
-
-            } else if ([linkage isKindOfClass:[NSArray class]] == YES) {
-                
-                NSMutableArray *linkedResources = @[].mutableCopy;
-                for (NSDictionary *linkageData in linkage) {
-                    NSString *linkType = linkageData[@"type"];
-                    
-                    if (linkageData[@"id"] != nil) {
-                        id linksToId = linkageData[@"id"];
+                    for (NSDictionary *resourceObjectIdentifier in (NSArray *)relationData) {
+                        NSString *type = resourceObjectIdentifier[@"type"];
+                        NSString *ID = resourceObjectIdentifier[@"id"];
                         
-                        JSONAPIResource *linkedResource = included[linkType][linksToId];
-                        if (linkedResource != nil) {
-                            [linkedResources addObject:linkedResources];
+                        for(JSONAPIResource *relatedResource in self.includedResources){
+                            if([relatedResource.ID isEqualToString: ID] && [relatedResource.type isEqualToString:type])
+                                [relatedJSONAPIResources addObject: relatedResource];
                         }
                     }
                 }
-                [self.__resourceLinks setObject:linkedResources forKey:linkKey];
-                
-            }
-        }
-    }
-    
-    // Link links for mapped key to properties
-    for (NSString *key in [self mapKeysToProperties]) {
-        if ([key hasPrefix:@"links."] == YES) {
-            
-            NSString *propertyName = [[self mapKeysToProperties] objectForKey:key];
-            NSString *linkedResource = [key stringByReplacingOccurrencesOfString:@"links." withString:@""];
-            
-            id resource = [self linkedResourceForKey:linkedResource];
-            if (resource != nil) {
-                
-                @try {
-                    [self setValue:resource forKey:propertyName];
-                }
-                @catch (NSException *exception) {
-                    NSLog(@"JSONAPIResource Warning - %@", [exception description]);
-                }
-            }
-            
-        }
-    }
-}
-
-#pragma mark - NSCopying
-
-- (id)copyWithZone:(NSZone *)zone {
-    id copy = [[[self class] alloc] initWithDictionary:[self.__dictionary copyWithZone:zone]];
-    
-    if (copy) {
-        // Copy NSObject subclasses
-        NSLog(@"__resourceLinks - %@", self.__resourceLinks);
-        [copy set__resourceLinks:[self.__resourceLinks copyWithZone:zone]];
-        
-        // Link links for mapped key to properties
-        for (NSString *key in [copy __resourceLinks]) {
-            @try {
-                [copy setValue:[[copy __resourceLinks] objectForKey:key] forKey:key];
-            }
-            @catch (NSException *exception) {
-                NSLog(@"JSONAPIResource Warning - %@", [exception description]);
-            }
-        }
-
-    }
-    
-    return copy;
-}
-
-#pragma mark - NSCoding
-
-- (NSArray *)propertyKeys
-{
-    NSMutableArray *array = [NSMutableArray array];
-    Class class = [self class];
-    while (class != [NSObject class])
-    {
-        unsigned int propertyCount;
-        objc_property_t *properties = class_copyPropertyList(class, &propertyCount);
-        for (int i = 0; i < propertyCount; i++)
-        {
-            //get property
-            objc_property_t property = properties[i];
-            const char *propertyName = property_getName(property);
-            NSString *key = [NSString stringWithCString:propertyName encoding:NSUTF8StringEncoding];
-            
-            //check if read-only
-            BOOL readonly = NO;
-            const char *attributes = property_getAttributes(property);
-            NSString *encoding = [NSString stringWithCString:attributes encoding:NSUTF8StringEncoding];
-            if ([[encoding componentsSeparatedByString:@","] containsObject:@"R"])
-            {
-                readonly = YES;
-                
-                //see if there is a backing ivar with a KVC-compliant name
-                NSRange iVarRange = [encoding rangeOfString:@",V"];
-                if (iVarRange.location != NSNotFound)
-                {
-                    NSString *iVarName = [encoding substringFromIndex:iVarRange.location + 2];
-                    if ([iVarName isEqualToString:key] ||
-                        [iVarName isEqualToString:[@"_" stringByAppendingString:key]])
-                    {
-                        //setValue:forKey: will still work
-                        readonly = NO;
+                else{
+                    NSString *type = relationData[@"type"];
+                    NSString *ID = relationData[@"id"];
+                    
+                    for(JSONAPIResource *relatedResource in self.includedResources){
+                        if([relatedResource.ID isEqualToString: ID] && [relatedResource.type isEqualToString:type]){
+                            [relatedJSONAPIResources addObject: relatedResource];
+                            break;
+                        }
                     }
                 }
             }
+            else{
+                NSLog(@"JSONAPIResource Warning : relation for key %@ has no data", relationshipKey);
+            }
             
-            if (!readonly)
-            {
-                //exclude read-only properties
-                [array addObject:key];
+            
+            if([relatedJSONAPIResources count] > 0){
+                
+                NSString *property = [relationshipKeys objectForKey:relationshipKey];
+                
+                if(class_getProperty([self class], [property cStringUsingEncoding: NSUTF8StringEncoding])){
+                    if([relatedJSONAPIResources count]>1){
+                        [self setValue: relatedJSONAPIResources forKey: property];
+                    }
+                    else{
+                        [self setValue: relatedJSONAPIResources[0] forKey: property];
+                    }
+                }
+                else{
+                    NSLog(@"JSONAPIResource Warning : object does not define a property of key: %@\n bailing out.", property);
+                }
+            }
+            else{
+                NSLog(@"JSONAPIResource Warning : objects not found for resource of key: %@\n bailing out.", relationshipKey);
             }
         }
-        free(properties);
-        class = [class superclass];
-    }
-    return array;
-}
-
-- (id)initWithCoder:(NSCoder *)aDecoder
-{
-    if ((self = [self init]))
-    {
-        for (NSString *key in [self propertyKeys])
-        {
-            id value = [aDecoder decodeObjectForKey:key];
-            [self setValue:value forKey:key];
+        else {
+            NSLog(@"JSONAPIResource Warning : relation for key %@ not found in json data.", relationshipKey);
         }
+    
     }
-    return self;
-}
 
-- (void)encodeWithCoder:(NSCoder *)aCoder
-{
-    for (NSString *key in [self propertyKeys])
-    {
-        id value = [self valueForKey:key];
-        [aCoder encodeObject:value forKey:key];
-    }
 }
 
 @end

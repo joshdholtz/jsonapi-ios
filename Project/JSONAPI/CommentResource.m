@@ -10,10 +10,16 @@
 
 @implementation CommentResource
 
-- (NSDictionary *)mapKeysToProperties {
+- (NSDictionary *)mapMembersToProperties {
     return @{
-             @"text" : @"text",
-             @"links.author" : @"author",
+             @"body" : @"body"
+             };
+}
+
+- (NSDictionary *) mapRelationshipsToProperties{
+
+    return @{
+             @"author" : @"author"
              };
 }
 

@@ -7,15 +7,27 @@
 //
 
 #import "PostResource.h"
+#import "JSONAPIResourceFormatter.h"
 
 @implementation PostResource
 
-- (NSDictionary *)mapKeysToProperties {
+- (NSDictionary *)mapMembersToProperties {
+    
+    [JSONAPIResourceFormatter registerFormat:@"Date" withBlock:^id(id jsonValue) {
+        return [NSDate date];
+    }];
+    
     return @{
              @"title" : @"title",
-             @"date" : @"Date:date",
-             @"links.author" : @"author",
-             @"links.comments" : @"comments"
+             @"date" : @"Date:date"
+             };
+}
+
+- (NSDictionary *)mapRelationshipsToProperties{
+
+    return @{
+             @"author" : @"author",
+             @"comments" : @"comments"
              };
 }
 

@@ -14,8 +14,8 @@
 @interface PostResource : JSONAPIResource
 
 @property (nonatomic, strong) NSString *title;
-@property (nonatomic, strong) PeopleResource *author;
 @property (nonatomic, strong) NSDate *date;
+@property (nonatomic, strong) PeopleResource *author;
 @property (nonatomic, strong) NSArray *comments;
 
 @end

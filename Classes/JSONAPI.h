@@ -15,13 +15,17 @@
 
 @interface JSONAPI : NSObject
 
+
+//mandatory members
 @property (nonatomic, strong, readonly) NSDictionary *meta;
 @property (nonatomic, strong, readonly) id data;
 @property (nonatomic, strong, readonly) NSArray *errors;
 
-@property (readonly) id resource;
-@property (nonatomic, strong, readonly) NSArray *resources;
-@property (nonatomic, strong, readonly) NSDictionary *includedResources;
+//optional members
+@property (nonatomic, strong, readonly) NSDictionary *jsonApi;
+@property (nonatomic, strong, readonly) NSArray *links;
+@property (nonatomic, strong, readonly) NSArray *included;
+
 
 @property (nonatomic, strong, readonly) NSError *internalError;
 
@@ -31,6 +35,7 @@
 - (instancetype)initWithDictionary:(NSDictionary*)dictionary;
 - (instancetype)initWithString:(NSString*)string;
 
+- (NSArray *) includedResourcesForJSONAPIResource: (JSONAPIResource *) resource;
 - (id)includedResource:(id)ID withType:(NSString*)type;
 - (BOOL)hasErrors;
 

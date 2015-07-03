@@ -11,5 +11,7 @@
 @interface PeopleResource : JSONAPIResource
 
 @property (nonatomic, strong) NSString *name;
+@property (nonatomic, strong) NSString *surname;
+@property (nonatomic, strong) NSString *twitter;
 
 @end
