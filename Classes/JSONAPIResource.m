@@ -133,7 +133,7 @@
                             NSString *formatFunction = [property substringToIndex:formatRange.location];
                             property = [property substringFromIndex:(formatRange.location+1)];
                             
-                            [self setValue:[JSONAPIResourceFormatter performFormatBlock:[dict objectForKey:key] withName:formatFunction] forKey:property ];
+                            [self setValue:[JSONAPIResourceFormatter performFormatBlock:[resourceObjectAttributes objectForKey:key] withName:formatFunction] forKey:property ];
                         } else {
                             [self setValue:[resourceObjectAttributes objectForKey:key] forKey:property ];
                         }
