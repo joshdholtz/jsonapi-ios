@@ -106,11 +106,11 @@
     
     if([_data isKindOfClass:[NSArray class]]){
         for (JSONAPIResource *thisResource in _data) {
-            [self includedResourcesForJSONAPIResource: thisResource];
+            thisResource.includedResources = [self includedResourcesForJSONAPIResource: thisResource];
         }
     }
     else{
-        [self includedResourcesForJSONAPIResource: (JSONAPIResource *)_data];
+        ((JSONAPIResource *)_data).includedResources = [self includedResourcesForJSONAPIResource: (JSONAPIResource *)_data];
     }
     
     // Parse errors
@@ -131,15 +131,30 @@
     
     NSMutableArray *includedResources = [NSMutableArray new];
     
-    for(NSDictionary *relationship in resource.relationships){
+    for(NSDictionary *relationship in [resource.relationships allValues]){
         NSDictionary *relationshipData = (relationship[@"data"] && (relationship[@"data"] != [NSNull null])) ? relationship[@"data"] : nil;
         if(relationshipData){
-            NSString *relationshipType = relationshipData[@"type"];
-            NSString *relationshipId = relationshipData[@"id"];
             
-            for(JSONAPIResource *thisResource in _included){
-                if([thisResource.ID isEqualToString: relationshipId] && [thisResource.type isEqualToString: relationshipType])
-                    [includedResources addObject: thisResource];
+            if([relationshipData isKindOfClass:[NSArray class]]){
+                for (NSDictionary *thisResourceIdentifier in relationshipData) {
+                    NSString *relationshipType = thisResourceIdentifier[@"type"];
+                    NSString *relationshipId = thisResourceIdentifier[@"id"];
+                    
+                    for(JSONAPIResource *thisResource in _included){
+                        if([thisResource.ID isEqualToString: relationshipId] && [thisResource.type isEqualToString: relationshipType])
+                            [includedResources addObject: thisResource];
+                    }
+
+                }
+            }
+            else{
+                NSString *relationshipType = relationshipData[@"type"];
+                NSString *relationshipId = relationshipData[@"id"];
+                
+                for(JSONAPIResource *thisResource in _included){
+                    if([thisResource.ID isEqualToString: relationshipId] && [thisResource.type isEqualToString: relationshipType])
+                        [includedResources addObject: thisResource];
+                }
             }
         }
     }

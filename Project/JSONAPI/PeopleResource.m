@@ -10,9 +10,11 @@
 
 @implementation PeopleResource
 
-- (NSDictionary *)mapKeysToProperties {
+- (NSDictionary *)mapMembersToProperties {
     return @{
-             @"name" : @"name"
+             @"first-name" : @"name",
+             @"last-name" : @"surname",
+             @"twitter" : @"twitter"
              };
 }
 

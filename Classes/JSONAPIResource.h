@@ -25,7 +25,8 @@
 
 - (id)initWithDictionary:(NSDictionary*)dict;
 
-- (NSDictionary *)mapKeysToProperties;
-- (void)linkWithIncluded:(JSONAPI*)jsonAPI;
+- (NSDictionary *)mapMembersToProperties;
+- (NSDictionary *)mapRelationshipsToProperties;
+
 
 @end
