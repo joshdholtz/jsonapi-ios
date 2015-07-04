@@ -9,14 +9,20 @@
 #import <Foundation/Foundation.h>
 
 #import "JSONAPIResource.h"
-#import "JSONAPIResourceFormatter.h"
-#import "JSONAPIResourceModeler.h"
-#import "JSONAPIErrorResource.h"
 
+/**
+ *  Represents a complete JSON-API formatted message body.
+ */
 @interface JSONAPI : NSObject
 
-@property (nonatomic, strong, readonly) NSDictionary *meta;
-@property (nonatomic, strong, readonly) id data;
+/**
+ *  Returns Content-Type string for JSON-API
+ *
+ *  @return Content-Type string for JSON-API
+ */
++ (NSString*)MEDIA_TYPE;
+
+@property (readonly) NSDictionary *meta;
 @property (nonatomic, strong, readonly) NSArray *errors;
 
 @property (readonly) id resource;
@@ -28,8 +34,12 @@
 // Initializers
 + (instancetype)jsonAPIWithDictionary:(NSDictionary *)dictionary;
 + (instancetype)jsonAPIWithString:(NSString *)string;
++ (instancetype)jsonAPIWithResource:(NSObject <JSONAPIResource> *)resource;
+
 - (instancetype)initWithDictionary:(NSDictionary*)dictionary;
 - (instancetype)initWithString:(NSString*)string;
+
+- (NSDictionary*)dictionary;
 
 - (id)includedResource:(id)ID withType:(NSString*)type;
 - (BOOL)hasErrors;
