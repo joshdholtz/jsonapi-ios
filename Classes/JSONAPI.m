@@ -120,7 +120,6 @@
     _includedResources = includedResources;
     
     // Link included with included
-    // TODO: Need to look into / stop circular references
     for (NSDictionary *typeIncluded in _includedResources.allValues) {
         for (JSONAPIResource *resource in typeIncluded.allValues) {
             [resource linkWithIncluded:self];
