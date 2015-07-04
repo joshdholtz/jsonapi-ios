@@ -8,16 +8,25 @@
 
 #import "JSONAPIErrorResource.h"
 
+#import "JSONAPIResourceDescriptor.h"
+
 @implementation JSONAPIErrorResource
 
-- (NSDictionary *)mapKeysToProperties {
-    return @{
-             @"status" : @"status",
-             @"code" : @"code",
-             @"title" : @"title",
-             @"detail" : @"detail",
-             @"paths" : @"paths",
-             };
+- (instancetype) initWithDictionary:(NSDictionary*)dictionary {
+    self =  [self init];
+    
+    if (self) {
+        _ID = dictionary[@"id"];
+        _href = dictionary[@"href"];
+        _status = dictionary[@"status"];
+        _code = dictionary[@"code"];
+        _title = dictionary[@"title"];
+        _detail = dictionary[@"detail"];
+        _links = dictionary[@"links"];
+        _paths = dictionary[@"paths"];
+    }
+    
+    return self;
 }
 
 @end
