@@ -16,6 +16,6 @@
                  "title": "some title",
                  "detail": "some detail",
                  "links": ["a_link"],
-                 "paths": ["a_path"]
+                 "source": ["a_path"]
                  }]
 }

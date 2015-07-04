@@ -145,15 +145,15 @@
     
     NSDictionary *json = [JSONAPIResourceParser dictionaryFor:newPost];
     XCTAssertEqualObjects(json[@"type"], @"posts", @"Did not create Post!");
-    XCTAssertNotNil(json[@"links"], @"Did not create links!");
-    XCTAssertNotNil(json[@"links"][@"author"], @"Did not create links!");
-    XCTAssertNotNil(json[@"links"][@"author"][@"linkage"], @"Did not create links!");
-    XCTAssertEqualObjects(json[@"links"][@"author"][@"linkage"][@"id"], newAuthor.ID, @"Wrong link ID!.");
-    XCTAssertNil(json[@"links"][@"author"][@"first-name"], @"Bad link!");
+    XCTAssertNotNil(json[@"relationships"], @"Did not create links!");
+    XCTAssertNotNil(json[@"relationships"][@"author"], @"Did not create links!");
+    XCTAssertNotNil(json[@"relationships"][@"author"][@"data"], @"Did not create links!");
+    XCTAssertEqualObjects(json[@"relationships"][@"author"][@"data"][@"id"], newAuthor.ID, @"Wrong link ID!.");
+    XCTAssertNil(json[@"relationships"][@"author"][@"first-name"], @"Bad link!");
 
-    XCTAssertNotNil(json[@"links"][@"comments"], @"Did not create links!");
-    XCTAssertTrue([json[@"links"][@"comments"] isKindOfClass:[NSArray class]], @"Comments should be array!.");
-    XCTAssertEqual([json[@"links"][@"comments"] count], 1, @"Comments should have 1 element!.");
+    XCTAssertNotNil(json[@"relationships"][@"comments"], @"Did not create links!");
+    XCTAssertTrue([json[@"relationships"][@"comments"] isKindOfClass:[NSArray class]], @"Comments should be array!.");
+    XCTAssertEqual([json[@"relationships"][@"comments"] count], 1, @"Comments should have 1 element!.");
 }
 
 - (void)testCreate {
