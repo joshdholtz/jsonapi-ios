@@ -41,6 +41,8 @@
     JSONAPI *api = [JSONAPI jsonAPIWithString: jsonStr];
     PostResource *res = (PostResource *) api.data;
     
+    XCTAssertNotNil( res );
+    
 }
 
 #pragma mark - Private

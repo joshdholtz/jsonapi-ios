@@ -104,15 +104,6 @@
     }
     _included = includedResources;
     
-    if([_data isKindOfClass:[NSArray class]]){
-        for (JSONAPIResource *thisResource in _data) {
-            thisResource.includedResources = [self includedResourcesForJSONAPIResource: thisResource];
-        }
-    }
-    else{
-        ((JSONAPIResource *)_data).includedResources = [self includedResourcesForJSONAPIResource: (JSONAPIResource *)_data];
-    }
-    
     // Parse errors
     NSMutableArray *returnedErrors = [NSMutableArray new];
     for (NSDictionary *rawError in _dictionary[@"errors"]) {
@@ -132,7 +123,9 @@
     NSMutableArray *includedResources = [NSMutableArray new];
     
     for(NSDictionary *relationship in [resource.relationships allValues]){
+        
         NSDictionary *relationshipData = (relationship[@"data"] && (relationship[@"data"] != [NSNull null])) ? relationship[@"data"] : nil;
+        
         if(relationshipData){
             
             if([relationshipData isKindOfClass:[NSArray class]]){
