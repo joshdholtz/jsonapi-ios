@@ -277,7 +277,7 @@
         // has many
         } else if ([value isKindOfClass:[NSArray class]]) {
             NSMutableArray *matched = [value mutableCopy];
-            [value enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            [value enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
                 NSObject <JSONAPIResource> *res = obj;
                 id v = includedValue[res.ID];
                 if (v != nil) {
