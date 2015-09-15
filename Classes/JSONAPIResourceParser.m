@@ -267,24 +267,31 @@
     // Loops through all keys to map to properties
     NSDictionary *properties = [descriptor properties];
     for (NSString *key in properties) {
-        JSONAPIPropertyDescriptor *property = [properties objectForKey:key];
-        if (property.resourceType) {
-            id value = [resource valueForKey:key];
-            if (value) {
-                if ([value isKindOfClass:[NSArray class]]) {
-                    for (NSObject <JSONAPIResource> *element in value) {
-                        id include = included[property.resourceType][element.ID];
-                        if (include) {
-                            [self set:element withDictionary:include];
-                        }
-                    }
-                } else {
-                    NSObject <JSONAPIResource> *attribute = value;
-                    id include = included[property.resourceType][attribute.ID];
-                    if (include) {
-                        [self set:attribute withDictionary:include];
-                    }
+        JSONAPIPropertyDescriptor *propertyDescriptor = [properties objectForKey:key];
+        id value = [resource valueForKey:key];
+        id includedValue = included[[[propertyDescriptor.resourceType descriptor] type]];
+        
+        // ordinary attribute
+        if (propertyDescriptor.resourceType == nil) {
+            continue;
+        // has many
+        } else if ([value isKindOfClass:[NSArray class]]) {
+            NSMutableArray *matched = [value mutableCopy];
+            [value enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                NSObject <JSONAPIResource> *res = obj;
+                id v = includedValue[res.ID];
+                if (v != nil) {
+                    matched[idx] = v;
                 }
+            }];
+
+            [resource setValue:matched forKey:key];
+        // has one
+        } else if (value != nil) {
+            NSObject <JSONAPIResource> *res = value;
+            id v = includedValue[res.ID];
+            if (v != nil) {
+                [resource setValue:v forKey:key];
             }
         }
     }

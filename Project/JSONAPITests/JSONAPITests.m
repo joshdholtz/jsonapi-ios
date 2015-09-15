@@ -71,9 +71,14 @@
     JSONAPI *jsonAPI = [JSONAPI jsonAPIWithDictionary:json];
     
     PostResource *post = jsonAPI.resource;
+    CommentResource *firstComment = post.comments.firstObject;
+    
     XCTAssertNotNil(post.author, @"Post's author should not be nil");
     XCTAssertNotNil(post.comments, @"Post's comments should not be nil");
     XCTAssertEqual(post.comments.count, 2, @"Post should contain 2 comments");
+    XCTAssertEqualObjects(post.author.firstName, @"Dan", @"Post's author firstname should be 'Dan'");
+    XCTAssertEqualObjects(firstComment.text, @"First!", @"Post's first comment should be 'First!'");
+    XCTAssertEqualObjects(firstComment.author.firstName, @"Dan", @"Post's first comment author should be 'Dan'");
 }
 
 - (void)testIncludedCommentIsLinked {
