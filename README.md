@@ -35,7 +35,7 @@ it simply add the following line to your Podfile:
 ## Usage
 
 ### JSONAPI
-`JSONAPI` parses and validates a JSON API document into a usable object. This object holds the response as an NSDictionary but provides methods to accomdate the JSON API format such as `meta`, `linked`, and `(NSArray*)resourcesForKey:(NSString*)key`.
+`JSONAPI` parses and validates a JSON API document into a usable object. This object holds the response as an NSDictionary but provides methods to accommodate the JSON API format such as `meta`, `linked`, and `(NSArray*)resourcesForKey:(NSString*)key`.
 
 ### JSONAPIResource
 `JSONAPIResource` is an object that holds data for each resource in a JSON API document. This objects holds the "id", "href", and "links" as properties but also the rest of the object as an NSDictionary that can be accessed through `(id)objectForKey:(NSString*)key`. There is also a method for retrieving linked resources from the JSON API document by using `(id)linkedResourceForKey:(NSString*)key`.
