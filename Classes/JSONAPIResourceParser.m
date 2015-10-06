@@ -66,7 +66,10 @@
     
     NSMutableArray *mutableArray = @[].mutableCopy;
     for (NSDictionary *dictionary in array) {
-        [mutableArray addObject:[self parseResource:dictionary]];
+        NSObject <JSONAPIResource> *resource = [self parseResource:dictionary];
+        if(resource) {
+            [mutableArray addObject:[self parseResource:dictionary]];
+        }
     }
     
     return mutableArray;
