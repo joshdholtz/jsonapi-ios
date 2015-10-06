@@ -69,11 +69,16 @@
 - (void)testDataArticleAuthorAndComments {
     NSDictionary *json = [self mainExampleJSON];
     JSONAPI *jsonAPI = [JSONAPI jsonAPIWithDictionary:json];
-    
+	
     ArticleResource *article = jsonAPI.resource;
-    XCTAssertNotNil(article.author, @"Article author should not be nil");
-    XCTAssertNotNil(article.comments, @"Article comments should not be nil");
+    CommentResource *firstComment = article.comments.firstObject;
+    
+    XCTAssertNotNil(article.author, @"Article's author should not be nil");
+    XCTAssertNotNil(article.comments, @"Article's comments should not be nil");
     XCTAssertEqual(article.comments.count, 2, @"Article should contain 2 comments");
+    XCTAssertEqualObjects(article.author.firstName, @"Dan", @"Article's author firstname should be 'Dan'");
+    XCTAssertEqualObjects(firstComment.text, @"First!", @"Article's first comment should be 'First!'");
+    XCTAssertEqualObjects(firstComment.author.firstName, @"Dan", @"Article's first comment author should be 'Dan'");
 }
 
 - (void)testIncludedCommentIsLinked {
@@ -82,7 +87,7 @@
     
     CommentResource *comment = [jsonAPI includedResource:@"5" withType:@"comments"];
     XCTAssertNotNil(comment.author, @"Comment's author should not be nil");
-    XCTAssertEqualObjects(comment.author.ID, @"2", @"Comment's author's ID should be 2");
+    XCTAssertEqualObjects(comment.author.ID, @"9", @"Comment's author's ID should be 2");
 }
 
 - (void)testNoError {

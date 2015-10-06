@@ -55,7 +55,7 @@
 				 },
 				 "relationships": {
 				 "author": {
-				 "data": { "type": "people", "id": "2" }
+				 "data": { "type": "people", "id": "9" }
 				 }
 				 },
 				 "links": {
