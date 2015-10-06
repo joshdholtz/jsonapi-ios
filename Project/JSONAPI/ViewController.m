@@ -12,7 +12,7 @@
 
 #import "CommentResource.h"
 #import "PeopleResource.h"
-#import "PostResource.h"
+#import "ArticleResource.h"
 
 @interface ViewController ()
 

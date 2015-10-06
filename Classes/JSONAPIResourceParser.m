@@ -101,7 +101,7 @@
     NSDictionary *properties = [descriptor properties];
     for (NSString *key in properties) {
         JSONAPIPropertyDescriptor *property = [properties objectForKey:key];
-        
+		
         id value = [resource valueForKey:key];
         if (value) {
             if ([value isKindOfClass:[NSArray class]]) {
@@ -159,12 +159,14 @@
     }
     
     if (linkage) {
-        if (resource.selfLink) {
-            [linkage setValue:resource.selfLink forKey:@"self"];
-        }
-        [dictionary setValue:linkage forKey:@"links"];
+        [dictionary setValue:linkage forKey:@"relationships"];
     }
-    
+	
+	// TODO: Need to also add in all other links
+	if (resource.selfLink) {
+		dictionary[@"links"] = @{ @"self": resource.selfLink };
+	}
+	
     return dictionary;
 }
 
@@ -173,11 +175,9 @@
 
     JSONAPIResourceDescriptor *descriptor = [[resource class] descriptor];
     
-    NSDictionary *links = [dictionary objectForKey:@"links"];
+    NSDictionary *relationships = [dictionary objectForKey:@"relationships"];
     NSDictionary *attributes = [dictionary objectForKey:@"attributes"];
-    
-    resource.selfLink = [links valueForKey:@"self"];
-    
+	
     id ID = [dictionary objectForKey:@"id"];
     NSFormatter *format = [descriptor idFormatter];
     if (format) {
@@ -195,8 +195,8 @@
         JSONAPIPropertyDescriptor *property = [properties objectForKey:key];
         
         if (property.resourceType) {
-            if (links) {
-                id value = [links objectForKey:[property jsonName]];
+            if (relationships) {
+                id value = [relationships objectForKey:[property jsonName]];
                 [resource setValue:[JSONAPIResourceParser jsonAPILink:value] forKey:key];
             }
             
@@ -240,7 +240,7 @@
 }
 
 + (id)jsonAPILink:(NSDictionary*)dictionary {
-    id linkage = dictionary[@"linkage"];
+    id linkage = dictionary[@"data"];
     if ([linkage isKindOfClass:[NSArray class]]) {
         NSMutableArray *linkArray = [[NSMutableArray alloc] initWithCapacity:[linkage count]];
         for (NSDictionary *linkElement in linkage) {
@@ -334,7 +334,7 @@
         [reference setValue:@{
                               @"type" : descriptor.type,
                               @"id"   : resource.ID
-                              } forKey:@"linkage"];
+                              } forKey:@"data"];
     }
     
     return reference;
