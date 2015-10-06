@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.org/joshdholtz/jsonapi-ios.png?branch=master)](https://travis-ci.org/joshdholtz/jsonapi-ios)
 ![](https://cocoapod-badges.herokuapp.com/v/JSONAPI/badge.png)
 
-A library for loading data from a [JSON API](http://jsonapi.org) datasource. Parses JSON API data into models with support for auto-linking of resources and custom model classes.
+A library for loading data from a [JSON API](http://jsonapi.org) datasource. Parses JSON API data into models with support for linking of properties and other resources.
 
 ### Updates
 
@@ -35,12 +35,12 @@ it simply add the following line to your Podfile:
 ## Usage
 
 ### JSONAPI
-`JSONAPI` parses and validates a JSON API document into a usable object. This object holds the response as an NSDictionary but provides methods to accomdate the JSON API format such as `meta`, `linked`, and `(NSArray*)resourcesForKey:(NSString*)key`.
+`JSONAPI` parses and validates a JSON API document into a usable object. This object holds the response as an NSDictionary but provides methods to accomdate the JSON API format such as `meta`, `errors`, `linked`, `resources`, and `includedResources`.
 
 ### JSONAPIResource
-`JSONAPIResource` is an object that holds data for each resource in a JSON API document. This objects holds the "id", "href", and "links" as properties.
+`JSONAPIResource` is an object (that gets subclassed) that holds data for each resource in a JSON API document. This objects holds the "id" as `ID` and link for self as `selfLink` as well as attributes and relationships defined by descriptors (see below)
 
-#### Resource mappings
+#### Resource mappings (using descriptors)
 `+ (JSONAPIResourceDescriptor*)descriptor` should be overwritten to define descriptors for mapping of JSON keys and relationships into properties of a subclassed JSONAPIResource.
 
 ##### Usage
