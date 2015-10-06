@@ -1,5 +1,5 @@
 //
-//  PostResource.h
+//  ArticleResource.h
 //  JSONAPI
 //
 //  Created by Josh Holtz on 12/24/13.
@@ -10,7 +10,7 @@
 
 @class PeopleResource;
 
-@interface PostResource : JSONAPIResourceBase
+@interface ArticleResource : JSONAPIResourceBase
 
 @property (nonatomic, strong) NSString *title;
 @property (nonatomic, strong) PeopleResource *author;

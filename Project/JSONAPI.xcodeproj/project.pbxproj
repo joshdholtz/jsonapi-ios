@@ -23,7 +23,7 @@
 /* Begin PBXBuildFile section */
 		03866451186A909200985CEC /* PeopleResource.m in Sources */ = {isa = PBXBuildFile; fileRef = 03866450186A909200985CEC /* PeopleResource.m */; };
 		03866454186A94B700985CEC /* CommentResource.m in Sources */ = {isa = PBXBuildFile; fileRef = 03866453186A94B700985CEC /* CommentResource.m */; };
-		03866457186A94C200985CEC /* PostResource.m in Sources */ = {isa = PBXBuildFile; fileRef = 03866456186A94C200985CEC /* PostResource.m */; };
+		03866457186A94C200985CEC /* ArticleResource.m in Sources */ = {isa = PBXBuildFile; fileRef = 03866456186A94C200985CEC /* ArticleResource.m */; };
 		03866459186CCE6600985CEC /* CHANGELOG.md in Resources */ = {isa = PBXBuildFile; fileRef = 03866458186CCE6600985CEC /* CHANGELOG.md */; };
 		03A055BB1868E038004807F0 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03A055BA1868E038004807F0 /* Foundation.framework */; };
 		03A055BD1868E038004807F0 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03A055BC1868E038004807F0 /* CoreGraphics.framework */; };
@@ -69,8 +69,8 @@
 		03866450186A909200985CEC /* PeopleResource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PeopleResource.m; sourceTree = "<group>"; };
 		03866452186A94B700985CEC /* CommentResource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommentResource.h; sourceTree = "<group>"; };
 		03866453186A94B700985CEC /* CommentResource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommentResource.m; sourceTree = "<group>"; };
-		03866455186A94C200985CEC /* PostResource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PostResource.h; sourceTree = "<group>"; };
-		03866456186A94C200985CEC /* PostResource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PostResource.m; sourceTree = "<group>"; };
+		03866455186A94C200985CEC /* ArticleResource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArticleResource.h; sourceTree = "<group>"; };
+		03866456186A94C200985CEC /* ArticleResource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ArticleResource.m; sourceTree = "<group>"; };
 		03866458186CCE6600985CEC /* CHANGELOG.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = CHANGELOG.md; path = ../CHANGELOG.md; sourceTree = "<group>"; };
 		03A055B71868E038004807F0 /* JSONAPI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JSONAPI.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		03A055BA1868E038004807F0 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -138,8 +138,8 @@
 		0386643E186A791D00985CEC /* ResourceModels */ = {
 			isa = PBXGroup;
 			children = (
-				03866455186A94C200985CEC /* PostResource.h */,
-				03866456186A94C200985CEC /* PostResource.m */,
+				03866455186A94C200985CEC /* ArticleResource.h */,
+				03866456186A94C200985CEC /* ArticleResource.m */,
 				0386644F186A909200985CEC /* PeopleResource.h */,
 				03866450186A909200985CEC /* PeopleResource.m */,
 				03866452186A94B700985CEC /* CommentResource.h */,
@@ -385,7 +385,7 @@
 				03866451186A909200985CEC /* PeopleResource.m in Sources */,
 				681B47761B08EA9800A99D76 /* JSONAPIResourceBase.m in Sources */,
 				680E14F51B08146E004FF8CD /* JSONAPIResourceParser.m in Sources */,
-				03866457186A94C200985CEC /* PostResource.m in Sources */,
+				03866457186A94C200985CEC /* ArticleResource.m in Sources */,
 				03A055D11868E038004807F0 /* ViewController.m in Sources */,
 				03A055F71868E08A004807F0 /* JSONAPI.m in Sources */,
 				68A469941AE47E0000E7BBC8 /* NSDateFormatter+JSONAPIDateFormatter.m in Sources */,

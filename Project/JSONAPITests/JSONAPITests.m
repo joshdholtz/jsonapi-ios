@@ -15,7 +15,7 @@
 
 #import "CommentResource.h"
 #import "PeopleResource.h"
-#import "PostResource.h"
+#import "ArticleResource.h"
 
 @interface JSONAPITests : XCTestCase
 
@@ -28,7 +28,7 @@
 
     [JSONAPIResourceDescriptor addResource:[CommentResource class]];
     [JSONAPIResourceDescriptor addResource:[PeopleResource class]];
-    [JSONAPIResourceDescriptor addResource:[PostResource class]];
+    [JSONAPIResourceDescriptor addResource:[ArticleResource class]];
 }
 
 - (void)tearDown {
@@ -43,7 +43,7 @@
     XCTAssertEqualObjects(jsonAPI.meta[@"hehe"], @"hoho", @"Meta's 'hehe' should equal 'hoho'");
 }
 
-- (void)testDataPosts {
+- (void)testDataArticles {
     NSDictionary *json = [self mainExampleJSON];
     JSONAPI *jsonAPI = [JSONAPI jsonAPIWithDictionary:json];
     
@@ -51,10 +51,10 @@
     XCTAssertNotNil(jsonAPI.resources, @"Resources should not be nil");
     XCTAssertEqual(jsonAPI.resources.count, 1, @"Resources should contain 1 resource");
     
-    PostResource *post = jsonAPI.resource;
-    XCTAssert([post isKindOfClass:[PostResource class]], @"Post should be a PostResource");
-    XCTAssertEqualObjects(post.ID, @"1", @"Post id should be 1");
-    XCTAssertEqualObjects(post.title, @"JSON API paints my bikeshed!", @"Post title should be 'JSON API paints my bikeshed!'");
+    ArticleResource *article = jsonAPI.resource;
+    XCTAssert([article isKindOfClass:[ArticleResource class]], @"Article should be a ArticleResource");
+    XCTAssertEqualObjects(article.ID, @"1", @"Article id should be 1");
+    XCTAssertEqualObjects(article.title, @"JSON API paints my bikeshed!", @"Article title should be 'JSON API paints my bikeshed!'");
 }
 
 - (void)testIncludedPeopleAndComments {
@@ -66,14 +66,14 @@
     
 }
 
-- (void)testDataPostAuthorAndComments {
+- (void)testDataArticleAuthorAndComments {
     NSDictionary *json = [self mainExampleJSON];
     JSONAPI *jsonAPI = [JSONAPI jsonAPIWithDictionary:json];
     
-    PostResource *post = jsonAPI.resource;
-    XCTAssertNotNil(post.author, @"Post's author should not be nil");
-    XCTAssertNotNil(post.comments, @"Post's comments should not be nil");
-    XCTAssertEqual(post.comments.count, 2, @"Post should contain 2 comments");
+    ArticleResource *article = jsonAPI.resource;
+    XCTAssertNotNil(article.author, @"Article author should not be nil");
+    XCTAssertNotNil(article.comments, @"Article comments should not be nil");
+    XCTAssertEqual(article.comments.count, 2, @"Article should contain 2 comments");
 }
 
 - (void)testIncludedCommentIsLinked {
@@ -82,7 +82,7 @@
     
     CommentResource *comment = [jsonAPI includedResource:@"5" withType:@"comments"];
     XCTAssertNotNil(comment.author, @"Comment's author should not be nil");
-    XCTAssertEqualObjects(comment.author.ID, @"9", @"Comment's author's ID should be 9");
+    XCTAssertEqualObjects(comment.author.ID, @"2", @"Comment's author's ID should be 2");
 }
 
 - (void)testNoError {
@@ -115,12 +115,12 @@
 }
 
 - (void)testSerializeWithFormat {
-    PostResource *newPost = [[PostResource alloc] init];
-    newPost.title = @"Title";
-    newPost.date = [NSDate date];
+    ArticleResource *newArticle = [[ArticleResource alloc] init];
+    newArticle.title = @"Title";
+    newArticle.date = [NSDate date];
     
-    NSDictionary *json = [JSONAPIResourceParser dictionaryFor:newPost];
-    XCTAssertEqualObjects(json[@"type"], @"posts", @"Did not create post!");
+    NSDictionary *json = [JSONAPIResourceParser dictionaryFor:newArticle];
+    XCTAssertEqualObjects(json[@"type"], @"articles", @"Did not create article!");
     XCTAssertNotNil(json[@"attributes"][@"date"], @"Wrong date!");
     XCTAssertTrue([json[@"attributes"][@"date"] isKindOfClass:[NSString class]], @"Date should be string!.");
 }
@@ -137,14 +137,14 @@
     newComment.author = newAuthor;
     newComment.text = @"First!";
     
-    PostResource *newPost = [[PostResource alloc] init];
-    newPost.title = @"Title";
-    newPost.author = newAuthor;
-    newPost.date = [NSDate date];
-    newPost.comments = [[NSArray alloc] initWithObjects:newComment, nil];
+    ArticleResource *newArticle = [[ArticleResource alloc] init];
+    newArticle.title = @"Title";
+    newArticle.author = newAuthor;
+    newArticle.date = [NSDate date];
+    newArticle.comments = [[NSArray alloc] initWithObjects:newComment, nil];
     
-    NSDictionary *json = [JSONAPIResourceParser dictionaryFor:newPost];
-    XCTAssertEqualObjects(json[@"type"], @"posts", @"Did not create Post!");
+    NSDictionary *json = [JSONAPIResourceParser dictionaryFor:newArticle];
+    XCTAssertEqualObjects(json[@"type"], @"articles", @"Did not create Article!");
     XCTAssertNotNil(json[@"relationships"], @"Did not create links!");
     XCTAssertNotNil(json[@"relationships"][@"author"], @"Did not create links!");
     XCTAssertNotNil(json[@"relationships"][@"author"][@"data"], @"Did not create links!");
