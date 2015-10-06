@@ -9,7 +9,7 @@ A library for loading data from a [JSON API](http://jsonapi.org) datasource. Par
 
 Version | Changes
 --- | ---
-**1.0.0** | We did it team! We are at the `JSON API 1.0 final` spec. Resources now use `JSONAPIResourceDescriptor` for more explicit definitions. **HUGE** thanks to [jkarmstr](https://github.com/jkarmstr) for doing all the dirty work. Also thanks to [edopelawi ](https://github.com/edopelawi ) and [dev-mush ](https://github.com/dev-mush ) for some bug fixes!
+**1.0.0** | We did it team! We are at the `JSON API 1.0 final` spec. Resources now use `JSONAPIResourceDescriptor` for more explicit definitions. **HUGE** thanks to [jkarmstr](https://github.com/jkarmstr) for doing all the dirty work. Also thanks to [edopelawi ](https://github.com/edopelawi ), [BenjaminDigeon](https://github.com/BenjaminDigeon), and [christianklotz](https://github.com/christianklotz) for some bug fixes!
 **1.0.0-rc1** | Rewrote core of `JSONAPI` and `JSONAPIResource` and all unit tests to be up to spec with JSON API spec 1.0.0-rc3. Removed `JSONAPIResourceLinker`. Added `JSONAPIErrorResource`
 **0.2.0** | Added `NSCopying` and `NSCoded` to `JSONAPIResource`; Added `JSONAPIResourceFormatter` to format values before getting mapped - [more info](#formatter)
 **0.1.2** | `JSONAPIResource` IDs can either be numbers or strings (thanks [danylhebreux](https://github.com/danylhebreux)); `JSONAPIResource` subclass can have mappings defined to set JSON values into properties automatically - [more info](#resource-mappings)
