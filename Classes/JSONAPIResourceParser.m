@@ -177,8 +177,6 @@
     
     NSDictionary *relationships = [dictionary objectForKey:@"relationships"];
     NSDictionary *attributes = [dictionary objectForKey:@"attributes"];
-    
-//    resource.selfLink = [links valueForKey:@"self"];
 	
     id ID = [dictionary objectForKey:@"id"];
     NSFormatter *format = [descriptor idFormatter];
