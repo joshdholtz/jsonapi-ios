@@ -6,6 +6,8 @@
 //  Copyright (c) 2015 Josh Holtz. All rights reserved.
 //
 
+#import <Foundation/Foundation.h>
+
 /**
  *  Class respresentation of a JSON-API error structure.
  */
