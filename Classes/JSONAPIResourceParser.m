@@ -56,7 +56,7 @@
     NSString *type = dictionary[@"type"] ?: @"";
     JSONAPIResourceDescriptor *descriptor = [JSONAPIResourceDescriptor forLinkedType:type];
     
-    NSObject <JSONAPIResource> *resource = [[descriptor resourceClass] alloc];
+    NSObject <JSONAPIResource> *resource = [[[descriptor resourceClass] alloc] init];
     [self set:resource withDictionary:dictionary];
     
     return resource;
