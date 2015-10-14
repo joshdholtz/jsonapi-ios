@@ -205,7 +205,7 @@
             
         } else {
             id value = [attributes objectForKey:[property jsonName]];;
-            if (nil == value) {
+            if ((id)[NSNull null] == value) {
                 value = [dictionary objectForKey:[property jsonName]];
             }
             
