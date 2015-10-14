@@ -9,6 +9,7 @@ A library for loading data from a [JSON API](http://jsonapi.org) datasource. Par
 
 Version | Changes
 --- | ---
+**1.0.1** | Now safely checks for `NSNull` in the parsed JSON. Thanks to [christianklotz](https://github.com/christianklotz) for that fix!
 **1.0.0** | We did it team! We are at the `JSON API 1.0 final` spec. Resources now use `JSONAPIResourceDescriptor` for more explicit definitions. **HUGE** thanks to [jkarmstr](https://github.com/jkarmstr) for doing all the dirty work. Also thanks to [edopelawi ](https://github.com/edopelawi ), [BenjaminDigeon](https://github.com/BenjaminDigeon), and [christianklotz](https://github.com/christianklotz) for some bug fixes!
 **1.0.0-rc1** | Rewrote core of `JSONAPI` and `JSONAPIResource` and all unit tests to be up to spec with JSON API spec 1.0.0-rc3. Removed `JSONAPIResourceLinker`. Added `JSONAPIErrorResource`
 **0.2.0** | Added `NSCopying` and `NSCoded` to `JSONAPIResource`; Added `JSONAPIResourceFormatter` to format values before getting mapped - [more info](#formatter)
@@ -64,17 +65,17 @@ static JSONAPIResourceDescriptor *__descriptor = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         __descriptor = [[JSONAPIResourceDescriptor alloc] initWithClass:[self class] forLinkedType:@"articles"];
-        
+
         [__descriptor setIdProperty:@"ID"];
 
         [__descriptor addProperty:@"title"];
         [__descriptor addProperty:@"date"
                  withDescription:[[JSONAPIPropertyDescriptor alloc] initWithJsonName:@"date" withFormat:[NSDateFormatter RFC3339DateFormatter]]];
-        
+
         [__descriptor hasOne:[PeopleResource class] withName:@"author"];
         [__descriptor hasMany:[CommentResource class] withName:@"comments"];
     });
-    
+
     return __descriptor;
 }
 
