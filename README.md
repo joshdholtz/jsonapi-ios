@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/joshdholtz/jsonapi-ios.png?branch=master)](https://travis-ci.org/joshdholtz/jsonapi-ios)
 ![](https://cocoapod-badges.herokuapp.com/v/JSONAPI/badge.png)
+[![Join the chat at https://gitter.im/joshdholtz/jsonapi-ios](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/joshdholtz/jsonapi-ios?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 A library for loading data from a [JSON API](http://jsonapi.org) datasource. Parses JSON API data into models with support for linking of properties and other resources.
 
