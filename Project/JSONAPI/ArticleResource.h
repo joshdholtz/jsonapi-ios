@@ -17,4 +17,6 @@
 @property (nonatomic, strong) NSDate *date;
 @property (nonatomic, strong) NSArray *comments;
 
+@property (nonatomic, strong) NSArray *versions;
+
 @end

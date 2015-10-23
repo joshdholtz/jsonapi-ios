@@ -215,8 +215,8 @@
                 
                 if ([value isKindOfClass:[NSArray class]]) {
                     if (format) {
-                        NSMutableArray *temp = [value copy];
-                        for (int i=0; i < [value length]; ++i) {
+                        NSMutableArray *temp = [value mutableCopy];
+                        for (int i = 0; i < [value count]; ++i) {
                             id xformed;
                             if ([format getObjectValue:&xformed forString:temp[i] errorDescription:&error]) {
                                 temp[i] = xformed;
