@@ -55,7 +55,9 @@
     XCTAssert([article isKindOfClass:[ArticleResource class]], @"Article should be a ArticleResource");
     XCTAssertEqualObjects(article.ID, @"1", @"Article id should be 1");
     XCTAssertEqualObjects(article.title, @"JSON API paints my bikeshed!", @"Article title should be 'JSON API paints my bikeshed!'");
-    XCTAssertNotNil(article.versions, @"Article versions should contain an array of dates");
+	
+	NSArray *dateStrings = @[@"2015-09-01T12:15:00Z",@"2015-08-01T06:15:00Z"];
+	XCTAssertEqualObjects(article.versions, dateStrings, @"Article versions should contain an array of date strings");
 }
 
 - (void)testIncludedPeopleAndComments {
