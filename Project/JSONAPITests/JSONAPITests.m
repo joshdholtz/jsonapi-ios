@@ -55,6 +55,7 @@
     XCTAssert([article isKindOfClass:[ArticleResource class]], @"Article should be a ArticleResource");
     XCTAssertEqualObjects(article.ID, @"1", @"Article id should be 1");
     XCTAssertEqualObjects(article.title, @"JSON API paints my bikeshed!", @"Article title should be 'JSON API paints my bikeshed!'");
+    XCTAssertNotNil(article.versions, @"Article versions should contain an array of dates");
 }
 
 - (void)testIncludedPeopleAndComments {
