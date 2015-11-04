@@ -68,7 +68,7 @@
     for (NSDictionary *dictionary in array) {
         NSObject <JSONAPIResource> *resource = [self parseResource:dictionary];
         if(resource) {
-            [mutableArray addObject:[self parseResource:dictionary]];
+            [mutableArray addObject:resource];
         }
     }
     
