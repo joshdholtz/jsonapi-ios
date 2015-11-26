@@ -203,6 +203,11 @@
                 [resource setValue:[JSONAPIResourceParser jsonAPILink:value] forKey:key];
             }
             
+        } else if (relationships[key]) {
+            if (relationships) {
+                id value = relationships[key];
+                [resource setValue:[JSONAPIResourceParser jsonAPILink:value] forKey:key];
+            }
         } else {
             id value = [attributes objectForKey:[property jsonName]];;
             if ((id)[NSNull null] == value) {
@@ -270,10 +275,17 @@
     for (NSString *key in properties) {
         JSONAPIPropertyDescriptor *propertyDescriptor = [properties objectForKey:key];
         id value = [resource valueForKey:key];
-        id includedValue = included[[[propertyDescriptor.resourceType descriptor] type]];
+        
+        Class valueClass = nil;
+        if (propertyDescriptor.resourceType) {
+            valueClass = propertyDescriptor.resourceType;
+        } else if ([value conformsToProtocol:@protocol(JSONAPIResource)]) {
+            valueClass = [value class];
+        }
+        id includedValue = included[[[valueClass descriptor] type]];
         
         // ordinary attribute
-        if (propertyDescriptor.resourceType == nil) {
+        if (valueClass == nil) {
             continue;
         // has many
         } else if ([value isKindOfClass:[NSArray class]]) {
