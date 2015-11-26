@@ -138,7 +138,7 @@
                     }
                 }
             } else {
-                if ([property resourceType]) {
+                if ([property resourceType] || [value conformsToProtocol:@protocol(JSONAPIResource)]) {
                     if (linkage == nil) {
                         linkage = [[NSMutableDictionary alloc] init];
                     }
