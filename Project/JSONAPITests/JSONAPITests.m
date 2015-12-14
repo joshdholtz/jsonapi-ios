@@ -17,6 +17,12 @@
 #import "PeopleResource.h"
 #import "ArticleResource.h"
 
+#import "NewsFeedPostResource.h"
+#import "UserResource.h"
+#import "SocialCommunityResource.h"
+#import "MediaResource.h"
+#import "WebPageResource.h"
+
 @interface JSONAPITests : XCTestCase
 
 @end
@@ -29,6 +35,11 @@
     [JSONAPIResourceDescriptor addResource:[CommentResource class]];
     [JSONAPIResourceDescriptor addResource:[PeopleResource class]];
     [JSONAPIResourceDescriptor addResource:[ArticleResource class]];
+    [JSONAPIResourceDescriptor addResource:[UserResource class]];
+    [JSONAPIResourceDescriptor addResource:[SocialCommunityResource class]];
+    [JSONAPIResourceDescriptor addResource:[MediaResource class]];
+    [JSONAPIResourceDescriptor addResource:[WebPageResource class]];
+    [JSONAPIResourceDescriptor addResource:[NewsFeedPostResource class]];
 }
 
 - (void)tearDown {
@@ -174,7 +185,65 @@
   XCTAssertEqualObjects([jsonAPI dictionary][@"data"][@"type"], @"people", @"Did not create person!");
 }
 
+#pragma mark - Generic relationships tests
+
+- (void)testGenericMappingAndParsing {
+    NSDictionary *json = [self genericRelationshipsExampleJSON];
+    JSONAPI *jsonAPI = [JSONAPI jsonAPIWithDictionary:json];
+    
+    NSArray <NewsFeedPostResource *> *posts = jsonAPI.resources;
+    
+    NewsFeedPostResource *firstPost = posts.firstObject;
+    UserResource *firstPostAuthor = firstPost.publisher;
+    
+    NewsFeedPostResource *secondPost = posts.lastObject;
+    SocialCommunityResource *secondPostAuthor = secondPost.publisher;
+    
+    XCTAssertNotNil(firstPostAuthor, @"First post's author should not be nil");
+    XCTAssertTrue(firstPostAuthor.class == UserResource.class, @"First post's author should be of class UserResource");
+    XCTAssertEqualObjects(firstPostAuthor.name, @"Sam", @"First post's author name should be 'Sam'");
+    
+    XCTAssertNotNil(secondPostAuthor, @"Second post's author should not be nil");
+    XCTAssertTrue(secondPostAuthor.class == SocialCommunityResource.class, @"First post's author should be of class SocialCommunityResource");
+    XCTAssertEqualObjects(secondPostAuthor.title, @"Testing Social Community", @"Second post's author title should be 'Testing Social Community'");
+    
+    XCTAssertNotNil(firstPost.attachments, @"First post's attachments should not be nil");
+    XCTAssertEqual(firstPost.attachments.count, 2, @"First post's attachments should contain 2 objects");
+    
+    XCTAssertTrue(((JSONAPIResourceBase *)firstPost.attachments.firstObject).class == MediaResource.class, @"First attachment should be of class MediaResource");
+    XCTAssertEqualObjects(((MediaResource *)firstPost.attachments.firstObject).mimeType, @"image/jpg", @"Media mime type should be 'image/jpg'");
+    
+    XCTAssertTrue(((JSONAPIResourceBase *)firstPost.attachments.lastObject).class == WebPageResource.class, @"Second attachment should be of class WebPageResource");
+    XCTAssertEqualObjects(((WebPageResource *)firstPost.attachments.lastObject).pageUrl, @"http://testingservice.com/content/testPage.html", @"Web page url should be 'http://testingservice.com/content/testPage.html'");
+}
+
+- (void)testGenericSerialization {
+    NSDictionary *json = [self genericRelationshipsExampleJSON];
+    JSONAPI *jsonAPI = [JSONAPI jsonAPIWithDictionary:json];
+    
+    NSArray <NewsFeedPostResource *> *posts = jsonAPI.resources;
+    
+    NSDictionary *serializedFirstPost = [JSONAPIResourceParser dictionaryFor:posts.firstObject];
+    NSDictionary *serializedSecondPost = [JSONAPIResourceParser dictionaryFor:posts.lastObject];
+    
+    XCTAssertNotNil(serializedFirstPost[@"relationships"][@"attachments"][0], @"Media attachment should not be nil");
+    XCTAssertNotNil(serializedFirstPost[@"relationships"][@"attachments"][1], @"Web page url attachment should not be nil");
+    
+    XCTAssertEqualObjects(serializedFirstPost[@"relationships"][@"attachments"][0][@"data"][@"id"], @15, @"Media id should be '15'");
+    XCTAssertEqualObjects(serializedFirstPost[@"relationships"][@"attachments"][0][@"data"][@"type"], @"Media", @"Media type should be 'Media'");
+    
+    XCTAssertEqualObjects(serializedFirstPost[@"relationships"][@"publisher"][@"data"][@"id"], @45, @"User id should be '45'");
+    XCTAssertEqualObjects(serializedFirstPost[@"relationships"][@"publisher"][@"data"][@"type"], @"User", @"User type should be 'User'");
+    
+    XCTAssertEqualObjects(serializedSecondPost[@"relationships"][@"publisher"][@"data"][@"id"], @23, @"Social community id should be '23'");
+    XCTAssertEqualObjects(serializedSecondPost[@"relationships"][@"publisher"][@"data"][@"type"], @"SocialCommunity", @"SocialCommunity type should be 'SocialCommunity'");
+}
+
 #pragma mark - Private
+
+- (NSDictionary*)genericRelationshipsExampleJSON {
+    return [self jsonFor:@"generic_relationships_example" ofType:@"json"];
+}
 
 - (NSDictionary*)mainExampleJSON {
     return [self jsonFor:@"main_example" ofType:@"json"];
