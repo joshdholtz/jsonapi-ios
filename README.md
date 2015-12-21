@@ -10,6 +10,7 @@ A library for loading data from a [JSON API](http://jsonapi.org) datasource. Par
 
 Version | Changes
 --- | ---
+**1.0.3** | Add ability to map different types of objects (https://github.com/joshdholtz/jsonapi-ios/pull/32). Thanks to [ealeksandrov](https://github.com/ealeksandrov) for helping!
 **1.0.2** | Just some bug fixes. Thanks to [christianklotz](https://github.com/christianklotz) for helping again!
 **1.0.1** | Now safely checks for `NSNull` in the parsed JSON. Thanks to [christianklotz](https://github.com/christianklotz) for that fix!
 **1.0.0** | We did it team! We are at the `JSON API 1.0 final` spec. Resources now use `JSONAPIResourceDescriptor` for more explicit definitions. **HUGE** thanks to [jkarmstr](https://github.com/jkarmstr) for doing all the dirty work. Also thanks to [edopelawi ](https://github.com/edopelawi ), [BenjaminDigeon](https://github.com/BenjaminDigeon), and [christianklotz](https://github.com/christianklotz) for some bug fixes!
