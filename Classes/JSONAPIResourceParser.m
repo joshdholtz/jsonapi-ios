@@ -112,7 +112,7 @@
                 if (valueArray.count > 0) {
                     NSMutableArray *dictionaryArray = [[NSMutableArray alloc] initWithCapacity:valueArray.count];
                     
-                    if ([property resourceType]) {
+                    if ([property resourceType] || [((NSArray *)value).firstObject conformsToProtocol:@protocol(JSONAPIResource)]) {
                         if (linkage == nil) {
                             linkage = [[NSMutableDictionary alloc] init];
                         }
@@ -138,7 +138,7 @@
                     }
                 }
             } else {
-                if ([property resourceType]) {
+                if ([property resourceType] || [value conformsToProtocol:@protocol(JSONAPIResource)]) {
                     if (linkage == nil) {
                         linkage = [[NSMutableDictionary alloc] init];
                     }
@@ -203,6 +203,11 @@
                 [resource setValue:[JSONAPIResourceParser jsonAPILink:value] forKey:key];
             }
             
+        } else if (relationships[key]) {
+            if (relationships) {
+                id value = relationships[key];
+                [resource setValue:[JSONAPIResourceParser jsonAPILink:value] forKey:key];
+            }
         } else {
             id value = [attributes objectForKey:[property jsonName]];;
             if ((id)[NSNull null] == value) {
@@ -270,29 +275,45 @@
     for (NSString *key in properties) {
         JSONAPIPropertyDescriptor *propertyDescriptor = [properties objectForKey:key];
         id value = [resource valueForKey:key];
-        id includedValue = included[[[propertyDescriptor.resourceType descriptor] type]];
+        
+        Class valueClass = nil;
+        if (propertyDescriptor.resourceType) {
+            valueClass = propertyDescriptor.resourceType;
+        } else if ([value conformsToProtocol:@protocol(JSONAPIResource)] || [value isKindOfClass:[NSArray class]]) {
+            valueClass = [value class];
+        }
         
         // ordinary attribute
-        if (propertyDescriptor.resourceType == nil) {
+        if (valueClass == nil) {
             continue;
         // has many
         } else if ([value isKindOfClass:[NSArray class]]) {
             NSMutableArray *matched = [value mutableCopy];
             [value enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-                NSObject <JSONAPIResource> *res = obj;
-                id v = includedValue[res.ID];
-                if (v != nil) {
-                    matched[idx] = v;
+                if ([obj conformsToProtocol:@protocol(JSONAPIResource)]) {
+                    NSObject <JSONAPIResource> *res = obj;
+                    id includedValue = included[[[res.class descriptor] type]];
+                    if (includedValue) {
+                        id v = includedValue[res.ID];
+                        if (v != nil) {
+                            matched[idx] = v;
+                        }
+                    }
                 }
             }];
 
             [resource setValue:matched forKey:key];
         // has one
         } else if (value != nil) {
-            NSObject <JSONAPIResource> *res = value;
-            id v = includedValue[res.ID];
-            if (v != nil) {
-                [resource setValue:v forKey:key];
+            if ([value conformsToProtocol:@protocol(JSONAPIResource)]) {
+                id <JSONAPIResource> res = value;
+                id includedValue = included[[[res.class descriptor] type]];
+                if (includedValue) {
+                    id v = included[[[res.class descriptor] type]][res.ID];
+                    if (v != nil) {
+                        [resource setValue:v forKey:key];
+                    }
+                }
             }
         }
     }

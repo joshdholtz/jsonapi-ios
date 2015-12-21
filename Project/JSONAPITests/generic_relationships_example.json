@@ -1,0 +1,90 @@
+{
+    "data" : [
+              {
+                  "attributes" : {
+                    "createdAt" : "2015-10-28T19:35:28.194Z",
+                    "title" : "Test Post",
+                    "text" : "Long text of post example"
+                  },
+                  "id" : 1,
+                  "type" : "NewsFeedPost",
+                  "relationships" : {
+                    "publisher" : {
+                        "data" : {
+                            "id" : 45,
+                            "type" : "User"
+                        }
+                    },
+                    "attachments" : {
+                        "data" : [
+                                  {
+                                    "id" : 15,
+                                    "type" : "Media"
+                                  },
+                                  {
+                                    "id" : 10,
+                                    "type" : "WebPage"
+                                  }
+                        ]
+                    }
+                  }
+              },
+              {
+                  "attributes" : {
+                    "createdAt" : "2015-11-28T19:35:26.194Z",
+                    "title" : "Second Test Post",
+                    "text" : "Long text of second post example"
+                  },
+                  "id" : 2,
+                  "type" : "NewsFeedPost",
+                  "relationships" : {
+                    "publisher" : {
+                        "data" : {
+                            "id" : 23,
+                            "type" : "SocialCommunity"
+                        }
+                    },
+                    "attachments" : {
+                        "data" : []
+                    }
+                  }
+              }
+            ],
+    "included" : [
+                  {
+                    "attributes" : {
+                        "name" : "Sam",
+                        "email" : "sam@gmail.com"
+                    },
+                    "id" : 45,
+                    "type" : "User",
+                    "relationships" : {}
+                  },
+                  {
+                    "attributes" : {
+                        "title" : "Testing Social Community",
+                        "homePage" : "http://testCommunity.com"
+                    },
+                    "id" : 23,
+                    "type" : "SocialCommunity",
+                    "relationships" : {}
+                  },
+                  {
+                    "attributes" : {
+                        "mimeType" : "image/jpg",
+                        "fileUrl" : "http://testingservice.com/media/15.jpg"
+                    },
+                    "id" : 15,
+                    "type" : "Media",
+                    "relationships" : {}
+                  },
+                  {
+                    "attributes" : {
+                        "pageUrl" : "http://testingservice.com/content/testPage.html"
+                    },
+                    "id" : 10,
+                    "type" : "WebPage",
+                    "relationships" : {}
+                  }
+    ]
+}

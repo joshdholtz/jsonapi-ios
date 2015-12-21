@@ -51,6 +51,13 @@
 		685481EB1AE4161900D3A633 /* JSONAPIPropertyDescriptor.m in Sources */ = {isa = PBXBuildFile; fileRef = 685481EA1AE4161900D3A633 /* JSONAPIPropertyDescriptor.m */; };
 		685481EF1AE419CB00D3A633 /* JSONAPIResourceDescriptor.m in Sources */ = {isa = PBXBuildFile; fileRef = 685481EE1AE419CB00D3A633 /* JSONAPIResourceDescriptor.m */; };
 		68A469941AE47E0000E7BBC8 /* NSDateFormatter+JSONAPIDateFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 68A469931AE47E0000E7BBC8 /* NSDateFormatter+JSONAPIDateFormatter.m */; };
+		781CF6CA1C1ECC260052D755 /* generic_relationships_example.json in Resources */ = {isa = PBXBuildFile; fileRef = 781CF6C91C1ECC260052D755 /* generic_relationships_example.json */; };
+		781CF6CB1C1ECC710052D755 /* generic_relationships_example.json in Resources */ = {isa = PBXBuildFile; fileRef = 781CF6C91C1ECC260052D755 /* generic_relationships_example.json */; };
+		78A5C1CA1C1E1336008C8632 /* NewsFeedPostResource.m in Sources */ = {isa = PBXBuildFile; fileRef = 78A5C1C91C1E1336008C8632 /* NewsFeedPostResource.m */; };
+		78A5C1CD1C1E13A8008C8632 /* UserResource.m in Sources */ = {isa = PBXBuildFile; fileRef = 78A5C1CC1C1E13A8008C8632 /* UserResource.m */; };
+		78A5C1D01C1E147B008C8632 /* SocialCommunityResource.m in Sources */ = {isa = PBXBuildFile; fileRef = 78A5C1CF1C1E147B008C8632 /* SocialCommunityResource.m */; };
+		78A5C1D31C1E14D6008C8632 /* MediaResource.m in Sources */ = {isa = PBXBuildFile; fileRef = 78A5C1D21C1E14D6008C8632 /* MediaResource.m */; };
+		78A5C1D61C1E154C008C8632 /* WebPageResource.m in Sources */ = {isa = PBXBuildFile; fileRef = 78A5C1D51C1E154C008C8632 /* WebPageResource.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -109,6 +116,17 @@
 		68A469921AE47E0000E7BBC8 /* NSDateFormatter+JSONAPIDateFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDateFormatter+JSONAPIDateFormatter.h"; sourceTree = "<group>"; };
 		68A469931AE47E0000E7BBC8 /* NSDateFormatter+JSONAPIDateFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDateFormatter+JSONAPIDateFormatter.m"; sourceTree = "<group>"; };
 		68DF9E951B06B4C500FA6429 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
+		781CF6C91C1ECC260052D755 /* generic_relationships_example.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = generic_relationships_example.json; sourceTree = "<group>"; };
+		78A5C1C81C1E1336008C8632 /* NewsFeedPostResource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewsFeedPostResource.h; sourceTree = "<group>"; };
+		78A5C1C91C1E1336008C8632 /* NewsFeedPostResource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewsFeedPostResource.m; sourceTree = "<group>"; };
+		78A5C1CB1C1E13A8008C8632 /* UserResource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserResource.h; sourceTree = "<group>"; };
+		78A5C1CC1C1E13A8008C8632 /* UserResource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserResource.m; sourceTree = "<group>"; };
+		78A5C1CE1C1E147B008C8632 /* SocialCommunityResource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SocialCommunityResource.h; sourceTree = "<group>"; };
+		78A5C1CF1C1E147B008C8632 /* SocialCommunityResource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SocialCommunityResource.m; sourceTree = "<group>"; };
+		78A5C1D11C1E14D6008C8632 /* MediaResource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MediaResource.h; sourceTree = "<group>"; };
+		78A5C1D21C1E14D6008C8632 /* MediaResource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MediaResource.m; sourceTree = "<group>"; };
+		78A5C1D41C1E154C008C8632 /* WebPageResource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebPageResource.h; sourceTree = "<group>"; };
+		78A5C1D51C1E154C008C8632 /* WebPageResource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebPageResource.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -144,6 +162,16 @@
 				03866450186A909200985CEC /* PeopleResource.m */,
 				03866452186A94B700985CEC /* CommentResource.h */,
 				03866453186A94B700985CEC /* CommentResource.m */,
+				78A5C1C81C1E1336008C8632 /* NewsFeedPostResource.h */,
+				78A5C1C91C1E1336008C8632 /* NewsFeedPostResource.m */,
+				78A5C1CB1C1E13A8008C8632 /* UserResource.h */,
+				78A5C1CC1C1E13A8008C8632 /* UserResource.m */,
+				78A5C1CE1C1E147B008C8632 /* SocialCommunityResource.h */,
+				78A5C1CF1C1E147B008C8632 /* SocialCommunityResource.m */,
+				78A5C1D11C1E14D6008C8632 /* MediaResource.h */,
+				78A5C1D21C1E14D6008C8632 /* MediaResource.m */,
+				78A5C1D41C1E154C008C8632 /* WebPageResource.h */,
+				78A5C1D51C1E154C008C8632 /* WebPageResource.m */,
 			);
 			name = ResourceModels;
 			sourceTree = "<group>";
@@ -253,6 +281,7 @@
 		03FBD8D81AB879E800789DF3 /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				781CF6C91C1ECC260052D755 /* generic_relationships_example.json */,
 				03FBD8D91AB879FD00789DF3 /* main_example.json */,
 				03FBD8E11AB8E46E00789DF3 /* error_example.json */,
 			);
@@ -339,6 +368,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				781CF6CB1C1ECC710052D755 /* generic_relationships_example.json in Resources */,
 				03A055D31868E038004807F0 /* Images.xcassets in Resources */,
 				03866459186CCE6600985CEC /* CHANGELOG.md in Resources */,
 				03A055C51868E038004807F0 /* InfoPlist.strings in Resources */,
@@ -355,6 +385,7 @@
 			files = (
 				03FBD8E31AB8E46E00789DF3 /* error_example.json in Resources */,
 				03A055E41868E038004807F0 /* InfoPlist.strings in Resources */,
+				781CF6CA1C1ECC260052D755 /* generic_relationships_example.json in Resources */,
 				03FBD8DA1AB879FD00789DF3 /* main_example.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -382,16 +413,21 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				78A5C1CD1C1E13A8008C8632 /* UserResource.m in Sources */,
+				78A5C1D61C1E154C008C8632 /* WebPageResource.m in Sources */,
 				03866451186A909200985CEC /* PeopleResource.m in Sources */,
 				681B47761B08EA9800A99D76 /* JSONAPIResourceBase.m in Sources */,
+				78A5C1CA1C1E1336008C8632 /* NewsFeedPostResource.m in Sources */,
 				680E14F51B08146E004FF8CD /* JSONAPIResourceParser.m in Sources */,
 				03866457186A94C200985CEC /* ArticleResource.m in Sources */,
 				03A055D11868E038004807F0 /* ViewController.m in Sources */,
 				03A055F71868E08A004807F0 /* JSONAPI.m in Sources */,
+				78A5C1D31C1E14D6008C8632 /* MediaResource.m in Sources */,
 				68A469941AE47E0000E7BBC8 /* NSDateFormatter+JSONAPIDateFormatter.m in Sources */,
 				685481EB1AE4161900D3A633 /* JSONAPIPropertyDescriptor.m in Sources */,
 				03866454186A94B700985CEC /* CommentResource.m in Sources */,
 				03A055CB1868E038004807F0 /* AppDelegate.m in Sources */,
+				78A5C1D01C1E147B008C8632 /* SocialCommunityResource.m in Sources */,
 				685481EF1AE419CB00D3A633 /* JSONAPIResourceDescriptor.m in Sources */,
 				03A055C71868E038004807F0 /* main.m in Sources */,
 				03FBD8DF1AB8DF8E00789DF3 /* JSONAPIErrorResource.m in Sources */,
