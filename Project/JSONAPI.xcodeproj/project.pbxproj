@@ -51,6 +51,8 @@
 		685481EB1AE4161900D3A633 /* JSONAPIPropertyDescriptor.m in Sources */ = {isa = PBXBuildFile; fileRef = 685481EA1AE4161900D3A633 /* JSONAPIPropertyDescriptor.m */; };
 		685481EF1AE419CB00D3A633 /* JSONAPIResourceDescriptor.m in Sources */ = {isa = PBXBuildFile; fileRef = 685481EE1AE419CB00D3A633 /* JSONAPIResourceDescriptor.m */; };
 		68A469941AE47E0000E7BBC8 /* NSDateFormatter+JSONAPIDateFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 68A469931AE47E0000E7BBC8 /* NSDateFormatter+JSONAPIDateFormatter.m */; };
+		7817CDAE1C39A51100D864E6 /* empty_relationship_example.json in Resources */ = {isa = PBXBuildFile; fileRef = 7817CDAD1C39A51100D864E6 /* empty_relationship_example.json */; };
+		7817CDAF1C39A85000D864E6 /* empty_relationship_example.json in Resources */ = {isa = PBXBuildFile; fileRef = 7817CDAD1C39A51100D864E6 /* empty_relationship_example.json */; };
 		781CF6CA1C1ECC260052D755 /* generic_relationships_example.json in Resources */ = {isa = PBXBuildFile; fileRef = 781CF6C91C1ECC260052D755 /* generic_relationships_example.json */; };
 		781CF6CB1C1ECC710052D755 /* generic_relationships_example.json in Resources */ = {isa = PBXBuildFile; fileRef = 781CF6C91C1ECC260052D755 /* generic_relationships_example.json */; };
 		78A5C1CA1C1E1336008C8632 /* NewsFeedPostResource.m in Sources */ = {isa = PBXBuildFile; fileRef = 78A5C1C91C1E1336008C8632 /* NewsFeedPostResource.m */; };
@@ -116,6 +118,7 @@
 		68A469921AE47E0000E7BBC8 /* NSDateFormatter+JSONAPIDateFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDateFormatter+JSONAPIDateFormatter.h"; sourceTree = "<group>"; };
 		68A469931AE47E0000E7BBC8 /* NSDateFormatter+JSONAPIDateFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDateFormatter+JSONAPIDateFormatter.m"; sourceTree = "<group>"; };
 		68DF9E951B06B4C500FA6429 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
+		7817CDAD1C39A51100D864E6 /* empty_relationship_example.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = empty_relationship_example.json; sourceTree = "<group>"; };
 		781CF6C91C1ECC260052D755 /* generic_relationships_example.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = generic_relationships_example.json; sourceTree = "<group>"; };
 		78A5C1C81C1E1336008C8632 /* NewsFeedPostResource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewsFeedPostResource.h; sourceTree = "<group>"; };
 		78A5C1C91C1E1336008C8632 /* NewsFeedPostResource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewsFeedPostResource.m; sourceTree = "<group>"; };
@@ -281,6 +284,7 @@
 		03FBD8D81AB879E800789DF3 /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				7817CDAD1C39A51100D864E6 /* empty_relationship_example.json */,
 				781CF6C91C1ECC260052D755 /* generic_relationships_example.json */,
 				03FBD8D91AB879FD00789DF3 /* main_example.json */,
 				03FBD8E11AB8E46E00789DF3 /* error_example.json */,
@@ -368,6 +372,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7817CDAF1C39A85000D864E6 /* empty_relationship_example.json in Resources */,
 				781CF6CB1C1ECC710052D755 /* generic_relationships_example.json in Resources */,
 				03A055D31868E038004807F0 /* Images.xcassets in Resources */,
 				03866459186CCE6600985CEC /* CHANGELOG.md in Resources */,
@@ -386,6 +391,7 @@
 				03FBD8E31AB8E46E00789DF3 /* error_example.json in Resources */,
 				03A055E41868E038004807F0 /* InfoPlist.strings in Resources */,
 				781CF6CA1C1ECC260052D755 /* generic_relationships_example.json in Resources */,
+				7817CDAE1C39A51100D864E6 /* empty_relationship_example.json in Resources */,
 				03FBD8DA1AB879FD00789DF3 /* main_example.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
