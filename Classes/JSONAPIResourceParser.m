@@ -200,16 +200,20 @@
         if (property.resourceType) {
             if (relationships) {
                 id value = [relationships objectForKey:[property jsonName]];
-                [resource setValue:[JSONAPIResourceParser jsonAPILink:value] forKey:key];
+                if (value[@"data"] != [NSNull null]) {
+                    [resource setValue:[JSONAPIResourceParser jsonAPILink:value] forKey:key];
+                }
             }
             
         } else if (relationships[key]) {
             if (relationships) {
                 id value = relationships[key];
-                [resource setValue:[JSONAPIResourceParser jsonAPILink:value] forKey:key];
+                if (value[@"data"] != [NSNull null]) {
+                    [resource setValue:[JSONAPIResourceParser jsonAPILink:value] forKey:key];
+                }
             }
         } else {
-            id value = [attributes objectForKey:[property jsonName]];;
+            id value = [attributes objectForKey:[property jsonName]];
             if ((id)[NSNull null] == value) {
                 value = [dictionary objectForKey:[property jsonName]];
             }
