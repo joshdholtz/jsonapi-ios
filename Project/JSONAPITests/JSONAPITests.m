@@ -247,7 +247,7 @@
     
     NewsFeedPostResource *testPost = jsonAPI.resource;
     
-    XCTAssertNil(testPost.publisher, @"Test post's attachments should not be nil");
+    XCTAssertNil(testPost.publisher, @"Test post's publisher should be nil");
     
     XCTAssertNotNil(testPost.attachments, @"Test post's attachments should not be nil");
     XCTAssertEqual(testPost.attachments.count, 1, @"Test post's attachments should contain 1 object");
