@@ -1,0 +1,25 @@
+{
+    "data": {
+        "attributes": {
+            "createdAt": "2015-10-28T19:35:28.194Z",
+            "title": "Empty relationship test post",
+            "text": "Test text"
+        },
+        "id": 1,
+        "type": "NewsFeedPost",
+        "relationships": {
+            "publisher": {
+                "data": null
+            },
+            "attachments" : {
+                "data" : [
+                          {
+                          "id" : 15,
+                          "type" : "Media"
+                          }
+                          ]
+            }
+        }
+        
+    }
+}

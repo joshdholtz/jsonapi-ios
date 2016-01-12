@@ -239,7 +239,26 @@
     XCTAssertEqualObjects(serializedSecondPost[@"relationships"][@"publisher"][@"data"][@"type"], @"SocialCommunity", @"SocialCommunity type should be 'SocialCommunity'");
 }
 
+#pragma mark - Empty relationship tests
+
+- (void)testEmptyRelationship {
+    NSDictionary *json = [self emptyRelationshipsExampleJSON];
+    JSONAPI *jsonAPI = [JSONAPI jsonAPIWithDictionary:json];
+    
+    NewsFeedPostResource *testPost = jsonAPI.resource;
+    
+    XCTAssertNil(testPost.publisher, @"Test post's publisher should be nil");
+    
+    XCTAssertNotNil(testPost.attachments, @"Test post's attachments should not be nil");
+    XCTAssertEqual(testPost.attachments.count, 1, @"Test post's attachments should contain 1 object");
+    XCTAssertTrue(((JSONAPIResourceBase *)testPost.attachments.firstObject).class == MediaResource.class, @"First attachment should be of class MediaResource");
+}
+
 #pragma mark - Private
+
+- (NSDictionary*)emptyRelationshipsExampleJSON {
+    return [self jsonFor:@"empty_relationship_example" ofType:@"json"];
+}
 
 - (NSDictionary*)genericRelationshipsExampleJSON {
     return [self jsonFor:@"generic_relationships_example" ofType:@"json"];
