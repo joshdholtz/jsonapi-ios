@@ -191,6 +191,13 @@
     } else {
         [resource setValue:ID forKey:[descriptor idProperty]];
     }
+    
+    if (dictionary[@"links"]) {
+        if (descriptor.selfLinkProperty) {
+            NSString *selfLink = dictionary[@"links"][@"self"];
+            [resource setValue:selfLink forKey:descriptor.selfLinkProperty];
+        }
+    }
 
     // Loops through all keys to map to properties
     NSDictionary *properties = [descriptor properties];
