@@ -180,6 +180,7 @@
     
     NSDictionary *relationships = [dictionary objectForKey:@"relationships"];
     NSDictionary *attributes = [dictionary objectForKey:@"attributes"];
+    NSDictionary *links = [dictionary objectForKey:@"links"];
 	
     id ID = [dictionary objectForKey:@"id"];
     NSFormatter *format = [descriptor idFormatter];
@@ -192,11 +193,9 @@
         [resource setValue:ID forKey:[descriptor idProperty]];
     }
     
-    if (dictionary[@"links"]) {
-        if (descriptor.selfLinkProperty) {
-            NSString *selfLink = dictionary[@"links"][@"self"];
-            [resource setValue:selfLink forKey:descriptor.selfLinkProperty];
-        }
+    if (descriptor.selfLinkProperty) {
+        NSString *selfLink = links[@"self"];
+        [resource setValue:selfLink forKey:descriptor.selfLinkProperty];
     }
 
     // Loops through all keys to map to properties
