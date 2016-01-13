@@ -97,22 +97,23 @@
             [dictionary setValue:ID forKey:@"id"];
         }
     }
-
+    
     NSMutableDictionary *attributes = [[NSMutableDictionary alloc] init];
     
     // Loops through all keys to map to properties
     NSDictionary *properties = [descriptor properties];
     for (NSString *key in properties) {
         JSONAPIPropertyDescriptor *property = [properties objectForKey:key];
-		
+        
         id value = [resource valueForKey:key];
         if (value) {
-            if ([value isKindOfClass:[NSArray class]]) {
-                NSArray *valueArray = value;
+            if ([value isMemberOfClass:[JSONAPIResourceCollection class]]) {
+                JSONAPIResourceCollection *collection = (JSONAPIResourceCollection *)value;
+                NSArray *valueArray = collection.resources;
                 if (valueArray.count > 0) {
                     NSMutableArray *dictionaryArray = [[NSMutableArray alloc] initWithCapacity:valueArray.count];
                     
-                    if ([property resourceType] || [((NSArray *)value).firstObject conformsToProtocol:@protocol(JSONAPIResource)]) {
+                    if ([property resourceType] || [collection.resources.firstObject conformsToProtocol:@protocol(JSONAPIResource)]) {
                         if (linkage == nil) {
                             linkage = [[NSMutableDictionary alloc] init];
                         }
@@ -164,23 +165,24 @@
     if (linkage) {
         [dictionary setValue:linkage forKey:@"relationships"];
     }
-	
-	// TODO: Need to also add in all other links
-	if (resource.selfLink) {
-		dictionary[@"links"] = @{ @"self": resource.selfLink };
-	}
-	
+    
+    // TODO: Need to also add in all other links
+    if (resource.selfLink) {
+        dictionary[@"links"] = @{ @"self": resource.selfLink };
+    }
+    
     return dictionary;
 }
 
 + (void)set:(NSObject <JSONAPIResource> *)resource withDictionary:dictionary {
     NSString *error;
-
+    
     JSONAPIResourceDescriptor *descriptor = [[resource class] descriptor];
     
     NSDictionary *relationships = [dictionary objectForKey:@"relationships"];
     NSDictionary *attributes = [dictionary objectForKey:@"attributes"];
-	
+    NSDictionary *links = [dictionary objectForKey:@"links"];
+    
     id ID = [dictionary objectForKey:@"id"];
     NSFormatter *format = [descriptor idFormatter];
     if (format) {
@@ -191,7 +193,11 @@
     } else {
         [resource setValue:ID forKey:[descriptor idProperty]];
     }
-
+    
+    if ([descriptor selfLinkProperty]) {
+        [resource setValue:links[@"self"] forKey:[descriptor selfLinkProperty]];
+    }
+    
     // Loops through all keys to map to properties
     NSDictionary *properties = [descriptor properties];
     for (NSString *key in properties) {
@@ -254,12 +260,19 @@
 + (id)jsonAPILink:(NSDictionary*)dictionary {
     id linkage = dictionary[@"data"];
     if ([linkage isKindOfClass:[NSArray class]]) {
-        NSMutableArray *linkArray = [[NSMutableArray alloc] initWithCapacity:[linkage count]];
-        for (NSDictionary *linkElement in linkage) {
-            [linkArray addObject:[JSONAPIResourceParser parseResource:linkElement]];
+        
+        JSONAPIResourceCollection *collection = [JSONAPIResourceCollection new];
+        
+        if (dictionary[@"links"]) {
+            collection.selfLink = dictionary[@"links"][@"self"];
+            collection.related = dictionary[@"links"][@"related"];
         }
         
-        return linkArray;
+        for (NSDictionary *linkElement in linkage) {
+            [collection.resources addObject:[JSONAPIResourceParser parseResource:linkElement]];
+        }
+        
+        return collection;
         
     } else {
         return [JSONAPIResourceParser parseResource:linkage];
@@ -283,31 +296,32 @@
         Class valueClass = nil;
         if (propertyDescriptor.resourceType) {
             valueClass = propertyDescriptor.resourceType;
-        } else if ([value conformsToProtocol:@protocol(JSONAPIResource)] || [value isKindOfClass:[NSArray class]]) {
+        } else if ([value conformsToProtocol:@protocol(JSONAPIResource)] || [value isKindOfClass:[JSONAPIResourceCollection class]]) {
             valueClass = [value class];
         }
         
         // ordinary attribute
         if (valueClass == nil) {
             continue;
-        // has many
-        } else if ([value isKindOfClass:[NSArray class]]) {
-            NSMutableArray *matched = [value mutableCopy];
-            [value enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            // has many
+        } else if ([value isKindOfClass:[JSONAPIResourceCollection class]]) {
+            JSONAPIResourceCollection *collection = (JSONAPIResourceCollection *)value;
+            JSONAPIResourceCollection *matched = [value mutableCopy];
+            [collection.resources enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
                 if ([obj conformsToProtocol:@protocol(JSONAPIResource)]) {
                     NSObject <JSONAPIResource> *res = obj;
                     id includedValue = included[[[res.class descriptor] type]];
                     if (includedValue) {
                         id v = includedValue[res.ID];
                         if (v != nil) {
-                            matched[idx] = v;
+                            matched.resources[idx] = v;
                         }
                     }
                 }
             }];
-
+            
             [resource setValue:matched forKey:key];
-        // has one
+            // has one
         } else if (value != nil) {
             if ([value conformsToProtocol:@protocol(JSONAPIResource)]) {
                 id <JSONAPIResource> res = value;

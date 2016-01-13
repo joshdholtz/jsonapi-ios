@@ -12,6 +12,7 @@
 #import "JSONAPIResourceDescriptor.h"
 #import "JSONAPIErrorResource.h"
 #import "JSONAPIResourceParser.h"
+#import "JSONAPIResourceCollection.h"
 
 #import "CommentResource.h"
 #import "PeopleResource.h"
@@ -65,6 +66,7 @@
     ArticleResource *article = jsonAPI.resource;
     XCTAssert([article isKindOfClass:[ArticleResource class]], @"Article should be a ArticleResource");
     XCTAssertEqualObjects(article.ID, @"1", @"Article id should be 1");
+    XCTAssertTrue([article.selfLink isEqualToString:@"http://example.com/articles/1"], @"Article selfLink should be 'http://example.com/articles/1'");
     XCTAssertEqualObjects(article.title, @"JSON API paints my bikeshed!", @"Article title should be 'JSON API paints my bikeshed!'");
 	
 	NSArray *dateStrings = @[@"2015-09-01T12:15:00Z",@"2015-08-01T06:15:00Z"];
@@ -85,11 +87,15 @@
     JSONAPI *jsonAPI = [JSONAPI jsonAPIWithDictionary:json];
 	
     ArticleResource *article = jsonAPI.resource;
-    CommentResource *firstComment = article.comments.firstObject;
+    CommentResource *firstComment = article.comments.resources.firstObject;
     
     XCTAssertNotNil(article.author, @"Article's author should not be nil");
     XCTAssertNotNil(article.comments, @"Article's comments should not be nil");
-    XCTAssertEqual(article.comments.count, 2, @"Article should contain 2 comments");
+    XCTAssertEqual(article.comments.resources.count, 2, @"Article should contain 2 comments");
+    
+    XCTAssertTrue([article.comments.selfLink isEqualToString:@"http://example.com/articles/1/relationships/comments"], @"Comments selfLink should be 'http://example.com/articles/1/relationships/comments'");
+    XCTAssertTrue([article.comments.related isEqualToString:@"http://example.com/articles/1/comments"], @"Comments related should be 'http://example.com/articles/1/comments'");
+    
     XCTAssertEqualObjects(article.author.firstName, @"Dan", @"Article's author firstname should be 'Dan'");
     XCTAssertEqualObjects(firstComment.text, @"First!", @"Article's first comment should be 'First!'");
     XCTAssertEqualObjects(firstComment.author.firstName, @"Dan", @"Article's first comment author should be 'Dan'");
@@ -160,7 +166,7 @@
     newArticle.title = @"Title";
     newArticle.author = newAuthor;
     newArticle.date = [NSDate date];
-    newArticle.comments = [[NSArray alloc] initWithObjects:newComment, nil];
+    newArticle.comments = [[JSONAPIResourceCollection alloc] initWithArray:@[newComment]];
     
     NSDictionary *json = [JSONAPIResourceParser dictionaryFor:newArticle];
     XCTAssertEqualObjects(json[@"type"], @"articles", @"Did not create Article!");
@@ -208,13 +214,13 @@
     XCTAssertEqualObjects(secondPostAuthor.title, @"Testing Social Community", @"Second post's author title should be 'Testing Social Community'");
     
     XCTAssertNotNil(firstPost.attachments, @"First post's attachments should not be nil");
-    XCTAssertEqual(firstPost.attachments.count, 2, @"First post's attachments should contain 2 objects");
+    XCTAssertEqual(firstPost.attachments.resources.count, 2, @"First post's attachments should contain 2 objects");
     
-    XCTAssertTrue(((JSONAPIResourceBase *)firstPost.attachments.firstObject).class == MediaResource.class, @"First attachment should be of class MediaResource");
-    XCTAssertEqualObjects(((MediaResource *)firstPost.attachments.firstObject).mimeType, @"image/jpg", @"Media mime type should be 'image/jpg'");
+    XCTAssertTrue(((JSONAPIResourceBase *)firstPost.attachments.resources.firstObject).class == MediaResource.class, @"First attachment should be of class MediaResource");
+    XCTAssertEqualObjects(((MediaResource *)firstPost.attachments.resources.firstObject).mimeType, @"image/jpg", @"Media mime type should be 'image/jpg'");
     
-    XCTAssertTrue(((JSONAPIResourceBase *)firstPost.attachments.lastObject).class == WebPageResource.class, @"Second attachment should be of class WebPageResource");
-    XCTAssertEqualObjects(((WebPageResource *)firstPost.attachments.lastObject).pageUrl, @"http://testingservice.com/content/testPage.html", @"Web page url should be 'http://testingservice.com/content/testPage.html'");
+    XCTAssertTrue(((JSONAPIResourceBase *)firstPost.attachments.resources.lastObject).class == WebPageResource.class, @"Second attachment should be of class WebPageResource");
+    XCTAssertEqualObjects(((WebPageResource *)firstPost.attachments.resources.lastObject).pageUrl, @"http://testingservice.com/content/testPage.html", @"Web page url should be 'http://testingservice.com/content/testPage.html'");
 }
 
 - (void)testGenericSerialization {
@@ -250,8 +256,8 @@
     XCTAssertNil(testPost.publisher, @"Test post's publisher should be nil");
     
     XCTAssertNotNil(testPost.attachments, @"Test post's attachments should not be nil");
-    XCTAssertEqual(testPost.attachments.count, 1, @"Test post's attachments should contain 1 object");
-    XCTAssertTrue(((JSONAPIResourceBase *)testPost.attachments.firstObject).class == MediaResource.class, @"First attachment should be of class MediaResource");
+    XCTAssertEqual(testPost.attachments.resources.count, 1, @"Test post's attachments should contain 1 object");
+    XCTAssertTrue(((JSONAPIResourceBase *)testPost.attachments.resources.firstObject).class == MediaResource.class, @"First attachment should be of class MediaResource");
 }
 
 #pragma mark - Private

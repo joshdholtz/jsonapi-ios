@@ -29,6 +29,7 @@
  * This is required for any model resource.
  */
 @property (strong) NSString *idProperty;
+@property (strong) NSString *selfLinkProperty;
 
 /** 
  * JSON-API "id" optional format. 
