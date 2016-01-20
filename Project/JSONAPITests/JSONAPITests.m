@@ -176,8 +176,8 @@
     XCTAssertNil(json[@"relationships"][@"author"][@"first-name"], @"Bad link!");
 
     XCTAssertNotNil(json[@"relationships"][@"comments"], @"Did not create links!");
-    XCTAssertTrue([json[@"relationships"][@"comments"][@"data"] isKindOfClass:[NSArray class]], @"Comments should be array!.");
-    XCTAssertEqual([json[@"relationships"][@"comments"][@"data"] count], 2, @"Comments should have 1 element!.");
+    XCTAssertTrue([json[@"relationships"][@"comments"][@"data"] isKindOfClass:[NSArray class]], @"Comments data should be array!.");
+    XCTAssertEqual([json[@"relationships"][@"comments"][@"data"] count], 2, @"Comments should have 2 elements!.");
 }
 
 - (void)testCreate {
