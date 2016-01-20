@@ -98,6 +98,14 @@
 - (void)addProperty:(NSString*)name;
 
 /**
+ * Add a simple property with custom json name.
+ *
+ * @param name The name of the property in the class.
+ * @param jsonName The label of the property in JSON.
+ */
+- (void)addProperty:(NSString*)name withJsonName:(NSString *)json;
+
+/**
  * Add a simple property with custom transform object.
  *
  * @param name The name of the property in the class.
