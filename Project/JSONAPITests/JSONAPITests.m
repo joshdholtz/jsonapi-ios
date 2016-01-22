@@ -151,16 +151,21 @@
     newAuthor.firstName = @"Karl";
     newAuthor.lastName = @"Armstrong";
     
-    CommentResource *newComment = [[CommentResource alloc] init];
-    newComment.ID = [NSUUID UUID];
-    newComment.author = newAuthor;
-    newComment.text = @"First!";
+    CommentResource *firstComment = [[CommentResource alloc] init];
+    firstComment.ID = [NSUUID UUID];
+    firstComment.author = newAuthor;
+    firstComment.text = @"First!";
+    
+    CommentResource *secondComment = [[CommentResource alloc] init];
+    secondComment.ID = [NSUUID UUID];
+    secondComment.author = newAuthor;
+    secondComment.text = @"Second!";
     
     ArticleResource *newArticle = [[ArticleResource alloc] init];
     newArticle.title = @"Title";
     newArticle.author = newAuthor;
     newArticle.date = [NSDate date];
-    newArticle.comments = [[NSArray alloc] initWithObjects:newComment, nil];
+    newArticle.comments = [[NSArray alloc] initWithObjects:firstComment, secondComment, nil];
     
     NSDictionary *json = [JSONAPIResourceParser dictionaryFor:newArticle];
     XCTAssertEqualObjects(json[@"type"], @"articles", @"Did not create Article!");
@@ -171,8 +176,8 @@
     XCTAssertNil(json[@"relationships"][@"author"][@"first-name"], @"Bad link!");
 
     XCTAssertNotNil(json[@"relationships"][@"comments"], @"Did not create links!");
-    XCTAssertTrue([json[@"relationships"][@"comments"] isKindOfClass:[NSArray class]], @"Comments should be array!.");
-    XCTAssertEqual([json[@"relationships"][@"comments"] count], 1, @"Comments should have 1 element!.");
+    XCTAssertTrue([json[@"relationships"][@"comments"][@"data"] isKindOfClass:[NSArray class]], @"Comments data should be array!.");
+    XCTAssertEqual([json[@"relationships"][@"comments"][@"data"] count], 2, @"Comments should have 2 elements!.");
 }
 
 - (void)testCreate {
@@ -226,11 +231,11 @@
     NSDictionary *serializedFirstPost = [JSONAPIResourceParser dictionaryFor:posts.firstObject];
     NSDictionary *serializedSecondPost = [JSONAPIResourceParser dictionaryFor:posts.lastObject];
     
-    XCTAssertNotNil(serializedFirstPost[@"relationships"][@"attachments"][0], @"Media attachment should not be nil");
-    XCTAssertNotNil(serializedFirstPost[@"relationships"][@"attachments"][1], @"Web page url attachment should not be nil");
+    XCTAssertNotNil(serializedFirstPost[@"relationships"][@"attachments"][@"data"][0], @"Media attachment should not be nil");
+    XCTAssertNotNil(serializedFirstPost[@"relationships"][@"attachments"][@"data"][1], @"Web page url attachment should not be nil");
     
-    XCTAssertEqualObjects(serializedFirstPost[@"relationships"][@"attachments"][0][@"data"][@"id"], @15, @"Media id should be '15'");
-    XCTAssertEqualObjects(serializedFirstPost[@"relationships"][@"attachments"][0][@"data"][@"type"], @"Media", @"Media type should be 'Media'");
+    XCTAssertEqualObjects(serializedFirstPost[@"relationships"][@"attachments"][@"data"][0][@"id"], @15, @"Media id should be '15'");
+    XCTAssertEqualObjects(serializedFirstPost[@"relationships"][@"attachments"][@"data"][0][@"type"], @"Media", @"Media type should be 'Media'");
     
     XCTAssertEqualObjects(serializedFirstPost[@"relationships"][@"publisher"][@"data"][@"id"], @45, @"User id should be '45'");
     XCTAssertEqualObjects(serializedFirstPost[@"relationships"][@"publisher"][@"data"][@"type"], @"User", @"User type should be 'User'");
