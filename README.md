@@ -21,6 +21,7 @@ For some full examples on how to use everything, please see the tests - https://
 
 Version | Changes
 --- | ---
+ **1.0.5** | Fix 1-to-many relationships serialization according to JSON API v1.0 (https://github.com/joshdholtz/jsonapi-ios/pull/34). Thanks to [RafaelKayumov](https://github.com/RafaelKayumov) for helping!
  **1.0.4** | Add support for empty to-one relationship according to JSON API v1.0 (https://github.com/joshdholtz/jsonapi-ios/pull/33). Thanks to [RafaelKayumov](https://github.com/RafaelKayumov) for helping!
 **1.0.3** | Add ability to map different types of objects (https://github.com/joshdholtz/jsonapi-ios/pull/32). Thanks to [ealeksandrov](https://github.com/ealeksandrov) for helping!
 **1.0.2** | Just some bug fixes. Thanks to [christianklotz](https://github.com/christianklotz) for helping again!
