@@ -107,7 +107,7 @@
         
         id value = [resource valueForKey:key];
         if (value) {
-            if ([value isMemberOfClass:[JSONAPIResourceCollection class]]) {
+            if ([value isKindOfClass:[JSONAPIResourceCollection class]]) {
                 JSONAPIResourceCollection *collection = (JSONAPIResourceCollection *)value;
                 if (collection.count > 0) {
                     NSMutableArray *dictionaryCollection = [[NSMutableArray alloc] initWithCapacity:collection.count];
@@ -121,7 +121,7 @@
                             [dictionaryCollection addObject:[self link:element from:resource withKey:[property jsonName]]];
                         }
                         
-                        NSDictionary *dataDictionary = @{@"data" : dictionaryArray};
+                        NSDictionary *dataDictionary = @{@"data" : dictionaryCollection};
                         [linkage setValue:dataDictionary forKey:[property jsonName]];
                     } else {
                         NSFormatter *format = [property formatter];
@@ -384,7 +384,7 @@
                                           @"type" : descriptor.type,
                                           @"id"   : resource.ID
                                           };
-        if ([[owner valueForKey:key] isKindOfClass:[NSArray class]]) {
+        if ([[owner valueForKey:key] isKindOfClass:[JSONAPIResourceCollection class]]) {
             reference = referenceObject.mutableCopy;
         } else {
             [reference setValue:referenceObject forKey:@"data"];
