@@ -6,10 +6,22 @@
 
 A library for loading data from a [JSON API](http://jsonapi.org) datasource. Parses JSON API data into models with support for linking of properties and other resources.
 
+### Quick Usage
+```objc
+NSDictionary *json = [self responseFromAPIRequest];
+JSONAPI *jsonAPI = [JSONAPI jsonAPIWithDictionary:json];
+
+ArticleResource *article = jsonAPI.resource;
+NSLog(@"Title: %@", article.title);
+```
+
+For some full examples on how to use everything, please see the tests - https://github.com/joshdholtz/jsonapi-ios/blob/master/Project/JSONAPITests/JSONAPITests.m
+
 ### Updates
 
 Version | Changes
 --- | ---
+ **1.0.5** | Fix 1-to-many relationships serialization according to JSON API v1.0 (https://github.com/joshdholtz/jsonapi-ios/pull/34). Thanks to [RafaelKayumov](https://github.com/RafaelKayumov) for helping!
  **1.0.4** | Add support for empty to-one relationship according to JSON API v1.0 (https://github.com/joshdholtz/jsonapi-ios/pull/33). Thanks to [RafaelKayumov](https://github.com/RafaelKayumov) for helping!
 **1.0.3** | Add ability to map different types of objects (https://github.com/joshdholtz/jsonapi-ios/pull/32). Thanks to [ealeksandrov](https://github.com/ealeksandrov) for helping!
 **1.0.2** | Just some bug fixes. Thanks to [christianklotz](https://github.com/christianklotz) for helping again!
@@ -38,6 +50,7 @@ it simply add the following line to your Podfile:
     pod 'JSONAPI', '~> 1.0.0'
 
 ## Usage
+For some full examples on how to use everything, please see the tests - https://github.com/joshdholtz/jsonapi-ios/blob/master/Project/JSONAPITests/JSONAPITests.m
 
 ### JSONAPI
 `JSONAPI` parses and validates a JSON API document into a usable object. This object holds the response as an NSDictionary but provides methods to accomdate the JSON API format such as `meta`, `errors`, `linked`, `resources`, and `includedResources`.

@@ -121,8 +121,8 @@
                             [dictionaryArray addObject:[self link:valueElement from:resource withKey:[property jsonName]]];
                         }
                         
-                        [linkage setValue:dictionaryArray forKey:[property jsonName]];
-                        
+                        NSDictionary *dataDictionary = @{@"data" : dictionaryArray};
+                        [linkage setValue:dataDictionary forKey:[property jsonName]];
                     } else {
                         NSFormatter *format = [property formatter];
                         
@@ -372,10 +372,15 @@
     }
     
     if (resource.ID) {
-        [reference setValue:@{
-                              @"type" : descriptor.type,
-                              @"id"   : resource.ID
-                              } forKey:@"data"];
+        NSDictionary *referenceObject = @{
+                                          @"type" : descriptor.type,
+                                          @"id"   : resource.ID
+                                          };
+        if ([[owner valueForKey:key] isKindOfClass:[NSArray class]]) {
+            reference = referenceObject.mutableCopy;
+        } else {
+            [reference setValue:referenceObject forKey:@"data"];
+        }
     }
     
     return reference;
