@@ -109,33 +109,32 @@
         if (value) {
             if ([value isMemberOfClass:[JSONAPIResourceCollection class]]) {
                 JSONAPIResourceCollection *collection = (JSONAPIResourceCollection *)value;
-                NSArray *valueArray = collection.resources;
-                if (valueArray.count > 0) {
-                    NSMutableArray *dictionaryArray = [[NSMutableArray alloc] initWithCapacity:valueArray.count];
+                if (collection.count > 0) {
+                    NSMutableArray *dictionaryCollection = [[NSMutableArray alloc] initWithCapacity:collection.count];
                     
-                    if ([property resourceType] || [collection.resources.firstObject conformsToProtocol:@protocol(JSONAPIResource)]) {
+                    if ([property resourceType] || [collection.firstObject conformsToProtocol:@protocol(JSONAPIResource)]) {
                         if (linkage == nil) {
                             linkage = [[NSMutableDictionary alloc] init];
                         }
                         
-                        for (id valueElement in valueArray) {
-                            [dictionaryArray addObject:[self link:valueElement from:resource withKey:[property jsonName]]];
+                        for (id element in collection) {
+                            [dictionaryCollection addObject:[self link:element from:resource withKey:[property jsonName]]];
                         }
                         
-                        [linkage setValue:dictionaryArray forKey:[property jsonName]];
+                        [linkage setValue:dictionaryCollection forKey:[property jsonName]];
                         
                     } else {
                         NSFormatter *format = [property formatter];
                         
-                        for (id valueElement in valueArray) {
+                        for (id element in collection) {
                             if (format) {
-                                [dictionaryArray addObject:[format stringForObjectValue:valueElement]];
+                                [dictionaryCollection addObject:[format stringForObjectValue:element]];
                             } else {
-                                [dictionaryArray addObject:valueElement];
+                                [dictionaryCollection addObject:element];
                             }
                         }
                         
-                        [attributes setValue:dictionaryArray forKey:[property jsonName]];
+                        [attributes setValue:dictionaryCollection forKey:[property jsonName]];
                     }
                 }
             } else {
@@ -270,7 +269,7 @@
         }
         
         for (NSDictionary *linkElement in linkage) {
-            [collection.resources addObject:[JSONAPIResourceParser parseResource:linkElement]];
+            [collection addObject:[JSONAPIResourceParser parseResource:linkElement]];
         }
         
         return collection;
@@ -308,14 +307,14 @@
         } else if ([value isKindOfClass:[JSONAPIResourceCollection class]]) {
             JSONAPIResourceCollection *collection = (JSONAPIResourceCollection *)value;
             JSONAPIResourceCollection *matched = [value mutableCopy];
-            [collection.resources enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            [collection enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
                 if ([obj conformsToProtocol:@protocol(JSONAPIResource)]) {
                     NSObject <JSONAPIResource> *res = obj;
                     id includedValue = included[[[res.class descriptor] type]];
                     if (includedValue) {
                         id v = includedValue[res.ID];
                         if (v != nil) {
-                            matched.resources[idx] = v;
+                            matched[idx] = v;
                         }
                     }
                 }

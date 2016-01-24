@@ -41,4 +41,44 @@
     return copy;
 }
 
+- (id)firstObject
+{
+    return self.resources.firstObject;
+}
+- (id)lastObject
+{
+    return self.resources.lastObject;
+}
+
+- (NSUInteger)count
+{
+    return self.resources.count;
+}
+
+- (void)addObject:(id)object
+{
+    [self.resources addObject:object];
+}
+
+- (id)objectAtIndexedSubscript:(NSUInteger)idx
+{
+    return self.resources[idx];
+}
+- (void)setObject:(id)obj atIndexedSubscript:(NSUInteger)idx
+{
+    self.resources[idx] = obj;
+}
+
+- (void)enumerateObjectsUsingBlock:(void (^)(id obj, NSUInteger idx, BOOL *stop))block
+{
+    [self.resources enumerateObjectsUsingBlock:block];
+}
+
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
+                                  objects:(id __unsafe_unretained [])stackbuf
+                                    count:(NSUInteger)len
+{
+    return [self.resources countByEnumeratingWithState:state objects:stackbuf count:len];
+}
+
 @end
