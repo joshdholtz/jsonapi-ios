@@ -69,9 +69,9 @@
     XCTAssertTrue([article.selfLink isEqualToString:@"http://example.com/articles/1"], @"Article selfLink should be 'http://example.com/articles/1'");
     XCTAssertEqualObjects(article.title, @"JSON API paints my bikeshed!", @"Article title should be 'JSON API paints my bikeshed!'");
 	
-	NSArray *dateStrings = @[[[NSDateFormatter RFC3339DateFormatter] dateFromString:@"2015-09-01T12:15:00.000Z"],
-                             [[NSDateFormatter RFC3339DateFormatter] dateFromString:@"2015-08-01T06:15:00.000Z"]];
-	XCTAssertEqualObjects(article.versions, dateStrings, @"Article versions should contain an array of date strings");
+	NSArray *dates = @[[[NSDateFormatter RFC3339DateFormatter] dateFromString:@"2015-09-01T12:15:00.000Z"],
+                       [[NSDateFormatter RFC3339DateFormatter] dateFromString:@"2015-08-01T06:15:00.000Z"]];
+	XCTAssertEqualObjects(article.versions, dates, @"Article versions should contain an array of date objects");
 }
 
 - (void)testIncludedPeopleAndComments {
