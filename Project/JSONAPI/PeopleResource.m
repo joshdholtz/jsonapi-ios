@@ -23,7 +23,7 @@ static JSONAPIResourceDescriptor *__descriptor = nil;
         [__descriptor setIdProperty:@"ID"];
 
         [__descriptor addProperty:@"firstName" withDescription:[[JSONAPIPropertyDescriptor alloc] initWithJsonName:@"first-name"]];
-        [__descriptor addProperty:@"lastName" withDescription:[[JSONAPIPropertyDescriptor alloc] initWithJsonName:@"last-name"]];
+        [__descriptor addProperty:@"lastName" withJsonName:@"last-name"];
         [__descriptor addProperty:@"twitter"];
     });
 
