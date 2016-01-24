@@ -12,6 +12,7 @@
 #import "JSONAPIResourceDescriptor.h"
 #import "JSONAPIErrorResource.h"
 #import "JSONAPIResourceParser.h"
+#import "NSDateFormatter+JSONAPIDateFormatter.h"
 
 #import "CommentResource.h"
 #import "PeopleResource.h"
@@ -68,7 +69,8 @@
     XCTAssertTrue([article.selfLink isEqualToString:@"http://example.com/articles/1"], @"Article selfLink should be 'http://example.com/articles/1'");
     XCTAssertEqualObjects(article.title, @"JSON API paints my bikeshed!", @"Article title should be 'JSON API paints my bikeshed!'");
 	
-	NSArray *dateStrings = @[@"2015-09-01T12:15:00Z",@"2015-08-01T06:15:00Z"];
+	NSArray *dateStrings = @[[[NSDateFormatter RFC3339DateFormatter] dateFromString:@"2015-09-01T12:15:00.000Z"],
+                             [[NSDateFormatter RFC3339DateFormatter] dateFromString:@"2015-08-01T06:15:00.000Z"]];
 	XCTAssertEqualObjects(article.versions, dateStrings, @"Article versions should contain an array of date strings");
 }
 
@@ -184,13 +186,21 @@
 }
 
 - (void)testCreate {
-  PeopleResource *newAuthor = [[PeopleResource alloc] init];
-  
-  newAuthor.firstName = @"Karl";
-  newAuthor.lastName = @"Armstrong";
-  
-  JSONAPI *jsonAPI = [JSONAPI jsonAPIWithResource:newAuthor];
-  XCTAssertEqualObjects([jsonAPI dictionary][@"data"][@"type"], @"people", @"Did not create person!");
+    NSDictionary *json = [self mainExampleJSON];
+    JSONAPI *jsonAPI = [JSONAPI jsonAPIWithDictionary:json];
+    
+    ArticleResource *article = jsonAPI.resource;
+    
+    jsonAPI = [JSONAPI jsonAPIWithResource:article];
+    NSDictionary *dictionary = [jsonAPI dictionary];
+    XCTAssertEqualObjects(dictionary[@"data"][@"type"], @"articles", @"Did not create article!");
+    XCTAssertEqualObjects(dictionary[@"data"][@"attributes"][@"title"], @"JSON API paints my bikeshed!", @"Did not parse title!");
+    XCTAssertEqual([dictionary[@"data"][@"relationships"][@"comments"][@"data"] count], 2, @"Did not parse relationships!");
+    XCTAssertEqual([dictionary[@"included"] count], 3, @"Did not parse included resources!");
+    XCTAssertEqualObjects(dictionary[@"included"][0][@"type"], @"people", @"Did not parse included people object!");
+    XCTAssertEqualObjects(dictionary[@"included"][0][@"id"], @"9", @"Did not parse ID!");
+    XCTAssertEqualObjects(dictionary[@"included"][1][@"type"], @"comments", @"Did not parse included comments object!");
+    XCTAssertEqualObjects(dictionary[@"included"][1][@"relationships"][@"author"][@"data"][@"type"], @"people", @"Did not parse included comments author!");
 }
 
 #pragma mark - Generic relationships tests

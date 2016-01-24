@@ -346,20 +346,15 @@
     NSDictionary *properties = [descriptor properties];
     for (NSString *key in properties) {
         JSONAPIPropertyDescriptor *property = [properties objectForKey:key];
-        
         if (property.resourceType) {
-            id value = [self valueForKey:key];
-            if ([value isKindOfClass:[NSArray class]]) {
-                for (NSObject <JSONAPIResource> *element in value) {
-                    [related addObject:[JSONAPIResourceParser dictionaryFor:element]];
-                }
+            id value = [resource valueForKey:key];
+            if ([value isKindOfClass:[JSONAPIResourceCollection class]]) {
+                [related addObjectsFromArray:value];
             } else {
-                NSObject <JSONAPIResource> *attribute = value;
-                [related addObject:[JSONAPIResourceParser dictionaryFor:attribute]];
+                [related addObject:value];
             }
         }
     }
-    
     return related;
 }
 
