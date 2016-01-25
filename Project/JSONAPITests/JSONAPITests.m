@@ -171,10 +171,16 @@
     newArticle.title = @"Title";
     newArticle.author = newAuthor;
     newArticle.date = [NSDate date];
+    
+    newArticle.selfLink = @"http://example.com/articles/1";
     newArticle.comments = [[JSONAPIResourceCollection alloc] initWithArray:@[firstComment, secondComment]];
+    newArticle.comments.selfLink = @"http://example.com/articles/1/relationships/comments";
+    newArticle.comments.relatedLink = @"http://example.com/articles/1/comments";
     
     NSDictionary *json = [JSONAPIResourceParser dictionaryFor:newArticle];
     XCTAssertEqualObjects(json[@"type"], @"articles", @"Did not create Article!");
+    XCTAssertEqualObjects(json[@"links"][@"self"], @"http://example.com/articles/1", @"Self link should be 'http://example.com/articles/1'!");
+    
     XCTAssertNotNil(json[@"relationships"], @"Did not create links!");
     XCTAssertNotNil(json[@"relationships"][@"author"], @"Did not create links!");
     XCTAssertNotNil(json[@"relationships"][@"author"][@"data"], @"Did not create links!");
@@ -184,6 +190,8 @@
     XCTAssertNotNil(json[@"relationships"][@"comments"], @"Did not create links!");
     XCTAssertTrue([json[@"relationships"][@"comments"][@"data"] isKindOfClass:[NSArray class]], @"Comments data should be array!.");
     XCTAssertEqual([json[@"relationships"][@"comments"][@"data"] count], 2, @"Comments should have 2 elements!.");
+    XCTAssertEqualObjects(json[@"relationships"][@"comments"][@"links"][@"self"], @"http://example.com/articles/1/relationships/comments", @"Self link should be 'http://example.com/articles/1/relationships/comments'!");
+    XCTAssertEqualObjects(json[@"relationships"][@"comments"][@"links"][@"related"], @"http://example.com/articles/1/comments", @"Related link should be 'http://example.com/articles/1/comments'!");
 }
 
 - (void)testCreate {

@@ -109,32 +109,47 @@
         if (value) {
             if ([value isKindOfClass:[JSONAPIResourceCollection class]]) {
                 JSONAPIResourceCollection *collection = (JSONAPIResourceCollection *)value;
+                
+                if (linkage == nil) {
+                    linkage = [[NSMutableDictionary alloc] init];
+                }
+                NSMutableDictionary *collectionDictionary = [[NSMutableDictionary alloc] init];
+                
+                if (collection.selfLink || collection.relatedLink) {
+                    NSMutableDictionary *links = [[NSMutableDictionary alloc] init];
+                    if (collection.selfLink) {
+                        links[@"self"] = collection.selfLink.mutableCopy;
+                    }
+                    if (collection.relatedLink) {
+                        links[@"related"] = collection.relatedLink.mutableCopy;
+                    }
+                    collectionDictionary[@"links"] = links;
+                }
+                
+                [linkage setValue:collectionDictionary forKey:[property jsonName]];
+                
                 if (collection.count > 0) {
-                    NSMutableArray *dictionaryArray = [[NSMutableArray alloc] initWithCapacity:collection.count];
+                    NSMutableArray *dataArray = [[NSMutableArray alloc] initWithCapacity:collection.count];
                     
                     if ([property resourceType] || [collection.firstObject conformsToProtocol:@protocol(JSONAPIResource)]) {
-                        if (linkage == nil) {
-                            linkage = [[NSMutableDictionary alloc] init];
-                        }
-                        
+
                         for (id element in collection) {
-                            [dictionaryArray addObject:[self link:element from:resource withKey:[property jsonName]]];
+                            [dataArray addObject:[self link:element from:resource withKey:[property jsonName]]];
                         }
+                        collectionDictionary[@"data"] = dataArray;
                         
-                        NSDictionary *dataDictionary = @{@"data" : dictionaryArray};
-                        [linkage setValue:dataDictionary forKey:[property jsonName]];
                     } else {
                         NSFormatter *format = [property formatter];
                         
                         for (id element in collection) {
                             if (format) {
-                                [dictionaryArray addObject:[format stringForObjectValue:element]];
+                                [dataArray addObject:[format stringForObjectValue:element]];
                             } else {
-                                [dictionaryArray addObject:element];
+                                [dataArray addObject:element];
                             }
                         }
                         
-                        [attributes setValue:dictionaryArray forKey:[property jsonName]];
+                        [attributes setValue:dataArray forKey:[property jsonName]];
                     }
                 }
             } else {
