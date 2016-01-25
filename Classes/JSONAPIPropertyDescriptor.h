@@ -9,7 +9,8 @@
 
 @class JSONAPIResourceDescriptor;
 
-typedef id (^DescriptorBlock)(id);
+typedef void (^DeserializationBlock)(id resource, id object);
+typedef id (^SerializationBlock)(id resource);
 
 /**
  * JSON API metadata for a <JSONAPIResource> property. This is intended to be used in 
@@ -55,10 +56,10 @@ typedef id (^DescriptorBlock)(id);
 @property (nonatomic) NSFormatter *formatter;
 
 // TODO: Add comment for deserializeDescriptorBlock
-@property (nonatomic, copy) DescriptorBlock deserializeDescriptorBlock;
+@property (nonatomic, copy) DeserializationBlock deserializeDescriptorBlock;
 
 // TODO: Add comment for serializeDescriptorBlock
-@property (nonatomic, copy) DescriptorBlock serializeDescriptorBlock;
+@property (nonatomic, copy) SerializationBlock serializeDescriptorBlock;
 
 /**
  * For a linked <JSONAPIResource> type, this is a reference to the resource class.
@@ -87,7 +88,7 @@ typedef id (^DescriptorBlock)(id);
 - (instancetype)initWithJsonName:(NSString*)name withFormat:(NSFormatter*)fmt;
 
 // TODO: Add comment
-- (instancetype)initWithJsonName:(NSString*)name withDeserializedBlock:(DescriptorBlock)deserializedBlock withSerializedBlock:(DescriptorBlock)serializedBlock;
+- (instancetype)initWithJsonName:(NSString*)name withDeserializedBlock:(DeserializationBlock)deserializedBlock withSerializedBlock:(SerializationBlock)serializedBlock;
 
 /** 
  * Initialize new instance for linked resource property. For related resource properties use this.

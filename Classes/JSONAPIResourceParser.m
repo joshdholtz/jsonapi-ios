@@ -125,13 +125,13 @@
                         [linkage setValue:dataDictionary forKey:[property jsonName]];
                     } else {
                         NSFormatter *format = [property formatter];
-						DescriptorBlock serializeBlock = [property serializeDescriptorBlock];
+						SerializationBlock serializeBlock = [property serializeDescriptorBlock];
                         
                         for (id valueElement in valueArray) {
                             if (format) {
                                 [dictionaryArray addObject:[format stringForObjectValue:valueElement]];
 							} else if (serializeBlock) {
-								id newValue = serializeBlock(valueElement);
+								id newValue = serializeBlock(resource);
 								if (newValue) {
 									[dictionaryArray addObject:newValue];
 								}
@@ -153,12 +153,12 @@
                     [linkage setValue:[self link:attribute from:resource withKey:[property jsonName]] forKey:[property jsonName]];
                 } else {
                     format = [property formatter];
-					DescriptorBlock serializeBlock = [property serializeDescriptorBlock];
+					SerializationBlock serializeBlock = [property serializeDescriptorBlock];
 					
                     if (format) {
                         [attributes setValue:[format stringForObjectValue:value] forKey:[property jsonName]];
 					} else if (serializeBlock) {
-						id newValue = serializeBlock(value);
+						id newValue = serializeBlock(resource);
 						if (newValue) {
 							[attributes setValue:newValue forKey:[property jsonName]];
 						}
@@ -245,7 +245,7 @@
 				
                 // anything else should be a value property
                 format = [property formatter];
-				DescriptorBlock deserializedDescriptorBlock = [property deserializeDescriptorBlock];
+				DeserializationBlock deserializedDescriptorBlock = [property deserializeDescriptorBlock];
                 
                 if ([value isKindOfClass:[NSArray class]]) {
                     if (format) {
@@ -258,10 +258,7 @@
                         }
                         [resource setValue:temp forKey:key];
 					} else if (deserializedDescriptorBlock) {
-						id newValue = deserializedDescriptorBlock(value);
-						if (newValue) {
-							[resource setValue:newValue forKey:key];
-						}
+						deserializedDescriptorBlock(resource, value);
                     } else {
                         [resource setValue:[[NSArray alloc] initWithArray:value] forKey:key];
                     }
@@ -273,10 +270,7 @@
                             [resource setValue:xformed forKey:key];
                         }
 					} else if (deserializedDescriptorBlock) {
-						id newValue = deserializedDescriptorBlock(value);
-						if (newValue) {
-							[resource setValue:newValue forKey:key];
-						}
+						deserializedDescriptorBlock(resource, value);
                     } else {
                         [resource setValue:value forKey:key];
                     }

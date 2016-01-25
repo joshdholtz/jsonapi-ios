@@ -19,6 +19,7 @@
 
 @property (nonatomic, strong) NSArray *versions;
 
+@property (nonatomic, strong) NSDictionary *meta;
 @property (nonatomic, strong) NSNumber *hasCatPictures;
 @property (nonatomic, strong) NSString *onlineURL;
 

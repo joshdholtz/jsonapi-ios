@@ -25,13 +25,14 @@
 	return self;
 }
 
-- (instancetype)initWithJsonName:(NSString *)name withDeserializedBlock:(DescriptorBlock)deserializedBlock withSerializedBlock:(DescriptorBlock)serializedBlock {
+
+- (instancetype)initWithJsonName:(NSString *)name withDeserializedBlock:(DeserializationBlock)deserializedBlock withSerializedBlock:(SerializationBlock)serializedBlock {
 	self = [self init];
 
 	if (self) {
 		_jsonName = name;
-		_deserializeDescriptorBlock = deserializedBlock;
-		_serializeDescriptorBlock = serializedBlock;
+//		_deserializeDescriptorBlock = deserializedBlock;
+//		_serializeDescriptorBlock = serializedBlock;
 		_resourceType = nil;
 	}
 

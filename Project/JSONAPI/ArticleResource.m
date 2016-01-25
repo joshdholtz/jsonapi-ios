@@ -37,18 +37,23 @@ static JSONAPIResourceDescriptor *__descriptor = nil;
 
         [__descriptor addProperty:@"versions"
                   withDescription:[[JSONAPIPropertyDescriptor alloc] initWithJsonName:@"versions" withFormat:[NSDateFormatter RFC3339DateFormatter]]];
-	
-		[__descriptor addProperty:@"hasCatPictures" withDescription:[[JSONAPIPropertyDescriptor alloc] initWithJsonName:@"meta" withDeserializedBlock:^id(id metaDictionary) {
-			return metaDictionary[@"has-cat-pictures"] ?: @FALSE;
-		} withSerializedBlock:^id(id object) {
+
+//		JSONAPIPropertyDescriptor *descriptor = [[JSONAPIPropertyDescriptor alloc] initWithJsonName:@"meta"];
+//		descriptor.deserializeDescriptorBlock = ^(id resource, id object) {
+//			ArticleResource *this = (ArticleResource*)resource;
+//			this.hasCatPictures = object[@"has-cat-pictures"];
+//			this.onlineURL = object[@"online-url"];
+//		};
+		
+		[__descriptor addProperty:@"meta" withDescription:[[JSONAPIPropertyDescriptor alloc] initWithJsonName:@"meta" withDeserializedBlock:^(id resource, id object) {
+			ArticleResource *this = (ArticleResource*)resource;
+			this.hasCatPictures = object[@"has-cat-pictures"];
+			this.onlineURL = object[@"online-url"];
+		} withSerializedBlock:^id(id resource) {
 			return nil;
 		}]];
 		
-		[__descriptor addProperty:@"onlineURL" withDescription:[[JSONAPIPropertyDescriptor alloc] initWithJsonName:@"meta" withDeserializedBlock:^id(id metaDictionary) {
-			return metaDictionary[@"online-url"];
-		} withSerializedBlock:^id(id object) {
-			return nil;
-		}]];
+//		[__descriptor addProperty:nil withDescription:[[JSONAPIPropertyDescriptor alloc] initWithJsonName:@"meta" withDeserializedBlock:nil withSerializedBlock:nil]];
 		
     });
     
