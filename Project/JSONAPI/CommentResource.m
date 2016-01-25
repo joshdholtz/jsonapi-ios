@@ -25,7 +25,7 @@ static JSONAPIResourceDescriptor *__descriptor = nil;
         
         [__descriptor setIdProperty:@"ID"];
 
-        [__descriptor addProperty:@"text" withDescription:[[JSONAPIPropertyDescriptor alloc] initWithJsonName:@"body"]];
+        [__descriptor addProperty:@"text" withJsonName:@"body"];
         
         [__descriptor hasOne:[PeopleResource class] withName:@"author"];
     });

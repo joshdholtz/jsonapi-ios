@@ -26,6 +26,7 @@ static JSONAPIResourceDescriptor *__descriptor = nil;
         __descriptor = [[JSONAPIResourceDescriptor alloc] initWithClass:[self class] forLinkedType:@"articles"];
         
         [__descriptor setIdProperty:@"ID"];
+        [__descriptor setSelfLinkProperty:@"selfLink"];
 
         [__descriptor addProperty:@"title"];
         [__descriptor addProperty:@"date"

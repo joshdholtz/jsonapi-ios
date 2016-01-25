@@ -53,6 +53,11 @@ static NSMutableDictionary *linkedTypeToResource = nil;
     [self addProperty:name withDescription:[[JSONAPIPropertyDescriptor alloc] initWithJsonName:name]];
 }
 
+- (void)addProperty:(NSString*)name withJsonName:(NSString *)json
+{
+    [self addProperty:name withDescription:[[JSONAPIPropertyDescriptor alloc] initWithJsonName:json]];
+}
+
 - (void)addProperty:(NSString*)name withDescription:(JSONAPIPropertyDescriptor*)description {
     [[self properties] setValue:description forKey:name];
 }

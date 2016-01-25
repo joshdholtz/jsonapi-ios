@@ -180,6 +180,7 @@
     
     NSDictionary *relationships = [dictionary objectForKey:@"relationships"];
     NSDictionary *attributes = [dictionary objectForKey:@"attributes"];
+    NSDictionary *links = [dictionary objectForKey:@"links"];
 	
     id ID = [dictionary objectForKey:@"id"];
     NSFormatter *format = [descriptor idFormatter];
@@ -190,6 +191,11 @@
         }
     } else {
         [resource setValue:ID forKey:[descriptor idProperty]];
+    }
+    
+    if (descriptor.selfLinkProperty) {
+        NSString *selfLink = links[@"self"];
+        [resource setValue:selfLink forKey:descriptor.selfLinkProperty];
     }
 
     // Loops through all keys to map to properties
@@ -332,20 +338,15 @@
     NSDictionary *properties = [descriptor properties];
     for (NSString *key in properties) {
         JSONAPIPropertyDescriptor *property = [properties objectForKey:key];
-        
         if (property.resourceType) {
-            id value = [self valueForKey:key];
+            id value = [resource valueForKey:key];
             if ([value isKindOfClass:[NSArray class]]) {
-                for (NSObject <JSONAPIResource> *element in value) {
-                    [related addObject:[JSONAPIResourceParser dictionaryFor:element]];
-                }
+                [related addObjectsFromArray:value];
             } else {
-                NSObject <JSONAPIResource> *attribute = value;
-                [related addObject:[JSONAPIResourceParser dictionaryFor:attribute]];
+                [related addObject:value];
             }
         }
     }
-    
     return related;
 }
 
