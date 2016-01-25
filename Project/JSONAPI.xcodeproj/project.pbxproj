@@ -46,6 +46,7 @@
 		03FBD8DF1AB8DF8E00789DF3 /* JSONAPIErrorResource.m in Sources */ = {isa = PBXBuildFile; fileRef = 03FBD8DE1AB8DF8E00789DF3 /* JSONAPIErrorResource.m */; };
 		03FBD8E21AB8E46E00789DF3 /* error_example.json in Resources */ = {isa = PBXBuildFile; fileRef = 03FBD8E11AB8E46E00789DF3 /* error_example.json */; };
 		03FBD8E31AB8E46E00789DF3 /* error_example.json in Resources */ = {isa = PBXBuildFile; fileRef = 03FBD8E11AB8E46E00789DF3 /* error_example.json */; };
+		3BFB45201C467967008F71D3 /* JSONAPIResourceCollection.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BFB451F1C467967008F71D3 /* JSONAPIResourceCollection.m */; };
 		680E14F51B08146E004FF8CD /* JSONAPIResourceParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 680E14F41B08146E004FF8CD /* JSONAPIResourceParser.m */; };
 		681B47761B08EA9800A99D76 /* JSONAPIResourceBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 681B47751B08EA9800A99D76 /* JSONAPIResourceBase.m */; };
 		685481EB1AE4161900D3A633 /* JSONAPIPropertyDescriptor.m in Sources */ = {isa = PBXBuildFile; fileRef = 685481EA1AE4161900D3A633 /* JSONAPIPropertyDescriptor.m */; };
@@ -107,6 +108,8 @@
 		03FBD8DD1AB8DF8E00789DF3 /* JSONAPIErrorResource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONAPIErrorResource.h; sourceTree = "<group>"; };
 		03FBD8DE1AB8DF8E00789DF3 /* JSONAPIErrorResource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSONAPIErrorResource.m; sourceTree = "<group>"; };
 		03FBD8E11AB8E46E00789DF3 /* error_example.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = error_example.json; sourceTree = "<group>"; };
+		3BFB451E1C467967008F71D3 /* JSONAPIResourceCollection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONAPIResourceCollection.h; sourceTree = "<group>"; };
+		3BFB451F1C467967008F71D3 /* JSONAPIResourceCollection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSONAPIResourceCollection.m; sourceTree = "<group>"; };
 		680E14F31B08146E004FF8CD /* JSONAPIResourceParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONAPIResourceParser.h; sourceTree = "<group>"; };
 		680E14F41B08146E004FF8CD /* JSONAPIResourceParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSONAPIResourceParser.m; sourceTree = "<group>"; };
 		681B47741B08EA9800A99D76 /* JSONAPIResourceBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONAPIResourceBase.h; sourceTree = "<group>"; };
@@ -276,6 +279,8 @@
 				680E14F41B08146E004FF8CD /* JSONAPIResourceParser.m */,
 				681B47741B08EA9800A99D76 /* JSONAPIResourceBase.h */,
 				681B47751B08EA9800A99D76 /* JSONAPIResourceBase.m */,
+				3BFB451E1C467967008F71D3 /* JSONAPIResourceCollection.h */,
+				3BFB451F1C467967008F71D3 /* JSONAPIResourceCollection.m */,
 			);
 			name = Classes;
 			path = ../Classes;
@@ -428,6 +433,7 @@
 				03866457186A94C200985CEC /* ArticleResource.m in Sources */,
 				03A055D11868E038004807F0 /* ViewController.m in Sources */,
 				03A055F71868E08A004807F0 /* JSONAPI.m in Sources */,
+				3BFB45201C467967008F71D3 /* JSONAPIResourceCollection.m in Sources */,
 				78A5C1D31C1E14D6008C8632 /* MediaResource.m in Sources */,
 				68A469941AE47E0000E7BBC8 /* NSDateFormatter+JSONAPIDateFormatter.m in Sources */,
 				685481EB1AE4161900D3A633 /* JSONAPIPropertyDescriptor.m in Sources */,

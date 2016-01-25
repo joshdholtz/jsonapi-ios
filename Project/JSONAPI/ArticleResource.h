@@ -7,6 +7,7 @@
 //
 
 #import "JSONAPIResourceBase.h"
+#import "JSONAPIResourceCollection.h"
 
 @class PeopleResource;
 
@@ -15,7 +16,7 @@
 @property (nonatomic, strong) NSString *title;
 @property (nonatomic, strong) PeopleResource *author;
 @property (nonatomic, strong) NSDate *date;
-@property (nonatomic, strong) NSArray *comments;
+@property (nonatomic, strong) JSONAPIResourceCollection *comments;
 
 @property (nonatomic, strong) NSArray *versions;
 

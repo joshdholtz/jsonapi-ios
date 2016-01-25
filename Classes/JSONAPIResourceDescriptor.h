@@ -29,7 +29,6 @@
  * This is required for any model resource.
  */
 @property (strong) NSString *idProperty;
-
 @property (strong) NSString *selfLinkProperty;
 
 /** 

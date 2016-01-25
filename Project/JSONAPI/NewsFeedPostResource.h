@@ -7,6 +7,7 @@
 //
 
 #import "JSONAPIResourceBase.h"
+#import "JSONAPIResourceCollection.h"
 #import "UserResource.h"
 #import "SocialCommunityResource.h"
 #import "MediaResource.h"
@@ -19,6 +20,6 @@
 @property (nonatomic, strong) NSString *text;
 
 @property (nonatomic, strong) id<JSONAPIResource> publisher;
-@property (nonatomic, strong) NSArray *attachments;
+@property (nonatomic, strong) JSONAPIResourceCollection *attachments;
 
 @end

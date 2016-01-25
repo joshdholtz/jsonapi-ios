@@ -21,7 +21,7 @@ For some full examples on how to use everything, please see the tests - https://
 
 Version | Changes
 --- | ---
-**1.0.6** | Improved resource parsing and added parsing of `selfLinks` (https://github.com/joshdholtz/jsonapi-ios/pull/35). Thanks to [ artcom](https://github.com/ artcom) for helping! Also removed the need to define `setIdProperty` and `setSelfLinkProperty` in every resource (automatically mapped in the init of `JSONAPIResourceDescriptor`)
+**1.0.6** | Improved resource parsing and added parsing of `selfLinks` (https://github.com/joshdholtz/jsonapi-ios/pull/35). Thanks to [artcom](https://github.com/artcom) for helping! Also removed the need to define `setIdProperty` and `setSelfLinkProperty` in every resource (automatically mapped in the init of `JSONAPIResourceDescriptor`)
 **1.0.5** | Fix 1-to-many relationships serialization according to JSON API v1.0 (https://github.com/joshdholtz/jsonapi-ios/pull/34). Thanks to [RafaelKayumov](https://github.com/RafaelKayumov) for helping!
 **1.0.4** | Add support for empty to-one relationship according to JSON API v1.0 (https://github.com/joshdholtz/jsonapi-ios/pull/33). Thanks to [RafaelKayumov](https://github.com/RafaelKayumov) for helping!
 **1.0.3** | Add ability to map different types of objects (https://github.com/joshdholtz/jsonapi-ios/pull/32). Thanks to [ealeksandrov](https://github.com/ealeksandrov) for helping!

@@ -8,6 +8,7 @@
 #import <Foundation/Foundation.h>
 
 #import "JSONAPIResource.h"
+#import "JSONAPIResourceCollection.h"
 
 @class JSONAPI;
 
