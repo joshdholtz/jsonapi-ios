@@ -19,9 +19,7 @@ static JSONAPIResourceDescriptor *__descriptor = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         __descriptor = [[JSONAPIResourceDescriptor alloc] initWithClass:[self class] forLinkedType:@"people"];
-        
-        [__descriptor setIdProperty:@"ID"];
-
+		
         [__descriptor addProperty:@"firstName" withDescription:[[JSONAPIPropertyDescriptor alloc] initWithJsonName:@"first-name"]];
         [__descriptor addProperty:@"lastName" withJsonName:@"last-name"];
         [__descriptor addProperty:@"twitter"];
