@@ -94,7 +94,8 @@
     XCTAssertNotNil(article.comments, @"Article's comments should not be nil");
     XCTAssertEqual(article.comments.count, 2, @"Article should contain 2 comments");
     XCTAssertTrue([article.comments.selfLink isEqualToString:@"http://example.com/articles/1/relationships/comments"], @"Comments selfLink should be 'http://example.com/articles/1/relationships/comments'");
-    XCTAssertTrue([article.comments.related isEqualToString:@"http://example.com/articles/1/comments"], @"Comments related should be 'http://example.com/articles/1/comments'");
+    XCTAssertTrue([article.comments.relatedLink isEqualToString:@"http://example.com/articles/1/comments"], @"Comments related should be 'http://example.com/articles/1/comments'");
+    
     XCTAssertEqualObjects(article.author.firstName, @"Dan", @"Article's author firstname should be 'Dan'");
     XCTAssertEqualObjects(firstComment.text, @"First!", @"Article's first comment should be 'First!'");
     XCTAssertEqualObjects(firstComment.author.firstName, @"Dan", @"Article's first comment author should be 'Dan'");

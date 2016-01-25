@@ -36,7 +36,7 @@
 {
     JSONAPIResourceCollection *copy = [JSONAPIResourceCollection new];
     copy.selfLink = self.selfLink.copy;
-    copy.related = self.related.copy;
+    copy.relatedLink = self.relatedLink.copy;
     copy.resources = self.resources.mutableCopy;
     return copy;
 }

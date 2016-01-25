@@ -12,7 +12,7 @@
 
 @property (nonatomic) NSMutableArray *resources;
 @property (nonatomic) NSString *selfLink;
-@property (nonatomic) NSString *related;
+@property (nonatomic) NSString *relatedLink;
 
 - (instancetype)initWithArray:(NSArray *)array;
 
