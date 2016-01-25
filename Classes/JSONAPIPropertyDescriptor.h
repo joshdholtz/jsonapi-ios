@@ -9,6 +9,8 @@
 
 @class JSONAPIResourceDescriptor;
 
+typedef id (^DescriptorBlock)(id);
+
 /**
  * JSON API metadata for a <JSONAPIResource> property. This is intended to be used in 
  * dictionary contained in <JSONAPIResourceDescriptor>. The dictionary key is the model 
@@ -52,6 +54,12 @@
  */
 @property (nonatomic) NSFormatter *formatter;
 
+// TODO: Add comment for deserializeDescriptorBlock
+@property (nonatomic, copy) DescriptorBlock deserializeDescriptorBlock;
+
+// TODO: Add comment for serializeDescriptorBlock
+@property (nonatomic, copy) DescriptorBlock serializeDescriptorBlock;
+
 /**
  * For a linked <JSONAPIResource> type, this is a reference to the resource class.
  *
@@ -77,6 +85,9 @@
  * @param fmt an NSFormatter that converts to/fram JSON string
  */
 - (instancetype)initWithJsonName:(NSString*)name withFormat:(NSFormatter*)fmt;
+
+// TODO: Add comment
+- (instancetype)initWithJsonName:(NSString*)name withDeserializedBlock:(DescriptorBlock)deserializedBlock withSerializedBlock:(DescriptorBlock)serializedBlock;
 
 /** 
  * Initialize new instance for linked resource property. For related resource properties use this.

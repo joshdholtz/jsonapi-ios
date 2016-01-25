@@ -10,31 +10,44 @@
 @implementation JSONAPIPropertyDescriptor
 
 - (instancetype)initWithJsonName:(NSString*)name {
-  return [self initWithJsonName:name withFormat:nil];
+	return [self initWithJsonName:name withFormat:nil];
 }
 
 - (instancetype)initWithJsonName:(NSString*)name withFormat:(NSFormatter*)fmt {
-  self = [self init];
-  
-  if (self) {
-    _jsonName = name;
-    _formatter = fmt;
-    _resourceType = nil;
-  }
-  
-  return self;
+	self = [self init];
+
+	if (self) {
+		_jsonName = name;
+		_formatter = fmt;
+		_resourceType = nil;
+	}
+
+	return self;
+}
+
+- (instancetype)initWithJsonName:(NSString *)name withDeserializedBlock:(DescriptorBlock)deserializedBlock withSerializedBlock:(DescriptorBlock)serializedBlock {
+	self = [self init];
+
+	if (self) {
+		_jsonName = name;
+		_deserializeDescriptorBlock = deserializedBlock;
+		_serializeDescriptorBlock = serializedBlock;
+		_resourceType = nil;
+	}
+
+	return self;
 }
 
 - (instancetype)initWithJsonName:(NSString*)name withResource:(Class)resource {
-  self = [self init];
-  
-  if (self) {
-    _jsonName = name;
-    _formatter = nil;
-    _resourceType = resource;
-  }
-  
-  return self;
+	self = [self init];
+
+	if (self) {
+		_jsonName = name;
+		_formatter = nil;
+		_resourceType = resource;
+	}
+
+	return self;
 }
 
 @end

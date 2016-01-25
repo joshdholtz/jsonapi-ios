@@ -15,7 +15,11 @@
              "versions": [
                 "2015-09-01T12:15:00.000Z",
                 "2015-08-01T06:15:00.000Z"
-             ]
+             ],
+			 "meta": {
+				"has-cat-pictures": true,
+				"online-url": "http://joshholtz.com"
+			 }
     },
     "relationships": {
 			 "author": {

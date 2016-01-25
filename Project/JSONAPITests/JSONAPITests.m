@@ -68,10 +68,15 @@
     XCTAssertEqualObjects(article.ID, @"1", @"Article id should be 1");
     XCTAssertTrue([article.selfLink isEqualToString:@"http://example.com/articles/1"], @"Article selfLink should be 'http://example.com/articles/1'");
     XCTAssertEqualObjects(article.title, @"JSON API paints my bikeshed!", @"Article title should be 'JSON API paints my bikeshed!'");
-	
+
+	// Testing data mapped using NSFormatter
 	NSArray *dates = @[[[NSDateFormatter RFC3339DateFormatter] dateFromString:@"2015-09-01T12:15:00.000Z"],
                        [[NSDateFormatter RFC3339DateFormatter] dateFromString:@"2015-08-01T06:15:00.000Z"]];
 	XCTAssertEqualObjects(article.versions, dates, @"Article versions should contain an array of date objects");
+	
+	// Testing data mapped with custom block
+	XCTAssertEqualObjects(article.hasCatPictures, @YES, @"Article hasCatPictures should be true");
+	XCTAssertEqualObjects(article.onlineURL, @"http://joshholtz.com", @"Article onlineURL should be http://joshholtz.com");
 }
 
 - (void)testIncludedPeopleAndComments {

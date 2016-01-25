@@ -37,6 +37,19 @@ static JSONAPIResourceDescriptor *__descriptor = nil;
 
         [__descriptor addProperty:@"versions"
                   withDescription:[[JSONAPIPropertyDescriptor alloc] initWithJsonName:@"versions" withFormat:[NSDateFormatter RFC3339DateFormatter]]];
+	
+		[__descriptor addProperty:@"hasCatPictures" withDescription:[[JSONAPIPropertyDescriptor alloc] initWithJsonName:@"meta" withDeserializedBlock:^id(id metaDictionary) {
+			return metaDictionary[@"has-cat-pictures"] ?: @FALSE;
+		} withSerializedBlock:^id(id object) {
+			return nil;
+		}]];
+		
+		[__descriptor addProperty:@"onlineURL" withDescription:[[JSONAPIPropertyDescriptor alloc] initWithJsonName:@"meta" withDeserializedBlock:^id(id metaDictionary) {
+			return metaDictionary[@"online-url"];
+		} withSerializedBlock:^id(id object) {
+			return nil;
+		}]];
+		
     });
     
     return __descriptor;
