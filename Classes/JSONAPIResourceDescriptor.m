@@ -44,6 +44,9 @@ static NSMutableDictionary *linkedTypeToResource = nil;
         _type = linkedType;
         _resourceClass = resource;
         _properties = [[NSMutableDictionary alloc] init];
+		
+        [self setIdProperty:@"ID"];
+        [self setSelfLinkProperty:@"selfLink"];
     }
     
     return self;
