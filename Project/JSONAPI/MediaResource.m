@@ -22,8 +22,8 @@ static JSONAPIResourceDescriptor *__descriptor = nil;
         
         [__descriptor setIdProperty:@"ID"];
         
-        [__descriptor addProperty:@"mimeType"];
-        [__descriptor addProperty:@"fileUrl"];
+        [__descriptor addProperty:@"mimeType" withJsonName:@"mime-type"];
+        [__descriptor addProperty:@"fileUrl" withJsonName:@"file-url"];
     });
     
     return __descriptor;

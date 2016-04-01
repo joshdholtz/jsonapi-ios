@@ -2,7 +2,7 @@
     "data" : [
               {
                   "attributes" : {
-                    "createdAt" : "2015-10-28T19:35:28.194Z",
+                    "created-at" : "2015-10-28T19:35:28.194Z",
                     "title" : "Test Post",
                     "text" : "Long text of post example"
                   },
@@ -31,7 +31,7 @@
               },
               {
                   "attributes" : {
-                    "createdAt" : "2015-11-28T19:35:26.194Z",
+                    "created-at" : "2015-11-28T19:35:26.194Z",
                     "title" : "Second Test Post",
                     "text" : "Long text of second post example"
                   },
@@ -63,7 +63,7 @@
                   {
                     "attributes" : {
                         "title" : "Testing Social Community",
-                        "homePage" : "http://testCommunity.com"
+                        "home-page" : "http://testCommunity.com"
                     },
                     "id" : 23,
                     "type" : "SocialCommunity",
@@ -71,8 +71,8 @@
                   },
                   {
                     "attributes" : {
-                        "mimeType" : "image/jpg",
-                        "fileUrl" : "http://testingservice.com/media/15.jpg"
+                        "mime-type" : "image/jpg",
+                        "file-url" : "http://testingservice.com/media/15.jpg"
                     },
                     "id" : 15,
                     "type" : "Media",
@@ -80,7 +80,7 @@
                   },
                   {
                     "attributes" : {
-                        "pageUrl" : "http://testingservice.com/content/testPage.html"
+                        "page-url" : "http://testingservice.com/content/testPage.html"
                     },
                     "id" : 10,
                     "type" : "WebPage",

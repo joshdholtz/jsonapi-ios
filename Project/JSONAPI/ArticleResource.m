@@ -34,7 +34,7 @@ static JSONAPIResourceDescriptor *__descriptor = nil;
                  withDescription:[[JSONAPIPropertyDescriptor alloc] initWithJsonName:@"date" withFormat:[NSDateFormatter RFC3339DateFormatter]]];
         
         [__descriptor hasOne:[PeopleResource class] withName:@"author"];
-        [__descriptor hasMany:[CommentResource class] withName:@"comments"];
+        [__descriptor hasMany:[CommentResource class] withName:@"articleComments" withJsonName:@"comments"];
 
         [__descriptor addProperty:@"versions"
                   withDescription:[[JSONAPIPropertyDescriptor alloc] initWithJsonName:@"versions" withFormat:[NSDateFormatter RFC3339DateFormatter]]];

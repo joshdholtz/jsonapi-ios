@@ -24,7 +24,7 @@ static JSONAPIResourceDescriptor *__descriptor = nil;
         [__descriptor setIdProperty:@"ID"];
         
         [__descriptor addProperty:@"createdAt"
-                  withDescription:[[JSONAPIPropertyDescriptor alloc] initWithJsonName:@"createdAt" withFormat:[NSDateFormatter RFC3339DateFormatter]]];
+                  withDescription:[[JSONAPIPropertyDescriptor alloc] initWithJsonName:@"created-at" withFormat:[NSDateFormatter RFC3339DateFormatter]]];
         [__descriptor addProperty:@"title"];
         [__descriptor addProperty:@"text"];
         

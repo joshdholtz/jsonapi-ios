@@ -22,7 +22,7 @@ static JSONAPIResourceDescriptor *__descriptor = nil;
         
         [__descriptor setIdProperty:@"ID"];
         
-        [__descriptor addProperty:@"pageUrl"];
+        [__descriptor addProperty:@"pageUrl" withJsonName:@"page-url"];
     });
     
     return __descriptor;

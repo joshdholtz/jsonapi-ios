@@ -15,7 +15,7 @@
 @property (nonatomic, strong) NSString *title;
 @property (nonatomic, strong) PeopleResource *author;
 @property (nonatomic, strong) NSDate *date;
-@property (nonatomic, strong) NSArray *comments;
+@property (nonatomic, strong) NSArray *articleComments;
 
 @property (nonatomic, strong) NSArray *versions;
 

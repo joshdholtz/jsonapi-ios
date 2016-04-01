@@ -88,11 +88,11 @@
     JSONAPI *jsonAPI = [JSONAPI jsonAPIWithDictionary:json];
 	
     ArticleResource *article = jsonAPI.resource;
-    CommentResource *firstComment = article.comments.firstObject;
+    CommentResource *firstComment = article.articleComments.firstObject;
     
     XCTAssertNotNil(article.author, @"Article's author should not be nil");
-    XCTAssertNotNil(article.comments, @"Article's comments should not be nil");
-    XCTAssertEqual(article.comments.count, 2, @"Article should contain 2 comments");
+    XCTAssertNotNil(article.articleComments, @"Article's comments should not be nil");
+    XCTAssertEqual(article.articleComments.count, 2, @"Article should contain 2 comments");
     XCTAssertEqualObjects(article.author.firstName, @"Dan", @"Article's author firstname should be 'Dan'");
     XCTAssertEqualObjects(firstComment.text, @"First!", @"Article's first comment should be 'First!'");
     XCTAssertEqualObjects(firstComment.author.firstName, @"Dan", @"Article's first comment author should be 'Dan'");
@@ -168,7 +168,7 @@
     newArticle.title = @"Title";
     newArticle.author = newAuthor;
     newArticle.date = [NSDate date];
-    newArticle.comments = [[NSArray alloc] initWithObjects:firstComment, secondComment, nil];
+    newArticle.articleComments = [[NSArray alloc] initWithObjects:firstComment, secondComment, nil];
     
     NSDictionary *json = [JSONAPIResourceParser dictionaryFor:newArticle];
     XCTAssertEqualObjects(json[@"type"], @"articles", @"Did not create Article!");
@@ -195,8 +195,8 @@
     XCTAssertEqualObjects(dictionary[@"data"][@"attributes"][@"title"], @"JSON API paints my bikeshed!", @"Did not parse title!");
     XCTAssertEqual([dictionary[@"data"][@"relationships"][@"comments"][@"data"] count], 2, @"Did not parse relationships!");
     XCTAssertEqual([dictionary[@"included"] count], 3, @"Did not parse included resources!");
-    XCTAssertEqualObjects(dictionary[@"included"][0][@"type"], @"people", @"Did not parse included people object!");
-    XCTAssertEqualObjects(dictionary[@"included"][0][@"id"], @"9", @"Did not parse ID!");
+    XCTAssertEqualObjects(dictionary[@"included"][2][@"type"], @"people", @"Did not parse included people object!");
+    XCTAssertEqualObjects(dictionary[@"included"][2][@"id"], @"9", @"Did not parse ID!");
     XCTAssertEqualObjects(dictionary[@"included"][1][@"type"], @"comments", @"Did not parse included comments object!");
     XCTAssertEqualObjects(dictionary[@"included"][1][@"relationships"][@"author"][@"data"][@"type"], @"people", @"Did not parse included comments author!");
 }
@@ -241,6 +241,10 @@
     
     NSDictionary *serializedFirstPost = [JSONAPIResourceParser dictionaryFor:posts.firstObject];
     NSDictionary *serializedSecondPost = [JSONAPIResourceParser dictionaryFor:posts.lastObject];
+
+	XCTAssertEqualObjects(serializedFirstPost[@"attributes"][@"created-at"], @"2015-10-28T19:35:28.194Z", @"created-at should be '2015-10-28T19:35:28.194Z'");
+	XCTAssertEqualObjects(serializedFirstPost[@"attributes"][@"text"], @"Long text of post example", @"Text should be 'Long text of post example'");
+	XCTAssertEqualObjects(serializedFirstPost[@"attributes"][@"title"], @"Test Post", @"Title should be 'Test Post'");
     
     XCTAssertNotNil(serializedFirstPost[@"relationships"][@"attachments"][@"data"][0], @"Media attachment should not be nil");
     XCTAssertNotNil(serializedFirstPost[@"relationships"][@"attachments"][@"data"][1], @"Web page url attachment should not be nil");

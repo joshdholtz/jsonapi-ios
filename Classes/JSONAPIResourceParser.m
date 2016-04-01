@@ -118,9 +118,9 @@
                         }
                         
                         for (id valueElement in valueArray) {
-                            [dictionaryArray addObject:[self link:valueElement from:resource withKey:[property jsonName]]];
+                            [dictionaryArray addObject:[self link:valueElement from:resource withKey:key]];
                         }
-                        
+						
                         NSDictionary *dataDictionary = @{@"data" : dictionaryArray};
                         [linkage setValue:dataDictionary forKey:[property jsonName]];
                     } else {
@@ -144,7 +144,7 @@
                     }
                     
                     NSObject <JSONAPIResource> *attribute = value;
-                    [linkage setValue:[self link:attribute from:resource withKey:[property jsonName]] forKey:[property jsonName]];
+                    [linkage setValue:[self link:attribute from:resource withKey:[property jsonName]] forKey:key];
                 } else {
                     format = [property formatter];
                     if (format) {
