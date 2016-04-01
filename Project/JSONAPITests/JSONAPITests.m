@@ -195,10 +195,17 @@
     XCTAssertEqualObjects(dictionary[@"data"][@"attributes"][@"title"], @"JSON API paints my bikeshed!", @"Did not parse title!");
     XCTAssertEqual([dictionary[@"data"][@"relationships"][@"comments"][@"data"] count], 2, @"Did not parse relationships!");
     XCTAssertEqual([dictionary[@"included"] count], 3, @"Did not parse included resources!");
-    XCTAssertEqualObjects(dictionary[@"included"][2][@"type"], @"people", @"Did not parse included people object!");
-    XCTAssertEqualObjects(dictionary[@"included"][2][@"id"], @"9", @"Did not parse ID!");
-    XCTAssertEqualObjects(dictionary[@"included"][1][@"type"], @"comments", @"Did not parse included comments object!");
-    XCTAssertEqualObjects(dictionary[@"included"][1][@"relationships"][@"author"][@"data"][@"type"], @"people", @"Did not parse included comments author!");
+	
+	NSPredicate *peoplePredicate = [NSPredicate predicateWithFormat:@"(type == %@) AND (id == %@)", @"people", @"9"];
+	NSPredicate *commentsPredicate = [NSPredicate predicateWithFormat:@"type == %@", @"comments"];
+	
+	NSArray *people = [dictionary[@"included"] filteredArrayUsingPredicate:peoplePredicate];
+	XCTAssertEqualObjects(people.firstObject[@"type"], @"people", @"Did not parse included people object!");
+    XCTAssertEqualObjects(people.firstObject[@"id"], @"9", @"Did not parse ID!");
+	
+	NSArray *comments = [dictionary[@"included"] filteredArrayUsingPredicate:commentsPredicate];
+    XCTAssertEqualObjects(comments.firstObject[@"type"], @"comments", @"Did not parse included comments object!");
+    XCTAssertEqualObjects(comments.firstObject[@"relationships"][@"author"][@"data"][@"type"], @"people", @"Did not parse included comments author!");
 }
 
 #pragma mark - Generic relationships tests
