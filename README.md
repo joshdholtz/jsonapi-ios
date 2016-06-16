@@ -21,6 +21,7 @@ For some full examples on how to use everything, please see the tests - https://
 
 Version | Changes
 --- | ---
+**1.0.7** | Added `meta` and `setMeta` to `JSONAPIResource` and `JSONAPIResourceBase` (https://github.com/joshdholtz/jsonapi-ios/pull/43).
 **1.0.6** | Improved resource parsing and added parsing of `selfLinks` (https://github.com/joshdholtz/jsonapi-ios/pull/35). Thanks to [ artcom](https://github.com/ artcom) for helping! Also removed the need to define `setIdProperty` and `setSelfLinkProperty` in every resource (automatically mapped in the init of `JSONAPIResourceDescriptor`)
 **1.0.5** | Fix 1-to-many relationships serialization according to JSON API v1.0 (https://github.com/joshdholtz/jsonapi-ios/pull/34). Thanks to [RafaelKayumov](https://github.com/RafaelKayumov) for helping!
 **1.0.4** | Add support for empty to-one relationship according to JSON API v1.0 (https://github.com/joshdholtz/jsonapi-ios/pull/33). Thanks to [RafaelKayumov](https://github.com/RafaelKayumov) for helping!
@@ -48,7 +49,7 @@ Clone the repository and drop in the .h and .m files from the "Classes" director
 JSONAPI is available through [CocoaPods](http://cocoapods.org), to install
 it simply add the following line to your Podfile:
 
-    pod 'JSONAPI', '~> 1.0.6'
+    pod 'JSONAPI', '~> 1.0.7'
 
 ## Classes/protocols
 For some full examples on how to use everything, please see the tests - https://github.com/joshdholtz/jsonapi-ios/blob/master/Project/JSONAPITests/JSONAPITests.m
