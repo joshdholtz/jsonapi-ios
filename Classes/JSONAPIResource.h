@@ -135,5 +135,30 @@
  */
 - (void)setID:(id)identifier;
 
+/**
+ * Get the meta for a resource instance. Optional for resources that come
+ * from persistance storage (i.e. the server).
+ *
+ * In general, this should be implemented by a @property ID in the realized class. The
+ * @property declaration will automatically synthesize the get/set members declared in this
+ * protocol. The property storage is an implementation detail, which is why the protocol does
+ * not use a @property declaration.
+ *
+ * @return The meta for a resource instance.
+ */
+- (NSDictionary*)meta;
+
+/**
+ * Set the meta for a resource instance. Optional for resources that come
+ * from persistance storage (i.e. the server).
+ *
+ * In general, this should be implemented by a @property ID in the realized class. The
+ * @property declaration will automatically synthesize the get/set members declared in this
+ * protocol. The property storage is an implementation detail, which is why the protocol does
+ * not use a @property declaration.
+ *
+ * @param meta The meta for a resource instance.
+ */
+- (void)setMeta:(NSDictionary*)meta;
 
 @end

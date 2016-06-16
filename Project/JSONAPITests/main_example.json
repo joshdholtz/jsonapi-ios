@@ -10,6 +10,9 @@
 	"data": [{
     "type": "articles",
     "id": "1",
+    "meta": {
+        "hehe": "hoho"
+    },
     "attributes": {
 			 "title": "JSON API paints my bikeshed!",
              "versions": [

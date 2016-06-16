@@ -64,6 +64,10 @@
     XCTAssertEqual(jsonAPI.resources.count, 1, @"Resources should contain 1 resource");
     
     ArticleResource *article = jsonAPI.resource;
+	
+    XCTAssertNotNil(article.meta, @"Meta should not be nil");
+    XCTAssertEqualObjects(article.meta[@"hehe"], @"hoho", @"Meta's 'hehe' should equal 'hoho'");
+	
     XCTAssert([article isKindOfClass:[ArticleResource class]], @"Article should be a ArticleResource");
     XCTAssertEqualObjects(article.ID, @"1", @"Article id should be 1");
     XCTAssertTrue([article.selfLink isEqualToString:@"http://example.com/articles/1"], @"Article selfLink should be 'http://example.com/articles/1'");
