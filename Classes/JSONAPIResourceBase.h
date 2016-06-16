@@ -43,4 +43,10 @@
  */
 @property (strong, atomic) id ID;
 
+/**
+ * Meta for a resource instance. Optional for resources that come
+ * from persistance storage (i.e. the server).
+ */
+@property (strong, atomic) NSDictionary *meta;
+
 @end

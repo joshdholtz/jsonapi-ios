@@ -181,6 +181,7 @@
     NSDictionary *relationships = [dictionary objectForKey:@"relationships"];
     NSDictionary *attributes = [dictionary objectForKey:@"attributes"];
     NSDictionary *links = [dictionary objectForKey:@"links"];
+    NSDictionary *meta = [dictionary objectForKey:@"meta"];
 	
     id ID = [dictionary objectForKey:@"id"];
     NSFormatter *format = [descriptor idFormatter];
@@ -196,6 +197,10 @@
     if (descriptor.selfLinkProperty) {
         NSString *selfLink = links[@"self"];
         [resource setValue:selfLink forKey:descriptor.selfLinkProperty];
+    }
+	
+    if ([resource respondsToSelector:@selector(setMeta:)]) {
+        [resource setMeta:meta];
     }
 
     // Loops through all keys to map to properties
