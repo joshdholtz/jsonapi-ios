@@ -278,10 +278,10 @@
 }
 
 
-+ (void)link:(NSObject <JSONAPIResource>*)resource withIncluded:(JSONAPI*)jsonAPI {
++ (void)link:(NSObject <JSONAPIResource>*)resource withAll:(JSONAPI*)jsonAPI {
     
-    NSDictionary *included = jsonAPI.includedResources;
-    if (nil == included) return;
+    NSDictionary *resources = jsonAPI.allResources;
+    if (nil == resources) return;
     
     JSONAPIResourceDescriptor *descriptor = [[resource class] descriptor];
     
@@ -307,9 +307,9 @@
             [value enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
                 if ([obj conformsToProtocol:@protocol(JSONAPIResource)]) {
                     NSObject <JSONAPIResource> *res = obj;
-                    id includedValue = included[[[res.class descriptor] type]];
-                    if (includedValue) {
-                        id v = includedValue[res.ID];
+                    id resourceValue = resources[[[res.class descriptor] type]];
+                    if (resourceValue) {
+                        id v = resourceValue[res.ID];
                         if (v != nil) {
                             matched[idx] = v;
                         }
@@ -322,9 +322,9 @@
         } else if (value != nil) {
             if ([value conformsToProtocol:@protocol(JSONAPIResource)]) {
                 id <JSONAPIResource> res = value;
-                id includedValue = included[[[res.class descriptor] type]];
-                if (includedValue) {
-                    id v = included[[[res.class descriptor] type]][res.ID];
+                id resourcesValue = resources[[[res.class descriptor] type]];
+                if (resourcesValue) {
+                    id v = resources[[[res.class descriptor] type]][res.ID];
                     if (v != nil) {
                         [resource setValue:v forKey:key];
                     }
