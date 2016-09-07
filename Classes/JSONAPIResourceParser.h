@@ -70,7 +70,7 @@
  * @param resource model object
  * @param jsonAPI JSON-API message object
  */
-+ (void)link:(NSObject <JSONAPIResource>*)resource withIncluded:(JSONAPI*)jsonAPI;
++ (void)link:(NSObject <JSONAPIResource>*)resource withAll:(JSONAPI*)jsonAPI;
 
 /**
  * Get array of associated resource instances.

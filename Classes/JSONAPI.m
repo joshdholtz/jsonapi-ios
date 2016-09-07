@@ -146,13 +146,13 @@ static NSString *gMEDIA_TYPE = @"application/vnd.api+json";
     // Link included with included
     for (NSDictionary *typeIncluded in _includedResources.allValues) {
         for (NSObject <JSONAPIResource> *resource in typeIncluded.allValues) {
-            [JSONAPIResourceParser link:resource withIncluded:self];
+            [JSONAPIResourceParser link:resource withAll:self];
         }
     }
     
     // Link data with included
     for (NSObject <JSONAPIResource> *resource in _resources) {
-        [JSONAPIResourceParser link:resource withIncluded:self];
+        [JSONAPIResourceParser link:resource withAll:self];
     }
     
     // Parse errors
@@ -203,6 +203,20 @@ static NSString *gMEDIA_TYPE = @"application/vnd.api+json";
         [parsedResources addObject:[JSONAPIResourceParser dictionaryFor:linked]];
     }
     return parsedResources;
+}
+
+- (NSDictionary *)allResources {
+    NSMutableDictionary *all = self.includedResources.mutableCopy;
+    [self.resources enumerateObjectsUsingBlock:^(NSObject<JSONAPIResource> * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        NSString *type = [[obj.class descriptor] type];
+        NSMutableDictionary *allValue = [all[type] mutableCopy];
+        if(!allValue) {
+            allValue = @{}.mutableCopy;
+        }
+        allValue[obj.ID] = obj;
+        all[type] = allValue;
+    }];
+    return all;
 }
 
 @end

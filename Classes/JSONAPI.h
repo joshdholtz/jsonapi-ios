@@ -40,6 +40,7 @@
 - (instancetype)initWithString:(NSString*)string;
 
 - (NSDictionary*)dictionary;
+- (NSDictionary*)allResources;
 
 - (id)includedResource:(id)ID withType:(NSString*)type;
 - (BOOL)hasErrors;
