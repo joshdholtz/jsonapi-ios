@@ -21,7 +21,11 @@
 @property (nonatomic, strong) NSString *detail;
 @property (nonatomic, strong) NSArray *links;
 @property (nonatomic, strong) NSArray *paths;
+@property (nonatomic, strong) NSDictionary *source;
 
 - (instancetype) initWithDictionary:(NSDictionary*)dictionary;
+
+- (NSString *)sourcePointer;
+- (NSString *)sourceParameter;
 
 @end

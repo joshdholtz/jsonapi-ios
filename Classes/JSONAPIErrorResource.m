@@ -24,9 +24,36 @@
         _detail = dictionary[@"detail"];
         _links = dictionary[@"links"];
         _paths = dictionary[@"paths"];
+        _source = dictionary[@"source"];
     }
     
     return self;
+}
+
+- (NSString *)sourcePointer
+{
+    if (self.source) {
+        NSString *pointer = self.source[@"pointer"];
+        
+        if (pointer) {
+            return pointer;
+        }
+    }
+    
+    return nil;
+}
+
+- (NSString *)sourceParameter
+{
+    if (self.source) {
+        NSString *parameter = self.source[@"parameter"];
+        
+        if (parameter) {
+            return parameter;
+        }
+    }
+    
+    return nil;
 }
 
 @end
