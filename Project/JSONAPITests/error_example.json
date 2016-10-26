@@ -9,13 +9,16 @@
     },
     "data": [],
     "errors": [{
-                 "id": "123456",
-                 "href": "/internet/is/fun",
-                 "status": "400",
-                 "code": "123abc",
-                 "title": "some title",
-                 "detail": "some detail",
-                 "links": ["a_link"],
-                 "source": ["a_path"]
-                 }]
+               "id": "123456",
+               "href": "/internet/is/fun",
+               "status": "400",
+               "code": "123abc",
+               "title": "some title",
+               "detail": "some detail",
+               "links": ["a_link"],
+               "source": {
+                          "pointer": "/some/point",
+                          "parameter": "a_parameter"
+                          }
+               }]
 }
