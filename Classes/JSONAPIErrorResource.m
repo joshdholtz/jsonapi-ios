@@ -33,7 +33,11 @@
 - (NSString *)pointer
 {
     if (self.source) {
-        return self.source[@"pointer"];;
+        NSString *pointer = self.source[@"pointer"];
+        
+        if (pointer) {
+            return pointer;
+        }
     }
     
     return nil;
@@ -42,7 +46,11 @@
 - (NSString *)parameter
 {
     if (self.source) {
-        return self.source[@"parameter"];
+        NSString *parameter = self.source[@"parameter"];
+        
+        if (parameter) {
+            return parameter;
+        }
     }
     
     return nil;
