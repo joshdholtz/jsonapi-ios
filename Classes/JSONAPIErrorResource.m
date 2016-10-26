@@ -30,7 +30,7 @@
     return self;
 }
 
-- (NSString *)pointer
+- (NSString *)sourcePointer
 {
     if (self.source) {
         NSString *pointer = self.source[@"pointer"];
@@ -43,7 +43,7 @@
     return nil;
 }
 
-- (NSString *)parameter
+- (NSString *)sourceParameter
 {
     if (self.source) {
         NSString *parameter = self.source[@"parameter"];

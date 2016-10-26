@@ -25,7 +25,7 @@
 
 - (instancetype) initWithDictionary:(NSDictionary*)dictionary;
 
-- (NSString *)pointer;
-- (NSString *)parameter;
+- (NSString *)sourcePointer;
+- (NSString *)sourceParameter;
 
 @end
