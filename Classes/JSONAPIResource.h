@@ -115,7 +115,7 @@
  *
  * @return The record identifier for a resource instance.
  */
-- (id)ID;
+- (id)iD;
 
 /**
  * Set the API record identifier for a resource instance. Required for resources that come

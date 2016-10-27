@@ -125,7 +125,7 @@ static NSString *gMEDIA_TYPE = @"application/vnd.api+json";
                 JSONAPIResourceDescriptor *desc = [JSONAPIResourceDescriptor forLinkedType:data[@"type"]];
                 
                 NSMutableDictionary *typeDict = includedResources[desc.type] ?: @{}.mutableCopy;
-                typeDict[resource.ID] = resource;
+                typeDict[resource.iD] = resource;
                 
                 includedResources[desc.type] = typeDict;
             }
@@ -136,7 +136,7 @@ static NSString *gMEDIA_TYPE = @"application/vnd.api+json";
             JSONAPIResourceDescriptor *desc = [JSONAPIResourceDescriptor forLinkedType:data[@"type"]];
             
             NSMutableDictionary *typeDict = includedResources[desc.type] ?: @{}.mutableCopy;
-            typeDict[resource.ID] = resource;
+            typeDict[resource.iD] = resource;
             
             includedResources[desc.type] = typeDict;
         }
@@ -190,7 +190,7 @@ static NSString *gMEDIA_TYPE = @"application/vnd.api+json";
     for (NSObject <JSONAPIResource> *linked in relatedResources) {
         JSONAPIResourceDescriptor *desc = [[linked class] descriptor];
         NSMutableDictionary *typeDict = includedResources[desc.type] ?: @{}.mutableCopy;
-        typeDict[linked.ID] = resource;
+        typeDict[linked.iD] = resource;
         includedResources[desc.type] = typeDict;
     }
     return includedResources;
