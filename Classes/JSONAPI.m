@@ -117,6 +117,16 @@ static NSString *gMEDIA_TYPE = @"application/vnd.api+json";
     // Parses included resources
     id included = dictionary[@"included"];
     NSMutableDictionary *includedResources = [[NSMutableDictionary alloc] init];
+    // Adding the resources to the included attribute
+    for (NSObject <JSONAPIResource> *resource in _resources) {
+        JSONAPIResourceDescriptor *desc = [resource.class descriptor];
+        
+        NSMutableDictionary *typeDict = includedResources[desc.type] ?: @{}.mutableCopy;
+        typeDict[resource.ID] = resource;
+        
+        includedResources[desc.type] = typeDict;
+    }
+    
     if ([included isKindOfClass:[NSArray class]] == YES) {
         for (NSDictionary *data in included) {
             
