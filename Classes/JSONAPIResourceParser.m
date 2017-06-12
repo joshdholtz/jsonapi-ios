@@ -347,7 +347,7 @@
             id value = [resource valueForKey:key];
             if ([value isKindOfClass:[NSArray class]]) {
                 [related addObjectsFromArray:value];
-            } else {
+            } else if (value) {
                 [related addObject:value];
             }
         }
