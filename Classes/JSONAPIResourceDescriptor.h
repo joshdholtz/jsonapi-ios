@@ -101,7 +101,7 @@
  * Add a simple property with custom json name.
  *
  * @param name The name of the property in the class.
- * @param jsonName The label of the property in JSON.
+ * @param json The label of the property in JSON.
  */
 - (void)addProperty:(NSString*)name withJsonName:(NSString *)json;
 
