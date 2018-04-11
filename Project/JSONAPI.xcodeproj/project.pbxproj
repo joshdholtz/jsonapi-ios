@@ -130,6 +130,7 @@
 		78A5C1D21C1E14D6008C8632 /* MediaResource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MediaResource.m; sourceTree = "<group>"; };
 		78A5C1D41C1E154C008C8632 /* WebPageResource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebPageResource.h; sourceTree = "<group>"; };
 		78A5C1D51C1E154C008C8632 /* WebPageResource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebPageResource.m; sourceTree = "<group>"; };
+		86CE9D90207E168300D76280 /* JSONAPIResourceFactory.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JSONAPIResourceFactory.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -268,6 +269,7 @@
 				685481E91AE4161900D3A633 /* JSONAPIPropertyDescriptor.h */,
 				685481EA1AE4161900D3A633 /* JSONAPIPropertyDescriptor.m */,
 				033A6C5D18695CD2001CF9FA /* JSONAPIResource.h */,
+				86CE9D90207E168300D76280 /* JSONAPIResourceFactory.h */,
 				03FBD8DD1AB8DF8E00789DF3 /* JSONAPIErrorResource.h */,
 				03FBD8DE1AB8DF8E00789DF3 /* JSONAPIErrorResource.m */,
 				685481ED1AE419CB00D3A633 /* JSONAPIResourceDescriptor.h */,

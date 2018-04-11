@@ -10,6 +10,7 @@
 #import "JSONAPI.h"
 #import "JSONAPIResourceDescriptor.h"
 #import "JSONAPIPropertyDescriptor.h"
+#import "JSONAPIResourceFactory.h"
 
 #pragma mark - JSONAPIResourceParser
 
@@ -56,7 +57,12 @@
     NSString *type = dictionary[@"type"] ?: @"";
     JSONAPIResourceDescriptor *descriptor = [JSONAPIResourceDescriptor forLinkedType:type];
     
-    NSObject <JSONAPIResource> *resource = [[[descriptor resourceClass] alloc] init];
+    NSObject <JSONAPIResource> *resource;
+    if ([[descriptor resourceClass] conformsToProtocol:@protocol(JSONAPIResourceFactory)]) {
+        resource = [[descriptor resourceClass] resourceObjectFor:dictionary];
+    } else {
+        resource = [[[descriptor resourceClass] alloc] init];
+    }
     [self set:resource withDictionary:dictionary];
     
     return resource;
