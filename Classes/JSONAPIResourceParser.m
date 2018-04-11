@@ -191,15 +191,17 @@
 	
     id ID = [dictionary objectForKey:@"id"];
     NSFormatter *format = [descriptor idFormatter];
-    if (format) {
-        id xformed;
-        if ([format getObjectValue:&xformed forString:ID errorDescription:&error]) {
-            [resource setValue:xformed forKey:[descriptor idProperty]];
+    if (resource.iD == nil || ![resource.iD isEqualToString:ID]) {
+        if (format) {
+            id xformed;
+            if ([format getObjectValue:&xformed forString:ID errorDescription:&error]) {
+                [resource setValue:xformed forKey:[descriptor idProperty]];
+            }
+        } else {
+            [resource setValue:ID forKey:[descriptor idProperty]];
         }
-    } else {
-        [resource setValue:ID forKey:[descriptor idProperty]];
     }
-    
+
     if (descriptor.selfLinkProperty) {
         NSString *selfLink = links[@"self"];
         [resource setValue:selfLink forKey:descriptor.selfLinkProperty];
