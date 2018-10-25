@@ -10,6 +10,7 @@
 #import "JSONAPI.h"
 #import "JSONAPIResourceDescriptor.h"
 #import "JSONAPIPropertyDescriptor.h"
+#import "JSONAPIResourceFactory.h"
 
 #pragma mark - JSONAPIResourceParser
 
@@ -56,7 +57,12 @@
     NSString *type = dictionary[@"type"] ?: @"";
     JSONAPIResourceDescriptor *descriptor = [JSONAPIResourceDescriptor forLinkedType:type];
     
-    NSObject <JSONAPIResource> *resource = [[[descriptor resourceClass] alloc] init];
+    NSObject <JSONAPIResource> *resource;
+    if ([[descriptor resourceClass] conformsToProtocol:@protocol(JSONAPIResourceFactory)]) {
+        resource = [[descriptor resourceClass] resourceObjectFor:dictionary];
+    } else {
+        resource = [[[descriptor resourceClass] alloc] init];
+    }
     [self set:resource withDictionary:dictionary];
     
     return resource;
@@ -118,7 +124,7 @@
                         }
                         
                         for (id valueElement in valueArray) {
-                            [dictionaryArray addObject:[self link:valueElement from:resource withKey:[property jsonName]]];
+                            [dictionaryArray addObject:[self link:valueElement from:resource withKey:key]];
                         }
                         
                         NSDictionary *dataDictionary = @{@"data" : dictionaryArray};
@@ -144,7 +150,7 @@
                     }
                     
                     NSObject <JSONAPIResource> *attribute = value;
-                    [linkage setValue:[self link:attribute from:resource withKey:[property jsonName]] forKey:[property jsonName]];
+                    [linkage setValue:[self link:attribute from:resource withKey:key] forKey:[property jsonName]];
                 } else {
                     format = [property formatter];
                     if (format) {
@@ -309,7 +315,7 @@
                     NSObject <JSONAPIResource> *res = obj;
                     id includedValue = included[[[res.class descriptor] type]];
                     if (includedValue) {
-                        id v = includedValue[res.ID];
+                        id v = includedValue[res.iD];
                         if (v != nil) {
                             matched[idx] = v;
                         }
@@ -324,7 +330,7 @@
                 id <JSONAPIResource> res = value;
                 id includedValue = included[[[res.class descriptor] type]];
                 if (includedValue) {
-                    id v = included[[[res.class descriptor] type]][res.ID];
+                    id v = included[[[res.class descriptor] type]][res.iD];
                     if (v != nil) {
                         [resource setValue:v forKey:key];
                     }
@@ -371,10 +377,10 @@
         [reference setValue:related forKey:@"related"];
     }
     
-    if (resource.ID) {
+    if (resource.iD) {
         NSDictionary *referenceObject = @{
                                           @"type" : descriptor.type,
-                                          @"id"   : resource.ID
+                                          @"id"   : resource.iD
                                           };
         if ([[owner valueForKey:key] isKindOfClass:[NSArray class]]) {
             reference = referenceObject.mutableCopy;
